@@ -273,7 +273,6 @@ class ChannelLinearLayoutChild extends LinearLayout {
             // item0
             if (null != focus && focus.getId() == R.id.module_channellayout_id_item0_root_child) {
                 ChannelUtil.logE("dispatchKeyEvent[left leave item0] => focus = " + focus);
-                ((ChannelTextView) focus).hightlight();
                 return true;
             }
             // item1
