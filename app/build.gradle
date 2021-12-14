@@ -1,0 +1,37 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdk 27
+    defaultConfig {
+        applicationId "com.kalu.channellayout"
+        minSdk 17
+        targetSdk 27
+//        minSdk 19
+//        targetSdk 31
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+//    implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+//    implementation 'com.google.android.material:material:1.3.0'
+
+    implementation project(path: ':module_channellayout_v7')
+}
