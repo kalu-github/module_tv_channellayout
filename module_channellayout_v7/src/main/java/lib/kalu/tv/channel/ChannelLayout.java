@@ -330,7 +330,9 @@ public class ChannelLayout extends LinearLayout {
             // left
             else if (direction == View.FOCUS_LEFT) {
                 // column3
-                refresh(column, View.GONE);
+                if (column == 2) {
+                    refresh(2, View.GONE);
+                }
                 // coloun2
                 refresh(column - 1, View.VISIBLE);
                 // arraw
