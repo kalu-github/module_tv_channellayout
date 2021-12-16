@@ -1,13 +1,13 @@
 <resources>
-    <item name="module_channellayout_id_update" type="id" />
-    <item name="module_channellayout_id_repeat" type="id" />
-    <item name="module_channellayout_id_item0" type="id" />
-    <item name="module_channellayout_id_item0_root" type="id" />
-    <item name="module_channellayout_id_item0_root_child" type="id" />
-    <item name="module_channellayout_id_item1" type="id" />
-    <item name="module_channellayout_id_item1_root" type="id" />
-    <item name="module_channellayout_id_item1_root_child" type="id" />
-    <item name="module_channellayout_id_item2" type="id" />
-    <item name="module_channellayout_id_item2_root" type="id" />
-    <item name="module_channellayout_id_item2_root_child" type="id" />
+<!--    <item name="module_channellayout_id_update" type="id" />-->
+<!--    <item name="module_channellayout_id_repeat" type="id" />-->
+<!--    <item name="module_channellayout_id_item0" type="id" />-->
+<!--    <item name="module_channellayout_id_item0_root" type="id" />-->
+<!--    <item name="module_channellayout_id_item0_root_child" type="id" />-->
+<!--    <item name="module_channellayout_id_item1" type="id" />-->
+<!--    <item name="module_channellayout_id_item1_root" type="id" />-->
+<!--    <item name="module_channellayout_id_item1_root_child" type="id" />-->
+<!--    <item name="module_channellayout_id_item2" type="id" />-->
+<!--    <item name="module_channellayout_id_item2_root" type="id" />-->
+<!--    <item name="module_channellayout_id_item2_root_child" type="id" />-->
 </resources>

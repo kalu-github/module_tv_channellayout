@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -69,6 +70,8 @@ class ChannelScrollView extends ScrollView {
     }
 
     private final void init() {
+        setClickable(false);
+        setLongClickable(false);
         setFocusable(false);
         setFocusableInTouchMode(false);
         setFillViewport(true);
@@ -79,50 +82,24 @@ class ChannelScrollView extends ScrollView {
 
     /********************/
 
-    protected final void refresh(int visibility) {
-
-        View child = getChildAt(0);
-        if (null == child)
-            return;
-
-        ((ChannelLinearLayoutChild) child).refresh(visibility);
-    }
-
-    protected final void update(@NonNull int visibility, @IntRange(from = 0, to = 2) int index, @NonNull List<ChannelModel> list) {
-
-        @IdRes int id;
-        @DrawableRes int res;
-        if (index == 0) {
-            res = R.drawable.module_channellayout_ic_shape_background_column0;
-            id = R.id.module_channellayout_id_item0_root;
-        } else if (index == 1) {
-            res = R.drawable.module_channellayout_ic_shape_background_column1;
-            id = R.id.module_channellayout_id_item1_root;
-        } else {
-            res = R.drawable.module_channellayout_ic_shape_background_column2;
-            id = R.id.module_channellayout_id_item2_root;
-        }
-
+    protected final void update(@IntRange(from = 0, to = 2) int index, @NonNull List<ChannelModel> list) {
 
         // add
         if (null == getChildAt(0)) {
             ChannelLinearLayoutChild child = new ChannelLinearLayoutChild(getContext());
-            child.setId(id);
-            child.setBackgroundResource(res);
             int height = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_height);
             ScrollView.LayoutParams params = new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, height);
             child.setLayoutParams(params);
-//            child.setVisibility(visibility);
-            child.update(visibility, index, list);
+            child.setBackgroundResource(R.drawable.module_channellayout_ic_shape_background_column0);
+            child.update(index, list);
             // add
             addView(child, 0);
         }
         // reset
         else {
             View child = getChildAt(0);
-            child.setBackgroundResource(res);
-//            child.setVisibility(visibility);
-            ((ChannelLinearLayoutChild) child).update(visibility, index, list);
+            child.setBackgroundResource(R.drawable.module_channellayout_ic_shape_background_column0);
+            ((ChannelLinearLayoutChild) child).update(index, list);
         }
     }
 
@@ -134,9 +111,10 @@ class ChannelScrollView extends ScrollView {
         if (position < 0)
             return;
 
-        try {
-            ((ChannelLayout) getParent()).callback(this, position, direction);
-        } catch (Exception e) {
+        ViewParent parent = getParent();
+        if (null != parent && parent instanceof ChannelLayout) {
+            int column = ((ChannelLayout) parent).indexOfChild(this);
+            ((ChannelLayout) parent).callback(column, position, direction);
         }
     }
 }

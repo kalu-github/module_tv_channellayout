@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.FocusFinder;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -75,278 +74,283 @@ class ChannelLinearLayoutChild extends LinearLayout {
         if (event.getRepeatCount() > 0) {
             return true;
         }
-        // up come
-        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
-            View focus = findFocus();
-            ChannelUtil.logE("dispatchKeyEvent[up come] => focus = " + focus);
-            // item0
-            if (null != focus && focus.getId() == R.id.module_channellayout_id_item0_root) {
-                searchFocus();
-                return true;
-            }
-            // item1
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item1_root) {
-                searchFocus();
-                return true;
-            }
-            // item2
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item2_root) {
-                searchFocus();
-                return true;
-            }
-        }
-        // down come
-        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
-            View focus = findFocus();
-            // item0
-            if (null != focus && focus.getId() == R.id.module_channellayout_id_item0_root) {
-                ChannelUtil.logE("dispatchKeyEvent[down come item0] => focus = " + focus);
-                searchFocus();
-                return true;
-            }
-            // item1
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item1_root) {
-                ChannelUtil.logE("dispatchKeyEvent[down come item1] => focus = " + focus);
-                searchFocus();
-                return true;
-            }
-            // item2
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item2_root) {
-                ChannelUtil.logE("dispatchKeyEvent[down come item2] => focus = " + focus);
-                searchFocus();
-                return true;
-            }
-            // exception
-            else {
-                ChannelUtil.logE("dispatchKeyEvent[down exception] => focus = " + focus);
-                return true;
-            }
-        }
-        // right come
-        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            View focus = findFocus();
-            // item0
-            if (null != focus && focus.getId() == R.id.module_channellayout_id_item0_root) {
-                ChannelUtil.logE("dispatchKeyEvent[right come item0] => focus = " + focus);
-                searchFocus();
-                return true;
-            }
-            // item1
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item1_root) {
-                ChannelUtil.logE("dispatchKeyEvent[right come item1] => focus = " + focus);
-                searchFocus();
-                return true;
-            }
-            // item2
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item2_root) {
-                ChannelUtil.logE("dispatchKeyEvent[right come item2] => focus = " + focus);
-//                setVisibility(View.VISIBLE);
-                searchFocus();
-                return true;
-            }
-            // exception
-            else {
-                ChannelUtil.logE("dispatchKeyEvent[right exception] => focus = " + focus);
-                return true;
-            }
-        }
-        // left come
-        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            View focus = findFocus();
-            // item0
-            if (null != focus && focus.getId() == R.id.module_channellayout_id_item0_root) {
-                ChannelUtil.logE("dispatchKeyEvent[left come item0] => focus = " + focus);
-                searchFocus();
-                callback((ChannelTextView) findFocus(), View.FOCUS_LEFT);
-                return true;
-            }
-            // item1
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item1_root) {
-                ChannelUtil.logE("dispatchKeyEvent[left come item1] => focus = " + focus);
-                searchFocus();
-                callback((ChannelTextView) findFocus(), View.FOCUS_LEFT);
-                return true;
-            }
-            // item2
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item2_root) {
-                ChannelUtil.logE("dispatchKeyEvent[left come item2] => focus = " + focus);
-                searchFocus();
-                return true;
-            }
-            // exception
-            else {
-                ChannelUtil.logE("dispatchKeyEvent[left come exception] => focus = " + focus);
-            }
-        }
+//        // up come
+//        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
+//            View focus = findFocus();
+//            if (null != focus && focus instanceof ChannelLinearLayoutChild) {
+//                if (null != focus.getParent() && focus.getParent() instanceof ChannelScrollView) {
+//                    if (null != focus.getParent().getParent() && focus.getParent().getParent() instanceof ChannelLayout) {
+//                        int column = ((ChannelLayout) focus.getParent().getParent()).indexOfChild((View) focus.getParent());
+//                        ChannelUtil.logE("dispatchKeyEvent[up come item" + column + "] => column = " + column + ", focus = " + focus);
+//                    }
+//                }
+//                searchFocus();
+//            }
+//            // exception
+//            else {
+//                ChannelUtil.logE("dispatchKeyEvent[up come intercept] => focus = " + focus);
+//            }
+//            return true;
+//        }
+//        // down come
+//        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+//            View focus = findFocus();
+//            if (null != focus && focus instanceof ChannelLinearLayoutChild) {
+//                if (null != focus.getParent() && focus.getParent() instanceof ChannelScrollView) {
+//                    if (null != focus.getParent().getParent() && focus.getParent().getParent() instanceof ChannelLayout) {
+//                        int column = ((ChannelLayout) focus.getParent().getParent()).indexOfChild((View) focus.getParent());
+//                        ChannelUtil.logE("dispatchKeyEvent[up come item" + column + "] => column = " + column + ", focus = " + focus);
+//                    }
+//                }
+//                searchFocus();
+//            }
+//            // exception
+//            else {
+//                ChannelUtil.logE("dispatchKeyEvent[down come intercept] => focus = " + focus);
+//            }
+//            return true;
+//        }
+//        // right come
+//        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+//            View focus = findFocus();
+//            if (null != focus && focus instanceof ChannelLinearLayoutChild) {
+//                if (null != focus.getParent() && focus.getParent() instanceof ChannelScrollView) {
+//                    if (null != focus.getParent().getParent() && focus.getParent().getParent() instanceof ChannelLayout) {
+//                        int column = ((ChannelLayout) focus.getParent().getParent()).indexOfChild((View) focus.getParent());
+//                        ChannelUtil.logE("dispatchKeyEvent[right come item" + column + "] => column = " + column + ", focus = " + focus);
+//                    }
+//                }
+//                searchFocus();
+//            }
+//            // exception
+//            else {
+//                ChannelUtil.logE("dispatchKeyEvent[right come intercept] => focus = " + focus);
+//            }
+//            return true;
+//        }
+//        // left come
+//        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+//            View focus = findFocus();
+//            if (null != focus && focus instanceof ChannelLinearLayoutChild) {
+//                if (null != focus.getParent() && focus.getParent() instanceof ChannelScrollView) {
+//                    if (null != focus.getParent().getParent() && focus.getParent().getParent() instanceof ChannelLayout) {
+//                        int column = ((ChannelLayout) focus.getParent().getParent()).indexOfChild((View) focus.getParent());
+//                        ChannelUtil.logE("dispatchKeyEvent[left come item" + column + "] => column = " + column + ", focus = " + focus);
+//                    }
+//                }
+//                searchFocus();
+//            }
+//            // exception
+//            else {
+//                ChannelUtil.logE("dispatchKeyEvent[left come intercept] => focus = " + focus);
+//            }
+//            return true;
+//        }
+//        // up move
+//        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
+//            View focus = findFocus();
+//            if (null != focus && focus instanceof ChannelTextView) {
+//                int index = indexOfChild(focus);
+//                int count = getChildCount();
+//                if (index + 1 >= count) {
+//                    ChannelUtil.logE("dispatchKeyEvent[up move intercept] => focus = " + focus);
+//                } else {
+//                    ChannelUtil.logE("dispatchKeyEvent[up move] => focus = " + focus);
+//                    nextFocus(index, View.FOCUS_UP);
+//                }
+//            }
+//            // exception
+//            else {
+//                ChannelUtil.logE("dispatchKeyEvent[up move intercept] => focus = " + focus);
+//            }
+//            return true;
+//        }
+//        // right leave
+//        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+//            View focus = findFocus();
+//            if (null != focus && focus instanceof ChannelTextView) {
+//                ((ChannelTextView) focus).select();
+//                int index = indexOfChild(focus);
+//                callback(index, View.FOCUS_RIGHT);
+//                ChannelUtil.logE("dispatchKeyEvent[right leave child" + index + "] => text = " + ((ChannelTextView) focus).getText());
+//            }
+//            // exception
+//            else {
+//                ChannelUtil.logE("dispatchKeyEvent[right leave intercept] => focus = " + focus);
+//            }
+//            return true;
+//        }
+//        // left leave
+//        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+//            View focus = findFocus();
+//            if (null != focus && focus instanceof ChannelTextView) {
+//                ((ChannelTextView) focus).select();
+//                int index = indexOfChild(focus);
+//                callback(index, View.FOCUS_LEFT);
+//                ChannelUtil.logE("dispatchKeyEvent[left leave child" + index + "] => focus = " + focus);
+//            }
+//            // exception
+//            else {
+//                ChannelUtil.logE("dispatchKeyEvent[left leave intercept] => focus = " + focus);
+//            }
+//            return true;
+//        }
         // down move
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
             View focus = findFocus();
-            // item0
-            if (null != focus && focus.getId() == R.id.module_channellayout_id_item0_root_child) {
-                ChannelUtil.logE("dispatchKeyEvent[down move item0] => focus = " + focus);
-                int index = indexOfChild(focus);
-                nextFocus(index, View.FOCUS_DOWN);
-                return true;
-            }
-            // item1
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item1_root_child) {
-                ChannelUtil.logE("dispatchKeyEvent[down move item1] => focus = " + focus);
-                int index = indexOfChild(focus);
-                nextFocus(index, View.FOCUS_DOWN);
-                return true;
-            }
-            // item2
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item2_root_child) {
-                ChannelUtil.logE("dispatchKeyEvent[down move item2] => focus = " + focus);
-                int index = indexOfChild(focus);
-                nextFocus(index, View.FOCUS_DOWN);
-                return true;
+            if (null != focus && focus instanceof ChannelLinearLayoutChild) {
+                ChannelUtil.logE("dispatchKeyEvent[down move] => focus = " + focus);
+                nextFocus(View.FOCUS_DOWN);
             }
             // exception
             else {
-                ChannelUtil.logE("dispatchKeyEvent[down exception] => focus = " + focus);
-                return true;
+                ChannelUtil.logE("dispatchKeyEvent[down move intercept] => focus = " + focus);
             }
+            return true;
         }
         // up move
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
             View focus = findFocus();
-            // item0
-            if (null != focus && focus.getId() == R.id.module_channellayout_id_item0_root_child) {
+            if (null != focus && focus instanceof ChannelLinearLayoutChild) {
                 ChannelUtil.logE("dispatchKeyEvent[up move] => focus = " + focus);
-                int index = indexOfChild(focus);
-                nextFocus(index, View.FOCUS_UP);
-                return true;
-            }
-            // item1
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item1_root_child) {
-                ChannelUtil.logE("dispatchKeyEvent[up move] => focus = " + focus);
-                int index = indexOfChild(focus);
-                nextFocus(index, View.FOCUS_UP);
-                return true;
-            }
-            // item2
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item2_root_child) {
-                ChannelUtil.logE("dispatchKeyEvent[up move] => focus = " + focus);
-                int index = indexOfChild(focus);
-                nextFocus(index, View.FOCUS_UP);
-                return true;
+                nextFocus(View.FOCUS_UP);
             }
             // exception
             else {
-                ChannelUtil.logE("dispatchKeyEvent[up exception] => focus = " + focus);
-                return true;
+                ChannelUtil.logE("dispatchKeyEvent[up move intercept] => focus = " + focus);
             }
+            return true;
         }
-        // right leave
+        // right move
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             View focus = findFocus();
-            // item0
-            if (null != focus && focus.getId() == R.id.module_channellayout_id_item0_root_child) {
-                ChannelUtil.logE("dispatchKeyEvent[right leave item0] => focus = " + focus);
-                ((ChannelTextView) focus).hightlight();
-                callback((ChannelTextView) focus, View.FOCUS_RIGHT);
-                return true;
-            }
-            // item1
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item1_root_child) {
-                ChannelUtil.logE("dispatchKeyEvent[right leave item1] => focus = " + focus);
-                ((ChannelTextView) focus).hightlight();
-                callback((ChannelTextView) focus, View.FOCUS_RIGHT);
-                return true;
-            }
-            // item2
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item2_root_child) {
-                ChannelUtil.logE("dispatchKeyEvent[right leave item2] => focus = " + focus);
-//                ((ChannelTextView) focus).hightlight();
-                return true;
+            if (null != focus && focus instanceof ChannelLinearLayoutChild) {
+                ChannelScrollView channelScrollView = (ChannelScrollView) getParent();
+                ChannelLayout channelLayout = (ChannelLayout) getParent().getParent();
+                int count = channelLayout.getChildCount();
+                int index = channelLayout.indexOfChild(channelScrollView);
+                ChannelUtil.logE("dispatchKeyEvent[right move] => count = " + count + ", index = " + index);
+                if (index + 1 < count) {
+                    ChannelUtil.logE("dispatchKeyEvent[right move] => focus = " + focus);
+                    View child = channelLayout.getChildAt(index + 1);
+                    if (null != child && child instanceof ChannelScrollView) {
+                        hightlightFocus();
+                        ((ChannelLinearLayoutChild) ((ChannelScrollView) child).getChildAt(0)).requestFocus();
+                        ((ChannelLinearLayoutChild) ((ChannelScrollView) child).getChildAt(0)).nextFocus(View.FOCUS_RIGHT);
+                    } else {
+                        ChannelUtil.logE("dispatchKeyEvent[right move error] => focus = " + focus);
+                    }
+                } else {
+                    ChannelUtil.logE("dispatchKeyEvent[right move outside] => focus = " + focus);
+                }
             }
             // exception
             else {
-                ChannelUtil.logE("dispatchKeyEvent[right leave exception] => focus = " + focus);
-                return true;
+                ChannelUtil.logE("dispatchKeyEvent[right move intercept] => focus = " + focus);
             }
+            return true;
         }
-        // left leave
+        // left move
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             View focus = findFocus();
-            // item0
-            if (null != focus && focus.getId() == R.id.module_channellayout_id_item0_root_child) {
-                ChannelUtil.logE("dispatchKeyEvent[left leave item0] => focus = " + focus);
-                return true;
-            }
-            // item1
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item1_root_child) {
-                ChannelUtil.logE("dispatchKeyEvent[left leave item1] => focus = " + focus);
-                callback((ChannelTextView) focus, View.FOCUS_LEFT);
-                ((ChannelTextView) focus).hightlight();
-                return true;
-            }
-            // item2
-            else if (null != focus && focus.getId() == R.id.module_channellayout_id_item2_root_child) {
-                ChannelUtil.logE("dispatchKeyEvent[left leave item2] => focus = " + focus);
-                callback((ChannelTextView) focus, View.FOCUS_LEFT);
-                return true;
+            if (null != focus && focus instanceof ChannelLinearLayoutChild) {
+                ChannelScrollView channelScrollView = (ChannelScrollView) getParent();
+                ChannelLayout channelLayout = (ChannelLayout) getParent().getParent();
+                int index = channelLayout.indexOfChild(channelScrollView);
+                ChannelUtil.logE("dispatchKeyEvent[left move] => index = " + index);
+                if (index >= 1) {
+                    ChannelUtil.logE("dispatchKeyEvent[left move] => focus = " + focus);
+                    View child = channelLayout.getChildAt(index - 1);
+                    if (null != child && child instanceof ChannelScrollView) {
+                        hightlightFocus();
+                        ((ChannelLinearLayoutChild) ((ChannelScrollView) child).getChildAt(0)).requestFocus();
+                        ((ChannelLinearLayoutChild) ((ChannelScrollView) child).getChildAt(0)).nextFocus(View.FOCUS_LEFT);
+                    } else {
+                        ChannelUtil.logE("dispatchKeyEvent[left move error] => focus = " + focus);
+                    }
+                } else {
+                    ChannelUtil.logE("dispatchKeyEvent[left move outside] => focus = " + focus);
+                }
             }
             // exception
             else {
-                ChannelUtil.logE("dispatchKeyEvent[left leave exception] => focus = " + focus);
-                return true;
+                ChannelUtil.logE("dispatchKeyEvent[left move intercept] => focus = " + focus);
             }
+            return true;
         }
         // else
         else {
             View focus = findFocus();
             ChannelUtil.logE("dispatchKeyEvent[null] => focus = " + focus + ", action = " + event.getAction() + ", code = " + event.getKeyCode());
+            return super.dispatchKeyEvent(event);
         }
-        return super.dispatchKeyEvent(event);
     }
 
+
     private final void init() {
-        setOrientation(LinearLayout.VERTICAL);
+        setClickable(true);
+        setLongClickable(true);
         setFocusable(true);
         setFocusableInTouchMode(true);
+        setOrientation(LinearLayout.VERTICAL);
         setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
     }
 
-    private final void searchFocus() {
-        searchFocus(-1, true);
-    }
+    private final void hightlightFocus() {
 
-    private final void searchFocus(int index, boolean focus) {
         int before = 0;
-        if (index < 0) {
-            int count = getChildCount();
-            for (int i = 0; i < count; i++) {
-                View temp = getChildAt(i);
-                if (null == temp)
-                    continue;
-                if (((ChannelTextView) temp).isHightlight()) {
-                    before = i;
-                    break;
-                }
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            View temp = getChildAt(i);
+            if (null == temp)
+                continue;
+            if (((ChannelTextView) temp).isHightlight()) {
+                before = i;
+                break;
             }
-        } else {
-            before = index;
         }
-        ChannelUtil.logE("searchFocus => before = " + before);
-        nextFocus(before, Integer.MIN_VALUE, focus);
+
+        View viewBefore = null;
+        try {
+            viewBefore = getChildAt(before);
+            ChannelUtil.logE("hightlightFocus[viewBefore] => text = " + ((TextView) viewBefore).getText());
+        } catch (Exception e) {
+            ChannelUtil.logE("hightlightFocus[viewBefore] => " + e.getMessage());
+        }
+
+        if (null != viewBefore) {
+            ChannelUtil.logE("hightlightFocus[viewBefore] => select");
+            ((ChannelTextView) viewBefore).select();
+        }
+
+        clearFocus();
     }
 
-    private final void nextFocus(@NonNull int before, @NonNull int direction) {
+    private final void nextFocus(@NonNull int direction) {
+
+        if (direction != View.FOCUS_DOWN && direction != View.FOCUS_UP && direction != View.FOCUS_LEFT && direction != View.FOCUS_RIGHT && direction != Integer.MIN_VALUE)
+            return;
+
+        int before = 0;
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            View temp = getChildAt(i);
+            if (null == temp)
+                continue;
+            if (((ChannelTextView) temp).isHightlight()) {
+                before = i;
+                break;
+            }
+        }
         nextFocus(before, direction, true);
     }
 
-    /**
-     * FOCUS_BLOCK_DESCENDANTS: 拦截焦点, 直接自己尝试获取焦点
-     * FOCUS_BEFORE_DESCENDANTS: 首先自己尝试获取焦点, 如果自己不能获取焦点, 则尝试让子控件获取焦点
-     * FOCUS_AFTER_DESCENDANTS: 首先尝试把焦点给子控件, 如果所有子控件都不要, 则自己尝试获取焦点
-     */
-    private final void nextFocus(@NonNull int before, @NonNull int direction, boolean focus) {
+    private final void nextFocus(@NonNull int before, @NonNull int direction, boolean requestFocus) {
 
-        if (direction != View.FOCUS_DOWN && direction != View.FOCUS_UP && direction != Integer.MIN_VALUE)
+        if (direction != View.FOCUS_DOWN && direction != View.FOCUS_UP && direction != View.FOCUS_LEFT && direction != View.FOCUS_RIGHT && direction != Integer.MIN_VALUE)
             return;
 
+        ChannelUtil.logE("nextFocus => ****************************");
         int next;
 
         // down
@@ -369,86 +373,64 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
         View viewBefore = null;
         try {
-            if (before >= 0 && before <= count) {
-                viewBefore = getChildAt(before);
-                ChannelUtil.logE("nextFocus => viewBefore = " + viewBefore + ", text = " + ((TextView) viewBefore).getText());
-            } else {
-                ChannelUtil.logE("nextFocus => viewBefore = null");
-            }
+            viewBefore = getChildAt(before);
+            ChannelUtil.logE("nextFocus[viewBefore] => text = " + ((TextView) viewBefore).getText());
         } catch (Exception e) {
-            ChannelUtil.logE("nextFocus => viewBefore = null");
+            ChannelUtil.logE("nextFocus[viewBefore] => " + e.getMessage());
         }
         View viewNext = null;
         try {
             viewNext = getChildAt(next);
-            ChannelUtil.logE("nextFocus => viewNext = " + viewNext + ", text = " + ((TextView) viewNext).getText());
+            ChannelUtil.logE("nextFocus[viewNext] => text = " + ((TextView) viewNext).getText());
         } catch (Exception e) {
-            ChannelUtil.logE("nextFocus => viewNext = null");
+            ChannelUtil.logE("nextFocus[viewNext] => " + e.getMessage());
         }
 
-        setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
         if (null != viewBefore) {
-            ((ChannelTextView) viewNext).hightlight(false);
+            ChannelUtil.logE("nextFocus[viewBefore] => reset");
+            ((ChannelTextView) viewBefore).reset();
         }
         if (null != viewNext) {
-            if (focus) {
-                viewNext.requestFocus();
+            if (requestFocus) {
+
+                callback(next, direction);
+                ChannelUtil.logE("nextFocus[viewBefore] => focus");
+                ((ChannelTextView) viewNext).focus();
+
+                int top = viewNext.getTop();
+                ((ChannelScrollView) getParent()).scrollTo(0, top);
+
             } else {
-                ((ChannelTextView) viewNext).hightlight();
+                ChannelUtil.logE("nextFocus[viewBefore] => select");
+                ((ChannelTextView) viewNext).select();
             }
         }
-        setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        ChannelUtil.logE("nextFocus => ****************************");
     }
 
     /*************/
 
-    protected final void startFocus(@NonNull int index) {
-        searchFocus(index, false);
+    protected final void select(@NonNull int position) {
+        select(position, false);
     }
 
-    protected final void startFocus(@NonNull int index, boolean focus) {
-        searchFocus(index, focus);
-    }
-
-    /*************/
-
-    protected final void refresh(int visibility) {
-
-        // step1
-        setFocusable(visibility == View.VISIBLE);
-        setFocusableInTouchMode(visibility == View.VISIBLE);
-
-        // step2
+    protected final void select(@NonNull int position, @NonNull boolean requestFocus) {
         int count = getChildCount();
-        for (int i = 0; i < count; i++) {
-            View child = getChildAt(i);
-            if (null == child)
-                continue;
-            child.setFocusable(visibility == View.VISIBLE);
-            child.setFocusableInTouchMode(visibility == View.VISIBLE);
-        }
+        if (position + 1 > count)
+            return;
 
-        // step3
-        searchFocus();
+        if (requestFocus) {
+            requestFocus();
+        }
+        nextFocus(position, Integer.MIN_VALUE, requestFocus);
     }
 
-    protected final void update(@NonNull int visibility, @IntRange(from = 0, to = 2) int index, @NonNull List<ChannelModel> list) {
+    /*************/
 
-        // focus
-        setFocusable(visibility == View.VISIBLE);
-        setFocusableInTouchMode(visibility == View.VISIBLE);
+    protected final void update(@IntRange(from = 0, to = 2) int index, @NonNull List<ChannelModel> list) {
 
         if (null == list || list.size() == 0)
             return;
-
-        @IdRes int id;
-        if (index == 0) {
-            id = R.id.module_channellayout_id_item0_root_child;
-        } else if (index == 1) {
-            id = R.id.module_channellayout_id_item1_root_child;
-        } else {
-            id = R.id.module_channellayout_id_item2_root_child;
-        }
 
         ChannelUtil.logE("**********************");
 
@@ -468,7 +450,6 @@ class ChannelLinearLayoutChild extends LinearLayout {
             if (null == getChildAt(i)) {
                 ChannelUtil.logE("update[new] => initText = " + initText);
                 ChannelTextView child = new ChannelTextView(getContext());
-                child.setId(id);
                 int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_height);
                 child.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, width));
                 int offset = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_size);
@@ -476,11 +457,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 int left = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_left);
                 int right = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_right);
                 child.setPadding(left, 0, right, 0);
-                child.setSelected(false);
-                child.setText(initText, temp.initSelect());
-                // focus
-                child.setFocusable(visibility == View.VISIBLE);
-                child.setFocusableInTouchMode(visibility == View.VISIBLE);
+                child.setText(initText, false);
                 // add
                 addView(child, i);
             }
@@ -488,25 +465,24 @@ class ChannelLinearLayoutChild extends LinearLayout {
             else {
                 ChannelUtil.logE("update[old] => initText = " + initText);
                 View child = getChildAt(i);
-                // focus
-                child.setFocusable(visibility == View.VISIBLE);
-                child.setFocusableInTouchMode(visibility == View.VISIBLE);
                 // setText
-                ((ChannelTextView) child).setText(initText, temp.initSelect(), true);
+                ((ChannelTextView) child).setText(initText, false, true);
             }
         }
         ChannelUtil.logE("**********************");
     }
 
+    protected final void refresh(@IntRange(from = 0, to = 2) int index, @NonNull List<ChannelModel> list) {
+
+    }
+
     /*************/
 
-    protected final void callback(@NonNull ChannelTextView view, int direction) {
+    protected final void callback(int position, int direction) {
 
-        int position = indexOfChild(view);
         ChannelUtil.logE("callback33 => position = " + position);
-        if (position < 0) {
+        if (position < 0)
             return;
-        }
 
         int count = getChildCount();
         ChannelUtil.logE("callback33 => count = " + count);
@@ -514,10 +490,8 @@ class ChannelLinearLayoutChild extends LinearLayout {
             return;
         }
 
-        ChannelUtil.logE("callback33 => text = " + view.getText());
-        try {
-            ((ChannelScrollView) getParent()).callback(position, direction);
-        } catch (Exception e) {
-        }
+        if (null == getParent() || !(getParent() instanceof ChannelScrollView))
+            return;
+        ((ChannelScrollView) getParent()).callback(position, direction);
     }
 }

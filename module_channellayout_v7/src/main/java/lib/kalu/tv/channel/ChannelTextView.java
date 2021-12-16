@@ -77,63 +77,50 @@ class ChannelTextView extends TextView {
 ////        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 //    }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        ChannelUtil.logE("onDraw => " + isSelected() + "-" + hasFocus());
-        if (isHightlight()) {
-            getPaint().setColor(getResources().getColor(R.color.module_channellayout_color_ffc700));
-            int height = getHeight();
-            int width = getWidth();
-            Paint.FontMetrics metrics = getPaint().getFontMetrics();
-            float fontHeight = (metrics.bottom - metrics.top) * 0.6f;
-            String text = String.valueOf(getText());
-            float fontWidth = getPaint().measureText(text);
-            float equal = fontWidth / text.length();
-            RectF rectF1 = new RectF();
-            rectF1.left = (width / 2 - fontWidth / 2) - equal * 2;
-            rectF1.top = height / 2 - fontHeight / 2 + equal / 10;
-            rectF1.right = rectF1.left + equal * 2 / 4;
-            rectF1.bottom = height - (height / 2 - fontHeight / 2);
-            canvas.drawRect(rectF1, getPaint());
-            RectF rectF2 = new RectF();
-            rectF2.left = rectF1.right + rectF1.width() / 3;
-            rectF2.top = rectF1.top;
-            rectF2.right = rectF2.left + rectF1.width() / 4;
-            rectF2.bottom = rectF1.bottom;
-            canvas.drawRect(rectF2, getPaint());
-        }
+//        ChannelUtil.logE("onDraw => " + isSelected() + "-" + hasFocus());
+//        if (isHightlight()) {
+//            getPaint().setColor(getResources().getColor(R.color.module_channellayout_color_ffc700));
+//            int height = getHeight();
+//            int width = getWidth();
+//            Paint.FontMetrics metrics = getPaint().getFontMetrics();
+//            float fontHeight = (metrics.bottom - metrics.top) * 0.6f;
+//            String text = String.valueOf(getText());
+//            float fontWidth = getPaint().measureText(text);
+//            float equal = fontWidth / text.length();
+//            RectF rectF1 = new RectF();
+//            rectF1.left = (width / 2 - fontWidth / 2) - equal * 2;
+//            rectF1.top = height / 2 - fontHeight / 2 + equal / 10;
+//            rectF1.right = rectF1.left + equal * 2 / 4;
+//            rectF1.bottom = height - (height / 2 - fontHeight / 2);
+//            canvas.drawRect(rectF1, getPaint());
+//            RectF rectF2 = new RectF();
+//            rectF2.left = rectF1.right + rectF1.width() / 3;
+//            rectF2.top = rectF1.top;
+//            rectF2.right = rectF2.left + rectF1.width() / 4;
+//            rectF2.bottom = rectF1.bottom;
+//            canvas.drawRect(rectF2, getPaint());
+//        }
     }
 
-    @Override
-    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        super.onFocusChanged(focused, direction, previouslyFocusedRect);
-        ChannelUtil.logE("onFocusChanged => isSelected = " + isSelected() + ", focus = " + focused + ", direction = " + direction + ", start = " + -1 + ", text = " + getText());
-        if (isSelected() && !focused) {
-            setTextColor(mTextColorSelect);
-            setBackgroundResource(mBackgroundResourceSelect);
-        } else if (focused) {
-
-            // 监听
-            try {
-                boolean activated = (boolean) getTag(R.id.module_channellayout_id_repeat);
-                if (activated) {
-                    setTag(R.id.module_channellayout_id_repeat, false);
-                } else {
-                    ((ChannelLinearLayoutChild) getParent()).callback(this, Integer.MIN_VALUE);
-                }
-            } catch (Exception e) {
-            }
-
-            setTextColor(mTextColorFocus);
-            setBackgroundResource(mBackgroundResourceFocus);
-        } else {
-            setTextColor(mTextColorDefault);
-            setBackgroundResource(mBackgroundResourceDefault);
-        }
-    }
+//    @Override
+//    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+//        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+//        ChannelUtil.logE("onFocusChanged => isSelected = " + isSelected() + ", focus = " + focused + ", direction = " + direction + ", start = " + -1 + ", text = " + getText());
+//        if (isSelected() && !focused) {
+//            setTextColor(mTextColorSelect);
+//            setBackgroundResource(mBackgroundResourceSelect);
+//        } else if (focused) {
+//            setTextColor(mTextColorFocus);
+//            setBackgroundResource(mBackgroundResourceFocus);
+//        } else {
+//            setTextColor(mTextColorDefault);
+//            setBackgroundResource(mBackgroundResourceDefault);
+//        }
+//    }
 
     @Override
     public void clearFocus() {
@@ -159,27 +146,38 @@ class ChannelTextView extends TextView {
         }
     }
 
-    public final void hightlight() {
-        setTag(R.id.module_channellayout_id_repeat, true);
-        hightlight(true);
-    }
-
-    public final void hightlight(boolean enable) {
-        setSelected(enable);
-        setTextColor(enable ? mTextColorSelect : mTextColorDefault);
-        setBackgroundResource(enable ? mBackgroundResourceSelect : mBackgroundResourceDefault);
-    }
-
     protected final boolean isHightlight() {
-        return hasFocus() || isSelected();
+        return isSelected();
+    }
+
+    protected final void select() {
+        setSelected(true);
+        setTextColor(mTextColorSelect);
+        setBackgroundResource(mBackgroundResourceSelect);
+        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_hightlight_select, 0, 0, 0);
+    }
+
+    protected final void focus() {
+        setSelected(true);
+        setTextColor(mTextColorFocus);
+        setBackgroundResource(mBackgroundResourceFocus);
+        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_hightlight_normal, 0, 0, 0);
+    }
+
+    protected final void reset() {
+        setSelected(false);
+        setTextColor(mTextColorDefault);
+        setBackgroundResource(mBackgroundResourceDefault);
+        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_hightlight_normal, 0, 0, 0);
     }
 
     /*************************/
 
     private final void init() {
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-        setClickable(true);
+        setClickable(false);
+        setLongClickable(false);
+        setFocusable(false);
+        setFocusableInTouchMode(false);
         setSelected(false);
         setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         setBackgroundColor(Color.TRANSPARENT);
@@ -187,7 +185,8 @@ class ChannelTextView extends TextView {
         setEllipsize(TextUtils.TruncateAt.MARQUEE);
         setSingleLine();
         setHorizontallyScrolling(true);
-        setTag(R.id.module_channellayout_id_repeat, false);
+        reset();
+//        setTag(R.id.module_channellayout_id_repeat, false);
     }
 
     /*************************/

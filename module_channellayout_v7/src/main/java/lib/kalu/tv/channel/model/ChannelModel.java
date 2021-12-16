@@ -1,5 +1,6 @@
 package lib.kalu.tv.channel.model;
 
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Keep;
 
 @Keep
@@ -11,5 +12,6 @@ public interface ChannelModel {
 
     CharSequence initText();
 
-    boolean initSelect();
+    @DrawableRes
+    int drawableLeft();
 }
