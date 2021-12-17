@@ -2,11 +2,13 @@ package lib.kalu.tv.channel;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.IntDef;
 import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -68,7 +70,7 @@ public class ChannelLayout extends LinearLayout {
         if (column == count) {
             // add
             if (null == getChildAt(column)) {
-                ChannelUtil.logE("ChannelLayout[add] => add");
+                ChannelUtil.logE("addItem[news1] => count = " + count + ", column = " + column + ", list = " + list);
                 ImageView child = new ImageView(getContext());
                 int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_arrow_width);
                 child.setLayoutParams(new LinearLayout.LayoutParams(width, LayoutParams.MATCH_PARENT));
@@ -82,7 +84,7 @@ public class ChannelLayout extends LinearLayout {
             }
             // reset
             else {
-                ChannelUtil.logE("ChannelLayout[add] => reset");
+                ChannelUtil.logE("addItem[reset1] => count = " + count + ", column = " + column + ", list = " + list);
                 View child = getChildAt(column);
                 LinearLayout.LayoutParams layoutParams = (LayoutParams) child.getLayoutParams();
                 int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_arrow_width);
@@ -92,23 +94,22 @@ public class ChannelLayout extends LinearLayout {
         }
         // item
         else {
-
             // add
             if (null == getChildAt(column)) {
-                ChannelUtil.logE("ChannelLayout[add] => add");
+                ChannelUtil.logE("addItem[news0] => count = " + count + ", column = " + column + ", list = " + list);
                 ChannelScrollView child = new ChannelScrollView(getContext());
                 child.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
-                child.update(column, list);
+                child.update(list);
                 addView(child, column);
             }
             // reset
             else {
-                ChannelUtil.logE("ChannelLayout[add] => reset");
+                ChannelUtil.logE("addItem[reset0] => count = " + count + ", column = " + column + ", list = " + list);
                 View child = getChildAt(column);
                 LinearLayout.LayoutParams layoutParams = (LayoutParams) child.getLayoutParams();
                 layoutParams.width = LayoutParams.WRAP_CONTENT;
                 child.setLayoutParams(layoutParams);
-                ((ChannelScrollView) child).update(column, list);
+                ((ChannelScrollView) child).update(list);
             }
         }
     }
@@ -158,7 +159,7 @@ public class ChannelLayout extends LinearLayout {
 
         View childAt = ((ChannelScrollView) child).getChildAt(0);
         ChannelUtil.logE("refresh => childAt = " + childAt);
-        if (null == childAt || !(child instanceof ChannelLinearLayoutChild))
+        if (null == childAt || !(childAt instanceof ChannelLinearLayoutChild))
             return;
 
         addItem(count, column, list);
@@ -259,6 +260,31 @@ public class ChannelLayout extends LinearLayout {
             break;
         }
         ChannelUtil.logE("select => ****************************");
+    }
+
+    @Keep
+    public final void setVisibility(@NonNull int column, @NonNull int visibility) {
+
+        if (column < 0)
+            return;
+
+        int count = getChildCount();
+        ChannelUtil.logE("select => count = " + count);
+        if (count == 0)
+            return;
+
+        if (column + 1 > count)
+            return;
+
+        View child = getChildAt(column);
+        if (null == child)
+            return;
+
+        ViewGroup.LayoutParams layoutParams = child.getLayoutParams();
+        if (null == layoutParams)
+            return;
+        layoutParams.width = visibility == View.VISIBLE ? ViewGroup.LayoutParams.WRAP_CONTENT : 0;
+        child.setLayoutParams(layoutParams);
     }
 
     /*************************/

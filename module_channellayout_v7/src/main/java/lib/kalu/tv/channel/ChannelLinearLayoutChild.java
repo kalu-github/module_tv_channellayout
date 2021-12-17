@@ -392,13 +392,32 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
         if (null != viewNext) {
             if (requestFocus) {
+                // down
+                if (direction == View.FOCUS_DOWN) {
+                    int bottom = viewNext.getBottom();
+                    int scrollY = ((ViewGroup) getParent()).getScrollY();
+                    int measuredHeight = ((ViewGroup) getParent()).getMeasuredHeight() + scrollY;
+                    if (bottom > measuredHeight) {
+                        ((ChannelScrollView) getParent()).smoothScrollBy(0, Math.abs(bottom - measuredHeight));
+                    }
+                    ChannelUtil.logE("nextFocus[viewNext][down] => focus");
+                }
+                // up
+                else if (direction == View.FOCUS_UP) {
+                    int top = viewNext.getTop();
+                    int scrollY = ((ViewGroup) getParent()).getScrollY();
+                    if (top < scrollY) {
+                        ((ChannelScrollView) getParent()).smoothScrollBy(0, -Math.abs(scrollY - top));
+                    }
+                    ChannelUtil.logE("nextFocus[viewNext][up] => focus");
+                }
+                // null
+                else {
+                    ChannelUtil.logE("nextFocus[viewNext][null] => focus");
+                }
 
                 callback(next, direction);
-                ChannelUtil.logE("nextFocus[viewBefore] => focus");
                 ((ChannelTextView) viewNext).focus();
-
-                int top = viewNext.getTop();
-                ((ChannelScrollView) getParent()).scrollTo(0, top);
 
             } else {
                 ChannelUtil.logE("nextFocus[viewBefore] => select");
@@ -427,20 +446,23 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
     /*************/
 
-    protected final void update(@IntRange(from = 0, to = 2) int index, @NonNull List<ChannelModel> list) {
+    protected final void update(@NonNull List<ChannelModel> list) {
 
-        if (null == list || list.size() == 0)
+        if (null == list || list.size() == 0) {
+            removeAllViews();
             return;
+        }
 
         ChannelUtil.logE("**********************");
 
         int count = getChildCount();
         int size = list.size();
-        ChannelUtil.logE("update => count = " + count + ", size = " + size);
+        int max = Math.max(size, count);
+        ChannelUtil.logE("update => count = " + count + ", size = " + size + ", max = " + max);
 
+        // 更新
         for (int i = 0; i < size; i++) {
 
-            ChannelUtil.logE("update => i = " + i);
             ChannelModel temp = list.get(i);
             CharSequence initText = temp.initText();
             if (null == initText || initText.length() == 0)
@@ -448,7 +470,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
             // add
             if (null == getChildAt(i)) {
-                ChannelUtil.logE("update[new] => initText = " + initText);
+                ChannelUtil.logE("update[新增] => i = " + i + " initText = " + initText);
                 ChannelTextView child = new ChannelTextView(getContext());
                 int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_height);
                 child.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, width));
@@ -463,17 +485,38 @@ class ChannelLinearLayoutChild extends LinearLayout {
             }
             // reset
             else {
-                ChannelUtil.logE("update[old] => initText = " + initText);
+                ChannelUtil.logE("update[刷新] => i = " + i + " initText = " + initText);
                 View child = getChildAt(i);
                 // setText
                 ((ChannelTextView) child).setText(initText, false, true);
             }
         }
+
+        // 移除
+        for (int i = size; i < count; i++) {
+
+            View child = getChildAt(i);
+            ChannelUtil.logE("update[删除] => i = " + i + ", child = " + child);
+            if (null == child)
+                continue;
+            if (null != child && child instanceof ChannelTextView) {
+                boolean hightlight = ((ChannelTextView) child).isHightlight();
+                if (hightlight) {
+                    View update = getChildAt(size - 1);
+                    if (null != update && update instanceof ChannelTextView) {
+                        ((ChannelTextView) update).select();
+                        break;
+                    }
+                }
+            }
+            ChannelUtil.logE("update[删除] => i = " + i + " initText = " + ((ChannelTextView) child).getText());
+        }
+        try {
+            removeViews(size, count - size);
+        } catch (Exception e) {
+        }
+
         ChannelUtil.logE("**********************");
-    }
-
-    protected final void refresh(@IntRange(from = 0, to = 2) int index, @NonNull List<ChannelModel> list) {
-
     }
 
     /*************/

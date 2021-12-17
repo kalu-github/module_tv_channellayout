@@ -82,7 +82,7 @@ class ChannelScrollView extends ScrollView {
 
     /********************/
 
-    protected final void update(@IntRange(from = 0, to = 2) int index, @NonNull List<ChannelModel> list) {
+    protected final void update(@NonNull List<ChannelModel> list) {
 
         // add
         if (null == getChildAt(0)) {
@@ -91,7 +91,7 @@ class ChannelScrollView extends ScrollView {
             ScrollView.LayoutParams params = new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, height);
             child.setLayoutParams(params);
             child.setBackgroundResource(R.drawable.module_channellayout_ic_shape_background_column0);
-            child.update(index, list);
+            child.update(list);
             // add
             addView(child, 0);
         }
@@ -99,7 +99,7 @@ class ChannelScrollView extends ScrollView {
         else {
             View child = getChildAt(0);
             child.setBackgroundResource(R.drawable.module_channellayout_ic_shape_background_column0);
-            ((ChannelLinearLayoutChild) child).update(index, list);
+            ((ChannelLinearLayoutChild) child).update(list);
         }
     }
 

@@ -33,5 +33,6 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
 //    implementation 'com.google.android.material:material:1.3.0'
 
-    implementation project(path: ':module_channellayout_v7')
+//    implementation project(path: ':module_channellayout_v7')
+    api files('libs/lib_tv_channellayout_v7_release_20211217.aar')
 }
