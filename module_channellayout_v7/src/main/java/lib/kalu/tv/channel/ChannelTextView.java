@@ -78,51 +78,6 @@ class ChannelTextView extends TextView {
 //    }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-//        ChannelUtil.logE("onDraw => " + isSelected() + "-" + hasFocus());
-//        if (isHightlight()) {
-//            getPaint().setColor(getResources().getColor(R.color.module_channellayout_color_ffc700));
-//            int height = getHeight();
-//            int width = getWidth();
-//            Paint.FontMetrics metrics = getPaint().getFontMetrics();
-//            float fontHeight = (metrics.bottom - metrics.top) * 0.6f;
-//            String text = String.valueOf(getText());
-//            float fontWidth = getPaint().measureText(text);
-//            float equal = fontWidth / text.length();
-//            RectF rectF1 = new RectF();
-//            rectF1.left = (width / 2 - fontWidth / 2) - equal * 2;
-//            rectF1.top = height / 2 - fontHeight / 2 + equal / 10;
-//            rectF1.right = rectF1.left + equal * 2 / 4;
-//            rectF1.bottom = height - (height / 2 - fontHeight / 2);
-//            canvas.drawRect(rectF1, getPaint());
-//            RectF rectF2 = new RectF();
-//            rectF2.left = rectF1.right + rectF1.width() / 3;
-//            rectF2.top = rectF1.top;
-//            rectF2.right = rectF2.left + rectF1.width() / 4;
-//            rectF2.bottom = rectF1.bottom;
-//            canvas.drawRect(rectF2, getPaint());
-//        }
-    }
-
-//    @Override
-//    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-//        super.onFocusChanged(focused, direction, previouslyFocusedRect);
-//        ChannelUtil.logE("onFocusChanged => isSelected = " + isSelected() + ", focus = " + focused + ", direction = " + direction + ", start = " + -1 + ", text = " + getText());
-//        if (isSelected() && !focused) {
-//            setTextColor(mTextColorSelect);
-//            setBackgroundResource(mBackgroundResourceSelect);
-//        } else if (focused) {
-//            setTextColor(mTextColorFocus);
-//            setBackgroundResource(mBackgroundResourceFocus);
-//        } else {
-//            setTextColor(mTextColorDefault);
-//            setBackgroundResource(mBackgroundResourceDefault);
-//        }
-//    }
-
-    @Override
     public void clearFocus() {
         setSelected(false);
         super.clearFocus();
@@ -140,6 +95,7 @@ class ChannelTextView extends TextView {
 
     protected final void setText(@NonNull CharSequence text, boolean select, boolean invalidate) {
         super.setText(text);
+        setSelected(select);
         setTextColor(select ? mTextColorSelect : mTextColorDefault);
         if (invalidate) {
             invalidate();

@@ -488,7 +488,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 ChannelUtil.logE("update[刷新] => i = " + i + " initText = " + initText);
                 View child = getChildAt(i);
                 // setText
-                ((ChannelTextView) child).setText(initText, false, true);
+                ((ChannelTextView) child).setText(initText, ((ChannelTextView) child).isHightlight(), true);
             }
         }
 
@@ -502,9 +502,9 @@ class ChannelLinearLayoutChild extends LinearLayout {
             if (null != child && child instanceof ChannelTextView) {
                 boolean hightlight = ((ChannelTextView) child).isHightlight();
                 if (hightlight) {
-                    View update = getChildAt(size - 1);
-                    if (null != update && update instanceof ChannelTextView) {
-                        ((ChannelTextView) update).select();
+                    View select = getChildAt(size - 1);
+                    if (null != select && select instanceof ChannelTextView) {
+                        ((ChannelTextView) select).select();
                         break;
                     }
                 }
@@ -514,6 +514,13 @@ class ChannelLinearLayoutChild extends LinearLayout {
         try {
             removeViews(size, count - size);
         } catch (Exception e) {
+        }
+
+        if (count == 0) {
+            View select = getChildAt(0);
+            if (null != select && select instanceof ChannelTextView) {
+                ((ChannelTextView) select).select();
+            }
         }
 
         ChannelUtil.logE("**********************");
