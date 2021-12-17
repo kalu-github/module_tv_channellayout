@@ -61,53 +61,38 @@ class ChannelTextView extends TextView {
         init();
     }
 
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        int height = MeasureSpec.getSize(heightMeasureSpec);
-//        CharSequence text = getText();
-//        if (null == text) {
-//            text = "";
-//        }
-//        int width = (int) getPaint().measureText(String.valueOf(text));
-//        if (width > 0) {
-//            width += getPaddingLeft();
-//            width += getPaddingRight();
-//        }
-//        setMeasuredDimension(width, height);
-////        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//    }
-
     @Override
-    public void clearFocus() {
-        setSelected(false);
-        super.clearFocus();
+    public void setLongClickable(boolean longClickable) {
+        super.setLongClickable(false);
     }
 
     @Override
-    public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
-        setSelected(false);
-        return super.requestFocus(direction, previouslyFocusedRect);
+    public boolean isLongClickable() {
+        return false;
     }
 
-    protected final void setText(@NonNull CharSequence text, boolean select) {
-        setText(text, select, false);
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        super.setText(text, type);
+        reset(false);
     }
 
-    protected final void setText(@NonNull CharSequence text, boolean select, boolean invalidate) {
-        super.setText(text);
+    protected final void select(boolean select) {
         setSelected(select);
-        setTextColor(select ? mTextColorSelect : mTextColorDefault);
-        if (invalidate) {
-            invalidate();
-        }
+        setTextColor(mTextColorSelect);
+        setBackgroundResource(mBackgroundResourceSelect);
+        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_hightlight_select, 0, 0, 0);
     }
 
-    protected final boolean isHightlight() {
-        return isSelected();
+    protected final void keep(boolean select) {
+        setSelected(select);
+        setTextColor(mTextColorDefault);
+        setBackgroundResource(mBackgroundResourceDefault);
+        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_hightlight_normal, 0, 0, 0);
     }
 
-    protected final void select() {
-        setSelected(true);
+    protected final void light(boolean select) {
+        setSelected(select);
         setTextColor(mTextColorSelect);
         setBackgroundResource(mBackgroundResourceSelect);
         setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_hightlight_select, 0, 0, 0);
@@ -120,29 +105,43 @@ class ChannelTextView extends TextView {
         setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_hightlight_normal, 0, 0, 0);
     }
 
-    protected final void reset() {
-        setSelected(false);
+    protected final void reset(boolean select) {
+        setSelected(select);
+        setClickable(true);
         setTextColor(mTextColorDefault);
         setBackgroundResource(mBackgroundResourceDefault);
         setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_hightlight_normal, 0, 0, 0);
     }
 
+    protected final void click() {
+        setSelected(true);
+        setClickable(false);
+        setTextColor(mTextColorFocus);
+        setBackgroundResource(mBackgroundResourceFocus);
+        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_hightlight_normal, 0, 0, 0);
+    }
+
+    //
+//    protected final void select() {
+//        setSelected(true);
+//        setTextColor(mTextColorSelect);
+//        setBackgroundResource(mBackgroundResourceSelect);
+//        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_hightlight_select, 0, 0, 0);
+//    }
+//
+
     /*************************/
 
     private final void init() {
-        setClickable(false);
-        setLongClickable(false);
         setFocusable(false);
         setFocusableInTouchMode(false);
-        setSelected(false);
         setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         setBackgroundColor(Color.TRANSPARENT);
         setMarqueeRepeatLimit(Integer.MAX_VALUE);
         setEllipsize(TextUtils.TruncateAt.MARQUEE);
         setSingleLine();
         setHorizontallyScrolling(true);
-        reset();
-//        setTag(R.id.module_channellayout_id_repeat, false);
+        reset(false);
     }
 
     /*************************/

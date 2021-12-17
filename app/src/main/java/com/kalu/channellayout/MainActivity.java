@@ -106,6 +106,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onClick(@NonNull int column, @NonNull int position) {
+                Log.e("TEST", "onClick => column = " + column + ", position = " + position);
+            }
+
+            @Override
             public void onMove(@NonNull int column) {
                 channelLayout.setVisibility(2, column == 2 ? View.VISIBLE : View.GONE);
                 channelLayout.setVisibility(3, column == 2 ? View.GONE : View.VISIBLE);

@@ -256,7 +256,7 @@ public class ChannelLayout extends LinearLayout {
             ChannelUtil.logE("select => layoutChildChildCount = " + layoutChildChildCount);
             if (position + 1 > layoutChildChildCount)
                 continue;
-            layoutChild.select(position, requestFocus);
+            layoutChild.select(column, position, requestFocus);
             break;
         }
         ChannelUtil.logE("select => ****************************");
@@ -320,6 +320,10 @@ public class ChannelLayout extends LinearLayout {
             // init
             else if (direction == Integer.MIN_VALUE) {
                 onChannelChangeListener.onInit(column, position);
+            }
+            // click
+            else if (direction == Integer.MAX_VALUE) {
+                onChannelChangeListener.onClick(column, position);
             }
             // focus
             else {

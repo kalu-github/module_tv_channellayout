@@ -10,5 +10,7 @@ public interface OnChannelChangeListener {
 
     void onFocus(@NonNull int column, @NonNull int position);
 
+    void onClick(@NonNull int column, @NonNull int position);
+
     void onMove(@NonNull int column);
 }
