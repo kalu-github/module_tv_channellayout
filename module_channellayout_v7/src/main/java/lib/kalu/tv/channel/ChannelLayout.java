@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -62,6 +63,44 @@ public class ChannelLayout extends LinearLayout {
         setFocusableInTouchMode(false);
         setOrientation(LinearLayout.HORIZONTAL);
         setBackgroundColor(Color.TRANSPARENT);
+    }
+
+    private final void nextUp(@NonNull int column, @NonNull int position) {
+        if (position < 0 || column < 0)
+            return;
+        int count = getChildCount();
+        if (count == 0)
+            return;
+        if (column + 1 > count)
+            return;
+        for (int i = 0; i < count; i++) {
+            if (i != column)
+                continue;
+            View child = getChildAt(i);
+            if (null == child || !(child instanceof ChannelScrollView))
+                continue;
+            ((ChannelScrollView) child).nextUp(column, position);
+            break;
+        }
+    }
+
+    private final void nextDown(@NonNull int column, @NonNull int position) {
+        if (position < 0 || column < 0)
+            return;
+        int count = getChildCount();
+        if (count == 0)
+            return;
+        if (column + 1 > count)
+            return;
+        for (int i = 0; i < count; i++) {
+            if (i != column)
+                continue;
+            View child = getChildAt(i);
+            if (null == child || !(child instanceof ChannelScrollView))
+                continue;
+            ((ChannelScrollView) child).nextDown(column, position);
+            break;
+        }
     }
 
     private final void addItem(int count, int column, @NonNull List<ChannelModel> list) {
@@ -251,36 +290,38 @@ public class ChannelLayout extends LinearLayout {
 
         int count = getChildCount();
         ChannelUtil.logE("getClickablePosition => count = " + count);
-        if (count == 0)
+        if (count <= 0)
             return -1;
 
         if (column + 1 > count)
             return -1;
 
-        View child = getChildAt(column);
-        if (null == child || !(child instanceof ChannelScrollView))
+        View child1 = getChildAt(column);
+        if (null == child1 || !(child1 instanceof ChannelScrollView))
             return -1;
 
-        ChannelScrollView scrollView = (ChannelScrollView) child;
-        int childCount = scrollView.getChildCount();
-        if (childCount != 1)
+        int count1 = ((ChannelScrollView) child1).getChildCount();
+        if (count1 != 1)
             return -1;
 
-        View childAt = scrollView.getChildAt(0);
-        if (null == childAt || !(childAt instanceof ChannelLinearLayoutChild))
+        View child2 = ((ChannelScrollView) child1).getChildAt(0);
+        if (null == child2 || !(child2 instanceof ChannelLinearLayoutChild))
             return -1;
 
-        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) childAt;
-        int layoutChildChildCount = layoutChild.getChildCount();
-        if (layoutChildChildCount < 0)
+        int count2 = ((ChannelLinearLayoutChild) child2).getChildCount();
+        ChannelUtil.logE("getClickablePosition => count2 = " + count2);
+        if (count2 < 0)
             return -1;
 
         int position = -1;
-        for (int i = 0; i < childCount; i++) {
-            View temp = layoutChild.getChildAt(i);
-            if (null == temp)
+        for (int i = 0; i < count2; i++) {
+            View child3 = ((ChannelLinearLayoutChild) child2).getChildAt(i);
+            ChannelUtil.logE("getClickablePosition => view = " + child3 + ", count2 = " + count2);
+            if (null == child3)
                 continue;
-            if (!temp.isClickable()) {
+            boolean clickable = child3.isClickable();
+            ChannelUtil.logE("getClickablePosition => column = " + column + ", i = " + i + ", clickable = " + clickable + ", text = " + ((TextView) child3).getText());
+            if (!clickable) {
                 position = i;
                 break;
             }
@@ -329,8 +370,7 @@ public class ChannelLayout extends LinearLayout {
         int count = getChildCount();
         if (position + 1 >= count)
             return;
-
-        select(column, position + 1, true);
+        nextDown(column, position);
     }
 
     @Keep
@@ -338,8 +378,7 @@ public class ChannelLayout extends LinearLayout {
         int position = getClickablePosition(column);
         if (position <= 0)
             return;
-
-        select(column, position - 1, true);
+        nextUp(column, position);
     }
 
     /*************************/
@@ -378,6 +417,14 @@ public class ChannelLayout extends LinearLayout {
             }
             // click
             else if (direction == Integer.MAX_VALUE) {
+                onChannelChangeListener.onClick(column, position);
+            }
+            // nextUp
+            else if (direction == 1111) {
+                onChannelChangeListener.onClick(column, position);
+            }
+            // nextDown
+            else if (direction == 2222) {
                 onChannelChangeListener.onClick(column, position);
             }
             // focus

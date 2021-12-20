@@ -103,6 +103,33 @@ class ChannelScrollView extends ScrollView {
         }
     }
 
+    protected final void nextUp(@NonNull int column, @NonNull int position) {
+        if (position <= 0)
+            return;
+        int count1 = getChildCount();
+        if (count1 != 1)
+            return;
+        View childAt = getChildAt(0);
+        if (null == childAt || !(childAt instanceof ChannelLinearLayoutChild))
+            return;
+        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) childAt;
+        layoutChild.nextUp(column, position);
+    }
+
+    protected final void nextDown(@NonNull int column, @NonNull int position) {
+        int count1 = getChildCount();
+        if (count1 != 1)
+            return;
+        View childAt = getChildAt(0);
+        if (null == childAt || !(childAt instanceof ChannelLinearLayoutChild))
+            return;
+        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) childAt;
+        int count2 = layoutChild.getChildCount();
+        if (position + 1 > count2)
+            return;
+        layoutChild.nextDown(column, position);
+    }
+
     /*************/
 
     protected final void callback(@NonNull int position, int direction) {

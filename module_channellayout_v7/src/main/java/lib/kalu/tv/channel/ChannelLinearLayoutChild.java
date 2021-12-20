@@ -327,7 +327,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
     private final void nextFocus(@NonNull int column, @NonNull int position, @NonNull int direction, boolean focus) {
 
-        if (direction != View.FOCUS_DOWN && direction != View.FOCUS_UP && direction != View.FOCUS_LEFT && direction != View.FOCUS_RIGHT && direction != Integer.MIN_VALUE && direction != Integer.MAX_VALUE)
+        if (direction != 1111 && direction != 2222 && direction != View.FOCUS_DOWN && direction != View.FOCUS_UP && direction != View.FOCUS_LEFT && direction != View.FOCUS_RIGHT && direction != Integer.MIN_VALUE && direction != Integer.MAX_VALUE)
             return;
 
         ChannelUtil.logE("nextFocus => ****************************");
@@ -337,8 +337,16 @@ class ChannelLinearLayoutChild extends LinearLayout {
         if (direction == View.FOCUS_DOWN) {
             next = position + 1;
         }
+        // nextDown
+        else if (direction == 2222) {
+            next = position + 1;
+        }
         // up
         else if (direction == View.FOCUS_UP) {
+            next = position - 1;
+        }
+        // nextUp
+        else if (direction == 1111) {
             next = position - 1;
         }
         // init
@@ -383,7 +391,10 @@ class ChannelLinearLayoutChild extends LinearLayout {
             } else {
                 boolean clickable = viewBefore.isClickable();
                 ChannelUtil.logE("nextFocus[viewBefore] => clickable = " + clickable + ", text = " + ((TextView) viewBefore).getText());
-                if (clickable) {
+
+                if (direction == 1111 || direction == 2222) {
+                    ((ChannelTextView) viewBefore).reset(false);
+                } else if (clickable) {
                     ((ChannelTextView) viewBefore).reset(direction != View.FOCUS_DOWN && direction != View.FOCUS_UP);
                 } else {
                     ((ChannelTextView) viewBefore).light(false);
@@ -430,6 +441,14 @@ class ChannelLinearLayoutChild extends LinearLayout {
             else if (direction == Integer.MIN_VALUE && focus) {
                 ((ChannelTextView) viewNext).click();
             }
+            // nextUp
+            else if (direction == 1111 && focus) {
+                ((ChannelTextView) viewNext).click();
+            }
+            // nextDown
+            else if (direction == 2222 && focus) {
+                ((ChannelTextView) viewNext).click();
+            }
             // move
             else if (focus) {
                 ((ChannelTextView) viewNext).focus();
@@ -462,6 +481,22 @@ class ChannelLinearLayoutChild extends LinearLayout {
             requestFocus();
         }
         nextFocus(column, position, Integer.MIN_VALUE, requestFocus);
+    }
+
+    protected final void nextUp(@NonNull int column, @NonNull int position) {
+        int count = getChildCount();
+        if (position + 1 > count)
+            return;
+
+        nextFocus(column, position, 1111, true);
+    }
+
+    protected final void nextDown(@NonNull int column, @NonNull int position) {
+        int count = getChildCount();
+        if (position + 1 > count)
+            return;
+
+        nextFocus(column, position, 2222, true);
     }
 
     /*************/
