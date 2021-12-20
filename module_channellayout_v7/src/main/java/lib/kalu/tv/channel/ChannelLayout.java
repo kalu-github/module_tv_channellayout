@@ -165,50 +165,6 @@ public class ChannelLayout extends LinearLayout {
         addItem(count, column, list);
     }
 
-    //    private final void refresh(int column, int visibility) {
-//
-//        if (column < 0)
-//            return;
-//
-//        int count = getChildCount();
-//        if (column + 1 > count)
-//            return;
-//
-//        // arrow
-//        if (column == 3) {
-//            try {
-//                View child = getChildAt(column);
-//                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) child.getLayoutParams();
-//                int width;
-//                if (visibility == View.VISIBLE) {
-//                    width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_arrow_width);
-//                } else {
-//                    width = 0;
-//                }
-//                layoutParams.width = width;
-//                child.setLayoutParams(layoutParams);
-//            } catch (Exception e) {
-//            }
-//        }
-//        // item
-//        else {
-//            try {
-//                ChannelScrollView child = (ChannelScrollView) getChildAt(column);
-//                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) child.getLayoutParams();
-//                int width;
-//                if (visibility == View.VISIBLE) {
-//                    width = LayoutParams.WRAP_CONTENT;
-//                } else {
-//                    width = 0;
-//                }
-//                layoutParams.width = width;
-//                child.setLayoutParams(layoutParams);
-//                child.refresh(visibility);
-//            } catch (Exception e) {
-//            }
-//        }
-//    }
-
     @Keep
     public final void select(@NonNull int column, @NonNull int position) {
         select(column, position, false);
@@ -285,6 +241,105 @@ public class ChannelLayout extends LinearLayout {
             return;
         layoutParams.width = visibility == View.VISIBLE ? ViewGroup.LayoutParams.WRAP_CONTENT : 0;
         child.setLayoutParams(layoutParams);
+    }
+
+    @Keep
+    public final int getClickablePosition(@NonNull int column) {
+
+        if (column < 0)
+            return -1;
+
+        int count = getChildCount();
+        ChannelUtil.logE("getClickablePosition => count = " + count);
+        if (count == 0)
+            return -1;
+
+        if (column + 1 > count)
+            return -1;
+
+        View child = getChildAt(column);
+        if (null == child || !(child instanceof ChannelScrollView))
+            return -1;
+
+        ChannelScrollView scrollView = (ChannelScrollView) child;
+        int childCount = scrollView.getChildCount();
+        if (childCount != 1)
+            return -1;
+
+        View childAt = scrollView.getChildAt(0);
+        if (null == childAt || !(childAt instanceof ChannelLinearLayoutChild))
+            return -1;
+
+        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) childAt;
+        int layoutChildChildCount = layoutChild.getChildCount();
+        if (layoutChildChildCount < 0)
+            return -1;
+
+        int position = -1;
+        for (int i = 0; i < childCount; i++) {
+            View temp = layoutChild.getChildAt(i);
+            if (null == temp)
+                continue;
+            if (!temp.isClickable()) {
+                position = i;
+                break;
+            }
+        }
+        return position;
+    }
+
+    @Keep
+    public final int getChildCount(@NonNull int column) {
+
+        if (column < 0)
+            return -1;
+
+        int count = getChildCount();
+        ChannelUtil.logE("getChildCount => count = " + count);
+        if (count == 0)
+            return -1;
+
+        if (column + 1 > count)
+            return -1;
+
+        View child = getChildAt(column);
+        if (null == child || !(child instanceof ChannelScrollView))
+            return -1;
+
+        ChannelScrollView scrollView = (ChannelScrollView) child;
+        int childCount = scrollView.getChildCount();
+        if (childCount != 1)
+            return -1;
+
+        View childAt = scrollView.getChildAt(0);
+        if (null == childAt || !(childAt instanceof ChannelLinearLayoutChild))
+            return -1;
+
+        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) childAt;
+        int layoutChildChildCount = layoutChild.getChildCount();
+        return layoutChildChildCount;
+    }
+
+    @Keep
+    public final void selectNextDown(@NonNull int column) {
+        int position = getClickablePosition(column);
+        if (position < 0)
+            return;
+
+        int count = getChildCount();
+        if (position + 1 >= count)
+            return;
+
+        select(column, position + 1, true);
+    }
+
+    @Keep
+    public final void selectNextUp(@NonNull int column) {
+        int position = getClickablePosition(column);
+        if (position <= 0)
+            return;
+
+        select(column, position - 1, true);
     }
 
     /*************************/
