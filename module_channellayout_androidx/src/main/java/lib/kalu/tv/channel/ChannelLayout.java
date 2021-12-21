@@ -49,11 +49,43 @@ public class ChannelLayout extends LinearLayout {
         super.setOrientation(LinearLayout.HORIZONTAL);
     }
 
-    /*************/
-
     @Override
     public int getOrientation() {
         return LinearLayout.HORIZONTAL;
+    }
+
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+//        int count1 = getChildCount();
+//        for (int i = 0; i < count1; i++) {
+//            View child1 = getChildAt(i);
+//            if (null == child1 || !(child1 instanceof ChannelScrollView))
+//                continue;
+//            int count2 = ((ChannelScrollView) child1).getChildCount();
+//            if (count2 != 1)
+//                continue;
+//            View child2 = ((ChannelScrollView) child1).getChildAt(0);
+//            if (null == child2 || !(child2 instanceof ChannelLinearLayoutChild))
+//                continue;
+//            int count3 = ((ChannelLinearLayoutChild) child2).getChildCount();
+//            boolean breaks = false;
+//            for (int j = 0; j < count3; i++) {
+//                View child3 = ((ChannelLinearLayoutChild) child2).getChildAt(j);
+//                if (null == child3 || !(child3 instanceof ChannelTextView))
+//                    continue;
+//                if (!child3.isClickable()) {
+//                    breaks = true;
+//                    break;
+//                }
+//            }
+//            if (breaks) {
+//                ((ChannelLinearLayoutChild) child2).requestFocus();
+//                break;
+//            } else {
+//                ((ChannelLinearLayoutChild) child2).clearFocus();
+//            }
+//        }
     }
 
     private final void init(@Nullable AttributeSet attrs) {
@@ -175,30 +207,10 @@ public class ChannelLayout extends LinearLayout {
     }
 
     @Keep
-    public final void refresh(@NonNull int column, @NonNull List<ChannelModel> list) {
+    public final void update(@NonNull int count, @NonNull int column, @NonNull List<ChannelModel> list) {
 
-        ChannelUtil.logE("refresh => column = " + column + ", list = " + list);
+        ChannelUtil.logE("update => column = " + column + ", list = " + list);
         if (null == list || column < 0)
-            return;
-
-        int count = getChildCount();
-        ChannelUtil.logE("refresh => count = " + count);
-        if (column + 1 > count)
-            return;
-
-        View child = getChildAt(column);
-        ChannelUtil.logE("refresh => child = " + child);
-        if (null == child || !(child instanceof ChannelScrollView))
-            return;
-
-        int childCount = ((ChannelScrollView) child).getChildCount();
-        ChannelUtil.logE("refresh => childCount = " + childCount);
-        if (childCount != 1)
-            return;
-
-        View childAt = ((ChannelScrollView) child).getChildAt(0);
-        ChannelUtil.logE("refresh => childAt = " + childAt);
-        if (null == childAt || !(childAt instanceof ChannelLinearLayoutChild))
             return;
 
         addItem(count, column, list);
