@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -208,6 +209,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
         setFocusable(true);
         setFocusableInTouchMode(true);
         setOrientation(LinearLayout.VERTICAL);
+        setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
         setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
     }
 
