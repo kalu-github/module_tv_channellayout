@@ -4,4 +4,5 @@
 /app/build
 /app/release
 /module_channellayout_v7/build
+/module_channellayout_androidx/build
 local.properties

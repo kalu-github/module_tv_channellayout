@@ -6,4 +6,5 @@ dependencyResolutionManagement {
     }
 }
 include ':app'
-include ':module_channellayout_v7'
+//include ':module_channellayout_v7'
+include ':module_channellayout_androidx'
