@@ -57,35 +57,38 @@ public class ChannelLayout extends LinearLayout {
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
-//        int count1 = getChildCount();
-//        for (int i = 0; i < count1; i++) {
-//            View child1 = getChildAt(i);
-//            if (null == child1 || !(child1 instanceof ChannelScrollView))
-//                continue;
-//            int count2 = ((ChannelScrollView) child1).getChildCount();
-//            if (count2 != 1)
-//                continue;
-//            View child2 = ((ChannelScrollView) child1).getChildAt(0);
-//            if (null == child2 || !(child2 instanceof ChannelLinearLayoutChild))
-//                continue;
-//            int count3 = ((ChannelLinearLayoutChild) child2).getChildCount();
-//            boolean breaks = false;
-//            for (int j = 0; j < count3; i++) {
-//                View child3 = ((ChannelLinearLayoutChild) child2).getChildAt(j);
-//                if (null == child3 || !(child3 instanceof ChannelTextView))
-//                    continue;
-//                if (!child3.isClickable()) {
-//                    breaks = true;
-//                    break;
-//                }
-//            }
-//            if (breaks) {
-//                ((ChannelLinearLayoutChild) child2).requestFocus();
-//                break;
-//            } else {
-//                ((ChannelLinearLayoutChild) child2).clearFocus();
-//            }
-//        }
+
+        if (visibility != View.VISIBLE)
+            return;
+
+        int column = getChildCount();
+        ChannelUtil.logE("setVisibility => column = " + column);
+        for (int i = 0; i < column; i++) {
+            View view = getChildAt(i);
+            ChannelUtil.logE("setVisibility => i = " + i + ", view = " + view);
+            if (null == view || !(view instanceof ChannelScrollView))
+                continue;
+            int count = ((ChannelLinearLayoutChild) ((ChannelScrollView) view).getChildAt(0)).getChildCount();
+            ChannelUtil.logE("setVisibility => i = " + i + ", count = " + count);
+            boolean breaks = false;
+            for (int m = 0; m < count; m++) {
+                View temp = ((ChannelLinearLayoutChild) ((ChannelScrollView) view).getChildAt(0)).getChildAt(m);
+                ChannelUtil.logE("setVisibility => m = " + m + ", view = " + temp);
+                if (null == temp || !(temp instanceof ChannelTextView))
+                    continue;
+                if (!temp.isClickable()) {
+                    breaks = true;
+                    break;
+                }
+            }
+            ChannelUtil.logE("setVisibility => i = " + i + ", breaks = " + breaks);
+            if (breaks) {
+                ((ChannelLinearLayoutChild) ((ChannelScrollView) view).getChildAt(0)).requestFocus();
+                break;
+            } else {
+//                ((ChannelLinearLayoutChild) ((ChannelScrollView) view).getChildAt(0)).clearFocus();
+            }
+        }
     }
 
     private final void init(@Nullable AttributeSet attrs) {

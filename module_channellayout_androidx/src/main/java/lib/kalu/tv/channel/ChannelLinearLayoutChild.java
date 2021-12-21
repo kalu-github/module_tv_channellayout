@@ -69,20 +69,10 @@ class ChannelLinearLayoutChild extends LinearLayout {
     }
 
     @Override
-    public void setVisibility(int visibility) {
-        super.setVisibility(visibility);
-        if (visibility == View.VISIBLE) {
-            requestFocus();
-        } else {
-            clearFocus();
-        }
-    }
-
-    @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-        if (getVisibility() != View.VISIBLE)
-            return super.dispatchKeyEvent(event);
+//        if (getVisibility() != View.VISIBLE)
+//            return super.dispatchKeyEvent(event);
 
         // repeat
         if (event.getRepeatCount() > 0) {
