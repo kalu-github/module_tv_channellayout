@@ -367,7 +367,7 @@ public class ChannelLayout extends LinearLayout {
         if (position < 0)
             return;
 
-        int count = getChildCount();
+        int count = getChildCount(column);
         if (position + 1 >= count)
             return;
         nextDown(column, position);

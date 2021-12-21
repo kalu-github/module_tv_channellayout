@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -16,6 +17,23 @@ import lib.kalu.tv.channel.listener.OnChannelChangeListener;
 import lib.kalu.tv.channel.model.ChannelModel;
 
 public class MainActivity extends AppCompatActivity {
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        // up
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
+            ChannelLayout channelLayout = findViewById(R.id.test_channel);
+            channelLayout.selectNextUp(1);
+            return true;
+        }
+        // down
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+            ChannelLayout channelLayout = findViewById(R.id.test_channel);
+            channelLayout.selectNextDown(1);
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
