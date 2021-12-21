@@ -403,9 +403,9 @@ public class ChannelLayout extends LinearLayout {
 
     /*************************/
 
-    protected final void callback(@NonNull int column, @NonNull int position, int direction) {
+    protected final void callback(@NonNull int column, @NonNull int position, @NonNull int direction, @NonNull ChannelModel value) {
 
-        ChannelUtil.logE("callback11 => column = " + column + ", position = " + position);
+        ChannelUtil.logE("callback11 => column = " + column + ", position = " + position + ", direction = " + direction + ", value = " + value);
         if (position < 0 || column < 0)
             return;
 
@@ -417,31 +417,31 @@ public class ChannelLayout extends LinearLayout {
         if (null != onChannelChangeListener) {
             // right
             if (direction == View.FOCUS_RIGHT) {
-                onChannelChangeListener.onMove(column);
+                onChannelChangeListener.onMove(column, position, value);
             }
             // left
             else if (direction == View.FOCUS_LEFT) {
-                onChannelChangeListener.onMove(column);
+                onChannelChangeListener.onMove(column, position, value);
             }
             // init
             else if (direction == Integer.MIN_VALUE) {
-                onChannelChangeListener.onInit(column, position);
+                onChannelChangeListener.onSelect(column, position, value);
             }
             // click
             else if (direction == Integer.MAX_VALUE) {
-                onChannelChangeListener.onClick(column, position);
+                onChannelChangeListener.onSelect(column, position, value);
             }
             // nextUp
             else if (direction == 1111) {
-                onChannelChangeListener.onClick(column, position);
+                onChannelChangeListener.onSelect(column, position, value);
             }
             // nextDown
             else if (direction == 2222) {
-                onChannelChangeListener.onClick(column, position);
+                onChannelChangeListener.onSelect(column, position, value);
             }
             // focus
             else {
-                onChannelChangeListener.onFocus(column, position);
+                onChannelChangeListener.onFocus(column, position, value);
             }
         }
     }

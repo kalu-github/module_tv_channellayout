@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lib.kalu.tv.channel.model.ChannelModel;
@@ -547,6 +549,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 int right = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_right);
                 child.setPadding(left, 0, right, 0);
                 child.setText(initText);
+                child.setTag(R.id.module_channel_item_tag, temp);
                 // add
                 addView(child, i);
             }
@@ -556,6 +559,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 View child = getChildAt(i);
                 // setText
                 ((ChannelTextView) child).setText(initText);
+                ((ChannelTextView) child).setTag(R.id.module_channel_item_tag, temp);
             }
         }
 
@@ -605,8 +609,17 @@ class ChannelLinearLayoutChild extends LinearLayout {
             return;
         }
 
+        View child = getChildAt(position);
+
+        ChannelModel value;
+        try {
+            value = (ChannelModel) child.getTag(R.id.module_channel_item_tag);
+        } catch (Exception e) {
+            value = null;
+        }
+
         if (null == getParent() || !(getParent() instanceof ChannelScrollView))
             return;
-        ((ChannelScrollView) getParent()).callback(position, direction);
+        ((ChannelScrollView) getParent()).callback(position, direction, value);
     }
 }

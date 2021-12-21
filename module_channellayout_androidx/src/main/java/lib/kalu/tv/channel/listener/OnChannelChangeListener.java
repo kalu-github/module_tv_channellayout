@@ -3,14 +3,14 @@ package lib.kalu.tv.channel.listener;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import lib.kalu.tv.channel.model.ChannelModel;
+
 @Keep
 public interface OnChannelChangeListener {
 
-    void onInit(@NonNull int column, @NonNull int position);
+    void onSelect(@NonNull int column, @NonNull int position, @NonNull ChannelModel value);
 
-    void onFocus(@NonNull int column, @NonNull int position);
+    void onFocus(@NonNull int column, @NonNull int position, @NonNull ChannelModel value);
 
-    void onClick(@NonNull int column, @NonNull int position);
-
-    void onMove(@NonNull int column);
+    void onMove(@NonNull int column, @NonNull int position, @NonNull ChannelModel value);
 }

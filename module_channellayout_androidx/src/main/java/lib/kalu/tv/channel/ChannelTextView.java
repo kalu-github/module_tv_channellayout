@@ -63,6 +63,10 @@ class ChannelTextView extends TextView {
     }
 
     @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+    }
+
+    @Override
     public void setText(CharSequence text, BufferType type) {
         super.setText(text, type);
         reset(false);

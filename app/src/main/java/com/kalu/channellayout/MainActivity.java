@@ -83,13 +83,13 @@ public class MainActivity extends AppCompatActivity {
 
         channelLayout.setOnChannelChangeListener(new OnChannelChangeListener() {
             @Override
-            public void onInit(@NonNull int column, @NonNull int position) {
-                Log.e("TEST", "onInit => column = " + column + ", position = " + position);
+            public void onSelect(@NonNull int column, @NonNull int position, @NonNull ChannelModel value) {
+                Log.e("TEST", "onInit => column = " + column + ", position = " + position+", value = "+value);
             }
 
             @Override
-            public void onFocus(@NonNull int column, @NonNull int position) {
-                Log.e("TEST", "onFocus => column = " + column + ", position = " + position);
+            public void onFocus(@NonNull int column, @NonNull int position, @NonNull ChannelModel value) {
+                Log.e("TEST", "onFocus => column = " + column + ", position = " + position+", value = "+value);
 
                 if (column == 0) {
                     ArrayList<ChannelModel> list = new ArrayList<>();
@@ -120,20 +120,15 @@ public class MainActivity extends AppCompatActivity {
                         };
                         list.add(model);
                     }
-                    channelLayout.refresh(1, list);
+                    channelLayout.update(3, 1, list);
                 }
             }
 
             @Override
-            public void onClick(@NonNull int column, @NonNull int position) {
-                Log.e("TEST", "onClick => column = " + column + ", position = " + position);
-            }
-
-            @Override
-            public void onMove(@NonNull int column) {
+            public void onMove(@NonNull int column, @NonNull int position, @NonNull ChannelModel value) {
+                Log.e("TEST", "onMove => column = " + column + ", position = " + position+", value = "+value);
                 channelLayout.setVisibility(2, column == 2 ? View.VISIBLE : View.GONE);
                 channelLayout.setVisibility(3, column == 2 ? View.GONE : View.VISIBLE);
-                Log.e("TEST", "onMove => column = " + column);
             }
         });
 

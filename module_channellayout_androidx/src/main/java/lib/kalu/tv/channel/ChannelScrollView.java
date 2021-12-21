@@ -126,16 +126,16 @@ class ChannelScrollView extends ScrollView {
 
     /*************/
 
-    protected final void callback(@NonNull int position, int direction) {
+    protected final void callback(@NonNull int position, @NonNull int direction, @NonNull ChannelModel value) {
 
-        ChannelUtil.logE("callback22 => position = " + position);
+        ChannelUtil.logE("callback22 => position = " + position + ", direction = " + direction + ", value = " + value);
         if (position < 0)
             return;
 
         ViewParent parent = getParent();
         if (null != parent && parent instanceof ChannelLayout) {
             int column = ((ChannelLayout) parent).indexOfChild(this);
-            ((ChannelLayout) parent).callback(column, position, direction);
+            ((ChannelLayout) parent).callback(column, position, direction, value);
         }
     }
 }
