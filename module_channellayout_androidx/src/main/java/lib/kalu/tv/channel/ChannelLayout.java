@@ -1,6 +1,7 @@
 package lib.kalu.tv.channel;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
@@ -98,6 +99,40 @@ public class ChannelLayout extends LinearLayout {
         setFocusableInTouchMode(false);
         setOrientation(LinearLayout.HORIZONTAL);
         setBackgroundColor(Color.TRANSPARENT);
+
+        int column = 0;
+        TypedArray attributes = null;
+        try {
+            attributes = getContext().obtainStyledAttributes(attrs, R.styleable.ChannelLayout);
+            column = attributes.getInt(R.styleable.ChannelLayout_cl_column_count, 0);
+        } catch (Exception e) {
+        }
+        if (null != attributes) {
+            attributes.recycle();
+        }
+
+        int size = column + 1;
+        for (int i = 0; i < size; i++) {
+            // image
+            if (i + 1 == size) {
+                ImageView child = new ImageView(getContext());
+                int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_arrow_width);
+                child.setLayoutParams(new LinearLayout.LayoutParams(width, LayoutParams.MATCH_PARENT));
+                child.setFocusable(false);
+                child.setFocusableInTouchMode(false);
+                child.setClickable(false);
+                child.setLongClickable(false);
+                child.setImageResource(R.drawable.module_channellayout_ic_arrow);
+                child.setBackgroundResource(R.drawable.module_channellayout_ic_shape_background_column4);
+                addView(child);
+            }
+            // item
+            else {
+                ChannelScrollView child = new ChannelScrollView(getContext());
+                child.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+                addView(child);
+            }
+        }
     }
 
     private final void nextUp(@NonNull int column, @NonNull int position) {
@@ -138,60 +173,10 @@ public class ChannelLayout extends LinearLayout {
         }
     }
 
-    private final void addItem(int count, int column, @NonNull List<ChannelModel> list) {
-
-        // arrow
-        if (column == count) {
-            // add
-            if (null == getChildAt(column)) {
-                ChannelUtil.logE("addItem[news1] => count = " + count + ", column = " + column + ", list = " + list);
-                ImageView child = new ImageView(getContext());
-                int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_arrow_width);
-                child.setLayoutParams(new LinearLayout.LayoutParams(width, LayoutParams.MATCH_PARENT));
-                child.setFocusable(false);
-                child.setFocusableInTouchMode(false);
-                child.setClickable(false);
-                child.setLongClickable(false);
-                child.setImageResource(R.drawable.module_channellayout_ic_arrow);
-                child.setBackgroundResource(R.drawable.module_channellayout_ic_shape_background_column4);
-                addView(child, column);
-            }
-            // reset
-            else {
-                ChannelUtil.logE("addItem[reset1] => count = " + count + ", column = " + column + ", list = " + list);
-                View child = getChildAt(column);
-                LinearLayout.LayoutParams layoutParams = (LayoutParams) child.getLayoutParams();
-                int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_arrow_width);
-                layoutParams.width = width;
-                child.setLayoutParams(layoutParams);
-            }
-        }
-        // item
-        else {
-            // add
-            if (null == getChildAt(column)) {
-                ChannelUtil.logE("addItem[news0] => count = " + count + ", column = " + column + ", list = " + list);
-                ChannelScrollView child = new ChannelScrollView(getContext());
-                child.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
-                child.update(list);
-                addView(child, column);
-            }
-            // reset
-            else {
-                ChannelUtil.logE("addItem[reset0] => count = " + count + ", column = " + column + ", list = " + list);
-                View child = getChildAt(column);
-                LinearLayout.LayoutParams layoutParams = (LayoutParams) child.getLayoutParams();
-                layoutParams.width = LayoutParams.WRAP_CONTENT;
-                child.setLayoutParams(layoutParams);
-                ((ChannelScrollView) child).update(list);
-            }
-        }
-    }
-
     @Keep
     public final void update(@NonNull List<List<ChannelModel>> list) {
 
-        ChannelUtil.logE("update => map = " + list);
+        ChannelUtil.logE("update => list = " + list);
         if (null == list || list.size() <= 0)
             return;
 
@@ -199,14 +184,10 @@ public class ChannelLayout extends LinearLayout {
         ChannelUtil.logE("update => size = " + size);
 
         // child
-        int column = 0;
-        for (List<ChannelModel> temp : list) {
-            addItem(size, column, temp);
-            ++column;
+        for (int i = 0; i < size; i++) {
+            List<ChannelModel> temp = list.get(i);
+            update(size, i, temp);
         }
-
-        // arrow
-        addItem(size, column, null);
     }
 
     @Keep
@@ -216,7 +197,27 @@ public class ChannelLayout extends LinearLayout {
         if (null == list || column < 0)
             return;
 
-        addItem(count, column, list);
+        View child = getChildAt(column);
+        ChannelUtil.logE("update => column = " + column + ", child = " + child);
+        if (null == child)
+            return;
+
+        // image
+        if (column == count) {
+            ChannelUtil.logE("update[reset1] => count = " + count + ", column = " + column + ", list = " + list);
+            LinearLayout.LayoutParams layoutParams = (LayoutParams) child.getLayoutParams();
+            int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_arrow_width);
+            layoutParams.width = width;
+            child.setLayoutParams(layoutParams);
+        }
+        // item
+        else {
+            ChannelUtil.logE("addItem[reset0] => count = " + count + ", column = " + column + ", list = " + list);
+            LinearLayout.LayoutParams layoutParams = (LayoutParams) child.getLayoutParams();
+            layoutParams.width = LayoutParams.WRAP_CONTENT;
+            child.setLayoutParams(layoutParams);
+            ((ChannelScrollView) child).update(list);
+        }
     }
 
     @Keep

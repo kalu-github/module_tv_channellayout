@@ -24,14 +24,18 @@ public class MainActivity extends AppCompatActivity {
         // up
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
             ChannelLayout channelLayout = findViewById(R.id.test_channel);
-            channelLayout.selectNextUp(1);
-            return true;
+            if (channelLayout.getVisibility() != View.VISIBLE) {
+                channelLayout.selectNextUp(1);
+                return true;
+            }
         }
         // down
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
             ChannelLayout channelLayout = findViewById(R.id.test_channel);
-            channelLayout.selectNextDown(1);
-            return true;
+            if (channelLayout.getVisibility() != View.VISIBLE) {
+                channelLayout.selectNextDown(1);
+                return true;
+            }
         }
         return super.dispatchKeyEvent(event);
     }
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             int column = i;
             ArrayList<ChannelModel> item = new ArrayList<>();
 
-            for (int j = 0; j < 20; j++) {
+            for (int j = 0; j < 4; j++) {
 
                 int num = j;
                 ChannelModel model = new ChannelModel() {
@@ -84,12 +88,12 @@ public class MainActivity extends AppCompatActivity {
         channelLayout.setOnChannelChangeListener(new OnChannelChangeListener() {
             @Override
             public void onSelect(@NonNull int column, @NonNull int position, @NonNull ChannelModel value) {
-                Log.e("TEST", "onInit => column = " + column + ", position = " + position+", value = "+value);
+                Log.e("TEST", "onInit => column = " + column + ", position = " + position + ", value = " + value);
             }
 
             @Override
             public void onFocus(@NonNull int column, @NonNull int position, @NonNull ChannelModel value) {
-                Log.e("TEST", "onFocus => column = " + column + ", position = " + position+", value = "+value);
+                Log.e("TEST", "onFocus => column = " + column + ", position = " + position + ", value = " + value);
 
                 if (column == 0) {
                     ArrayList<ChannelModel> list = new ArrayList<>();
@@ -126,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onMove(@NonNull int column, @NonNull int position, @NonNull ChannelModel value) {
-                Log.e("TEST", "onMove => column = " + column + ", position = " + position+", value = "+value);
+                Log.e("TEST", "onMove => column = " + column + ", position = " + position + ", value = " + value);
                 channelLayout.setVisibility(2, column == 2 ? View.VISIBLE : View.GONE);
                 channelLayout.setVisibility(3, column == 2 ? View.GONE : View.VISIBLE);
             }

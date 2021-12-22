@@ -72,29 +72,28 @@ class ChannelScrollView extends ScrollView {
         setVerticalScrollBarEnabled(false);
         setHorizontalScrollBarEnabled(false);
         setBackgroundColor(Color.TRANSPARENT);
+
+        // step1
+        removeAllViews();
+
+        // step2
+        ChannelLinearLayoutChild child = new ChannelLinearLayoutChild(getContext());
+        ScrollView.LayoutParams params = new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT);
+        child.setLayoutParams(params);
+        child.setBackgroundResource(R.drawable.module_channellayout_ic_shape_background_column0);
+        addView(child);
     }
 
     /********************/
 
     protected final void update(@NonNull List<ChannelModel> list) {
 
-        // add
-        if (null == getChildAt(0)) {
-            ChannelLinearLayoutChild child = new ChannelLinearLayoutChild(getContext());
-            int height = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_height);
-            ScrollView.LayoutParams params = new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, height);
-            child.setLayoutParams(params);
-            child.setBackgroundResource(R.drawable.module_channellayout_ic_shape_background_column0);
-            child.update(list);
-            // add
-            addView(child, 0);
-        }
-        // reset
-        else {
-            View child = getChildAt(0);
-            child.setBackgroundResource(R.drawable.module_channellayout_ic_shape_background_column0);
-            ((ChannelLinearLayoutChild) child).update(list);
-        }
+        View child = getChildAt(0);
+        if (null == child)
+            return;
+
+        // update
+        ((ChannelLinearLayoutChild) child).update(list);
     }
 
     protected final void nextUp(@NonNull int column, @NonNull int position) {

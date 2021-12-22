@@ -1,6 +1,5 @@
 package lib.kalu.tv.channel.model;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.Keep;
 
 @Keep
