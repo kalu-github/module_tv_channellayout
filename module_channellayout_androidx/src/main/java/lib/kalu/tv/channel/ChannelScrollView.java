@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
@@ -71,14 +72,14 @@ class ChannelScrollView extends ScrollView {
         setFillViewport(true);
         setVerticalScrollBarEnabled(false);
         setHorizontalScrollBarEnabled(false);
-        setBackgroundColor(Color.TRANSPARENT);
+        setBackgroundColor(Color.parseColor("#00000000"));
 
         // step1
         removeAllViews();
 
         // step2
         ChannelLinearLayoutChild child = new ChannelLinearLayoutChild(getContext());
-        ScrollView.LayoutParams params = new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT);
+        ScrollView.LayoutParams params = new ScrollView.LayoutParams(ScrollView.LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         child.setLayoutParams(params);
         child.setBackgroundResource(R.drawable.module_channellayout_ic_shape_background_column0);
         addView(child);

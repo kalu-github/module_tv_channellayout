@@ -184,8 +184,8 @@ class ChannelLinearLayoutChild extends LinearLayout {
         setLongClickable(true);
         setFocusable(true);
         setFocusableInTouchMode(true);
+        setGravity(Gravity.CENTER);
         setOrientation(LinearLayout.VERTICAL);
-        setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
         setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
     }
 
@@ -236,7 +236,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
     }
 
     private final int findPosition(@NonNull int column) {
-        int position = -1;
+        int position = 0;
         int count = getChildCount();
         for (int i = 0; i < count; i++) {
             View temp = getChildAt(i);
@@ -280,14 +280,14 @@ class ChannelLinearLayoutChild extends LinearLayout {
             if (column <= 0) {
                 ((ChannelTextView) view).select(true);
             } else {
-                boolean selected = view.isSelected();
-                boolean clickable = view.isClickable();
-                ChannelUtil.logE("keepLight => selected = " + selected + ", clickable = " + clickable);
-                if (!clickable && selected) {
+//                boolean selected = view.isSelected();
+//                boolean clickable = view.isClickable();
+//                ChannelUtil.logE("keepLight => selected = " + selected + ", clickable = " + clickable);
+//                if (!clickable && selected) {
                     ((ChannelTextView) view).light(true);
-                } else {
-                    ((ChannelTextView) view).keep(true);
-                }
+//                } else {
+//                    ((ChannelTextView) view).keep(true);
+//                }
             }
         }
 
@@ -390,29 +390,29 @@ class ChannelLinearLayoutChild extends LinearLayout {
         // viewNext
         if (null != viewNext) {
 
-            // scroll => down
-            if (direction == View.FOCUS_DOWN) {
-                int bottom = viewNext.getBottom();
-                int scrollY = ((ViewGroup) getParent()).getScrollY();
-                int measuredHeight = ((ViewGroup) getParent()).getMeasuredHeight() + scrollY;
-                if (bottom > measuredHeight) {
-                    ((ChannelScrollView) getParent()).smoothScrollBy(0, Math.abs(bottom - measuredHeight));
-                }
-                ChannelUtil.logE("nextFocus[viewNext][down] => focus");
-            }
-            // scroll => up
-            else if (direction == View.FOCUS_UP) {
-                int top = viewNext.getTop();
-                int scrollY = ((ViewGroup) getParent()).getScrollY();
-                if (top < scrollY) {
-                    ((ChannelScrollView) getParent()).smoothScrollBy(0, -Math.abs(scrollY - top));
-                }
-                ChannelUtil.logE("nextFocus[viewNext][up] => focus");
-            }
-            // scroll => null
-            else {
-                ChannelUtil.logE("nextFocus[viewNext][null] => focus");
-            }
+//            // scroll => down
+//            if (direction == View.FOCUS_DOWN) {
+//                int bottom = viewNext.getBottom();
+//                int scrollY = ((ViewGroup) getParent()).getScrollY();
+//                int measuredHeight = ((ViewGroup) getParent()).getHeight() + scrollY;
+//                if (bottom > measuredHeight) {
+//                    ((ChannelScrollView) getParent()).smoothScrollBy(0, Math.abs(bottom - measuredHeight));
+//                }
+//                ChannelUtil.logE("nextFocus[viewNext][down] => focus");
+//            }
+//            // scroll => up
+//            else if (direction == View.FOCUS_UP) {
+//                int top = viewNext.getTop();
+//                int scrollY = ((ViewGroup) getParent()).getScrollY();
+//                if (top < scrollY) {
+//                    ((ChannelScrollView) getParent()).smoothScrollBy(0, -Math.abs(scrollY - top));
+//                }
+//                ChannelUtil.logE("nextFocus[viewNext][up] => focus");
+//            }
+//            // scroll => null
+//            else {
+//                ChannelUtil.logE("nextFocus[viewNext][null] => focus");
+//            }
 
             // column0
             if (column <= 0 && focus) {
@@ -506,13 +506,14 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
             ChannelUtil.logE("update => i = " + i + " initText = " + initText);
             ChannelTextView child = new ChannelTextView(getContext());
-            int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_height);
-            child.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, width));
+            child.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             int offset = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_size);
             child.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset);
             int left = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_left);
             int right = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_right);
-            child.setPadding(left, 0, right, 0);
+            int top = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_top);
+            int bottom = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_bottom);
+            child.setPadding(left, top, right, bottom);
             child.setText(initText);
             child.setTag(R.id.module_channel_item_tag, temp);
             // add

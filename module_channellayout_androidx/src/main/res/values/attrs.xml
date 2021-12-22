@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <declare-styleable name="ChannelLayout">
         <attr name="cl_column_count" format="integer" />
+<!--        <attr name="cl_column_width" format="" />-->
     </declare-styleable>
 </resources>
