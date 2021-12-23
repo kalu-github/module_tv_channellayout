@@ -10,7 +10,7 @@ public interface OnChannelChangeListener {
 
     void onSelect(@NonNull int column, @NonNull int position, @NonNull ChannelModel value);
 
-    void onFocus(@NonNull int column, @NonNull int position, @NonNull ChannelModel value);
+    void onHighlight(@NonNull int column, @NonNull int position, @NonNull ChannelModel value);
 
     void onMove(@NonNull int column, @NonNull int position, @NonNull ChannelModel value);
 }

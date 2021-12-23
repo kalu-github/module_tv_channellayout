@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -61,25 +62,32 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     }
 
     @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+            resetTime();
+        } else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            resetTime();
+        } else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
+            resetTime();
+        } else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            resetTime();
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (null != mHandler) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
+        clearTime();
     }
 
     @Override
     public boolean handleMessage(@NonNull Message msg) {
         if (msg.what >= 5) {
-            if (null != mHandler) {
-                mHandler.removeCallbacksAndMessages(null);
-                setVisibility(View.INVISIBLE);
-            }
+            clearTime();
+            setVisibility(View.INVISIBLE);
         } else {
-            if (null != mHandler) {
-                mHandler.removeCallbacksAndMessages(null);
-                mHandler.sendEmptyMessageDelayed(msg.what + 1, 1000);
-            }
+            nextTime(msg.what);
         }
         return false;
     }
@@ -87,45 +95,93 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
+        // 5s隐藏
+        autoTime(visibility);
+        // 选中上一次
+        requestFocusLastTime();
+    }
+
+    private final void autoTime(int visibility) {
+        if (visibility == View.VISIBLE) {
+            resetTime();
+        } else {
+            clearTime();
+        }
+    }
+
+    private final void resetTime() {
         if (null != mHandler) {
             mHandler.removeCallbacksAndMessages(null);
         }
-        if (visibility == View.VISIBLE) {
-            if (null != mHandler) {
-                mHandler.sendEmptyMessageDelayed(1, 1000);
-            }
+        if (null != mHandler) {
+            mHandler.sendEmptyMessageDelayed(1, 1000);
         }
-        if (visibility != View.VISIBLE)
+    }
+
+    private final void clearTime() {
+        if (null != mHandler) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    private final void nextTime(int what) {
+        if (null != mHandler) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+        if (null != mHandler) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler.sendEmptyMessageDelayed(what + 1, 1000);
+        }
+    }
+
+    private final void requestFocusLastTime() {
+
+        if (getVisibility() != View.VISIBLE)
             return;
 
-        int column = getChildCount();
-        ChannelUtil.logE("setVisibility => column = " + column);
-        for (int i = 0; i < column; i++) {
-            View view = getChildAt(i);
-            ChannelUtil.logE("setVisibility => i = " + i + ", view = " + view);
-            if (null == view || !(view instanceof ChannelScrollView))
+        int count = getChildCount();
+        ChannelUtil.logE("requestFocusLastTime => count = " + count);
+
+        for (int i = count - 1; i >= 0; i--) {
+            View scroll = getChildAt(i);
+            if (null == scroll || !(scroll instanceof ChannelScrollView))
                 continue;
-            int count = ((ChannelLinearLayoutChild) ((ChannelScrollView) view).getChildAt(0)).getChildCount();
-            ChannelUtil.logE("setVisibility => i = " + i + ", count = " + count);
-            boolean breaks = false;
-            for (int m = 0; m < count; m++) {
-                View temp = ((ChannelLinearLayoutChild) ((ChannelScrollView) view).getChildAt(0)).getChildAt(m);
-                ChannelUtil.logE("setVisibility => m = " + m + ", view = " + temp);
-                if (null == temp || !(temp instanceof ChannelTextView))
+            ChannelLinearLayoutChild layoutChild = ((ChannelLinearLayoutChild) ((ChannelScrollView) scroll).getChildAt(0));
+            int childCount = layoutChild.getChildCount();
+            for (int m = 0; m <= childCount; m++) {
+                View text = layoutChild.getChildAt(m);
+                if (null == text || !(text instanceof ChannelTextView))
                     continue;
-                if (!temp.isClickable()) {
-                    breaks = true;
+                // empty
+                if (text.getId() == R.id.module_channel_item_empty) {
                     break;
+//                    ((ChannelLinearLayoutChild) ((ChannelScrollView) view).getChildAt(0)).removeAllViews();
+                }
+                // select
+                else if (!text.isClickable() && text.getId() == R.id.module_channel_item_standard) {
+                    layoutChild.requestFocus();
+                    return;
                 }
             }
-            ChannelUtil.logE("setVisibility => i = " + i + ", breaks = " + breaks);
-            if (breaks) {
-                ((ChannelLinearLayoutChild) ((ChannelScrollView) view).getChildAt(0)).requestFocus();
+        }
+    }
+
+    protected boolean removeLastEmpty() {
+        boolean hasEmpty = false;
+        int count = getChildCount();
+        for (int i = count - 1; i >= 0; i--) {
+            View child = getChildAt(i);
+            if (null != child && child instanceof ChannelScrollView) {
+                ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) ((ChannelScrollView) child).getChildAt(0);
+                View childAt = layoutChild.getChildAt(0);
+                if (null != childAt && childAt.getId() == R.id.module_channel_item_empty) {
+                    hasEmpty = true;
+                    layoutChild.removeAllViews();
+                }
                 break;
-            } else {
-//                ((ChannelLinearLayoutChild) ((ChannelScrollView) view).getChildAt(0)).clearFocus();
             }
         }
+        return hasEmpty;
     }
 
     private final void init(@Nullable AttributeSet attrs) {
@@ -246,7 +302,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
         ChannelUtil.logE("addItem[reset0] => count = " + count + ", column = " + column + ", list = " + list);
         ((ChannelScrollView) view).update(list);
-        select(column, defaultPosition);
+        select(column, defaultPosition, defaultPosition > 0);
     }
 
     @Keep
@@ -254,15 +310,10 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         select(column, position, false);
     }
 
-    /**
-     * @param column
-     * @param position
-     * @param requestFocus
-     */
     @Keep
-    public final void select(@NonNull int column, @NonNull int position, boolean requestFocus) {
+    public final void select(@NonNull int column, @NonNull int position, boolean select) {
         ChannelUtil.logE("select => ****************************");
-        ChannelUtil.logE("select => column = " + column + ", position = " + position + ", requestFocus = " + requestFocus);
+        ChannelUtil.logE("select => column = " + column + ", position = " + position + ", select = " + select);
 
         if (position < 0 || column < 0)
             return;
@@ -296,7 +347,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             ChannelUtil.logE("select => layoutChildChildCount = " + layoutChildChildCount);
             if (position + 1 > layoutChildChildCount)
                 continue;
-            layoutChild.select(column, position, requestFocus);
+            layoutChild.select(column, position, select);
             break;
         }
         ChannelUtil.logE("select => ****************************");
@@ -328,7 +379,27 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     }
 
     @Keep
-    public final int getClickablePosition(@NonNull int column) {
+    public final int getSelectColumn() {
+        int column = -1;
+        if (getVisibility() == View.VISIBLE) {
+            try {
+                int count = getChildCount();
+                for (int i = 0; i < count; i++) {
+                    ViewGroup viewGroup = (ViewGroup) getChildAt(i);
+                    View child = viewGroup.getChildAt(0);
+                    if (child.hasFocus()) {
+                        column = i;
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+            }
+        }
+        return column;
+    }
+
+    @Keep
+    public final int getSelectPosition(@NonNull int column) {
 
         if (column < 0)
             return -1;
@@ -408,7 +479,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     @Keep
     public final void selectNextDown(@NonNull int column) {
-        int position = getClickablePosition(column);
+        int position = getSelectPosition(column);
         if (position < 0)
             return;
 
@@ -420,10 +491,42 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     @Keep
     public final void selectNextUp(@NonNull int column) {
-        int position = getClickablePosition(column);
+        int position = getSelectPosition(column);
         if (position <= 0)
             return;
         nextUp(column, position);
+    }
+
+    @Keep
+    public final void addEmpty(@NonNull int column) {
+        int count = getChildCount();
+        if (column + 1 >= count)
+            return;
+        View child = getChildAt(column);
+        if (null == child || !(child instanceof ChannelScrollView))
+            return;
+        ChannelScrollView scrollView = (ChannelScrollView) child;
+        int childCount = scrollView.getChildCount();
+        if (childCount != 1)
+            return;
+        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
+        layoutChild.addEmpty();
+    }
+
+    @Keep
+    public final void removeAllViews(@NonNull int column) {
+        int count = getChildCount();
+        if (column + 1 >= count)
+            return;
+        View child = getChildAt(column);
+        if (null == child || !(child instanceof ChannelScrollView))
+            return;
+        ChannelScrollView scrollView = (ChannelScrollView) child;
+        int childCount = scrollView.getChildCount();
+        if (childCount != 1)
+            return;
+        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
+        layoutChild.removeAllViews();
     }
 
     /*************************/
@@ -450,6 +553,9 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         if (null != onChannelChangeListener) {
             // right
             if (direction == View.FOCUS_RIGHT) {
+                if (position == Integer.MAX_VALUE) {
+                    position = -1;
+                }
                 onChannelChangeListener.onMove(column, position, value);
             }
             // left
@@ -472,9 +578,9 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             else if (direction == 2222) {
                 onChannelChangeListener.onSelect(column, position, value);
             }
-            // focus
+            // highlight
             else {
-                onChannelChangeListener.onFocus(column, position, value);
+                onChannelChangeListener.onHighlight(column, position, value);
             }
         }
     }

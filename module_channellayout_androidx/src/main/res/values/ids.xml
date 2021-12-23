@@ -1,4 +1,6 @@
 <resources>
     <item name="module_channel_item_tag" type="id" />
+    <item name="module_channel_item_empty" type="id" />
+    <item name="module_channel_item_standard" type="id" />
     <!--    <item name="module_channel_item_position_focus" type="id" />-->
 </resources>
