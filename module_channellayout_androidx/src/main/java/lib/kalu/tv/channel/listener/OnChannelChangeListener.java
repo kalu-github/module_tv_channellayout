@@ -12,8 +12,6 @@ import lib.kalu.tv.channel.model.ChannelModel;
 @Keep
 public interface OnChannelChangeListener {
 
-    void onInit(@NonNull Map<Integer, List<ChannelModel>> map);
-
     void onMove(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value);
 
     void onSelect(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value);

@@ -32,7 +32,6 @@ import lib.kalu.tv.channel.model.ChannelModel;
 public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     private final Handler mHandler = new Handler(this);
-    private final Map[] mCache = new Map[2];
 
     public ChannelLayout(Context context) {
         super(context);
@@ -100,7 +99,12 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     @Override
     public void setVisibility(int visibility) {
+
+        // 恢复
+        reset(visibility);
+
         super.setVisibility(visibility);
+
         // 5s隐藏
         autoTime(visibility);
 //        // 选中上一次
@@ -109,6 +113,20 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 //        if (visibility == View.VISIBLE && null != onChannelChangeListener) {
 //            onChannelChangeListener.onInit(mCache[0]);
 //        }
+    }
+
+    private final void reset(int visibility) {
+        if (visibility == View.VISIBLE)
+            return;
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            try {
+                ChannelScrollView scrollView = (ChannelScrollView) getChildAt(i);
+                scrollView.resetTags();
+                scrollView.resethighLight();
+            } catch (Exception e) {
+            }
+        }
     }
 
     private final void autoTime(int visibility) {
@@ -280,33 +298,33 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         ChannelUtil.logE("addItem[reset0] => count = " + count + ", column = " + column + ", list = " + list);
 
 
-        // cache0
-        if (null == mCache[1]) {
-            if (null != mCache[0]) {
-                mCache[0].remove(column);
-                mCache[0].put(column, list);
-            } else {
-                TreeMap<Integer, List<ChannelModel>> map = new TreeMap<>();
-                map.put(column, list);
-                mCache[0] = map;
-            }
-        }
-        // cache0
-        else {
-            mCache[0] = mCache[1];
-        }
-
-        // cache1
-        if (null != mCache[1]) {
-            mCache[1].remove(column);
-            mCache[1].put(column, list);
-        }
-        // cache1
-        else {
-            TreeMap<Integer, List<ChannelModel>> map = new TreeMap<>();
-            map.put(column, list);
-            mCache[1] = map;
-        }
+//        // cache0
+//        if (null == mCache[1]) {
+//            if (null != mCache[0]) {
+//                mCache[0].remove(column);
+//                mCache[0].put(column, list);
+//            } else {
+//                TreeMap<Integer, List<ChannelModel>> map = new TreeMap<>();
+//                map.put(column, list);
+//                mCache[0] = map;
+//            }
+//        }
+//        // cache0
+//        else {
+//            mCache[0] = mCache[1];
+//        }
+//
+//        // cache1
+//        if (null != mCache[1]) {
+//            mCache[1].remove(column);
+//            mCache[1].put(column, list);
+//        }
+//        // cache1
+//        else {
+//            TreeMap<Integer, List<ChannelModel>> map = new TreeMap<>();
+//            map.put(column, list);
+//            mCache[1] = map;
+//        }
 
         ((ChannelScrollView) view).update(list);
         select(Channeldirection.INIT, column, defaultPosition, defaultPosition > 0, callback);

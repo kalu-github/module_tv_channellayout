@@ -1,5 +1,7 @@
 <resources>
-    <item name="module_channel_item_tag" type="id" />
+    <item name="module_channel_tag_all" type="id" />
+    <item name="module_channel_tag_all_" type="id" />
+    <item name="module_channel_tag_item" type="id" />
     <item name="module_channel_item_empty" type="id" />
     <item name="module_channel_item_standard" type="id" />
     <item name="module_channel_position_select" type="id" />

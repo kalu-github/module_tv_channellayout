@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lib.kalu.tv.channel.model.ChannelModel;
@@ -180,10 +181,14 @@ class ChannelLinearLayoutChild extends LinearLayout {
         else if (showing && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
             View focus = findFocus();
             if (null != focus && focus instanceof ChannelLinearLayoutChild) {
-                int position = getHighlightPosition();
-                setSelectPosition(position);
-                callback(position, Channeldirection.SELECT);
-                ChannelUtil.logE("dispatchKeyEvent[enter click] => position = " + position);
+                int selectPosition = getSelectPosition();
+                int highlightPosition = getHighlightPosition();
+                if (selectPosition != highlightPosition) {
+                    updateTags(true);
+                    setSelectPosition(highlightPosition);
+                    callback(highlightPosition, Channeldirection.SELECT);
+                    ChannelUtil.logE("dispatchKeyEvent[enter click] => position = " + highlightPosition);
+                }
                 return true;
             }
         }
@@ -191,10 +196,14 @@ class ChannelLinearLayoutChild extends LinearLayout {
         else if (showing && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
             View focus = findFocus();
             if (null != focus && focus instanceof ChannelLinearLayoutChild) {
-                int position = getHighlightPosition();
-                setSelectPosition(position);
-                callback(position, Channeldirection.SELECT);
-                ChannelUtil.logE("dispatchKeyEvent[center click] => position = " + position);
+                int selectPosition = getSelectPosition();
+                int highlightPosition = getHighlightPosition();
+                if (selectPosition != highlightPosition) {
+                    updateTags(true);
+                    setSelectPosition(highlightPosition);
+                    callback(highlightPosition, Channeldirection.SELECT);
+                    ChannelUtil.logE("dispatchKeyEvent[center click] => position = " + highlightPosition);
+                }
                 return true;
             }
         }
@@ -323,7 +332,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
         int bottom = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_bottom);
         child.setPadding(left, top, right, bottom);
         child.setText(initText);
-        child.setTag(R.id.module_channel_item_tag, model);
+        child.setTag(R.id.module_channel_tag_item, model);
         addView(child);
     }
 
@@ -437,7 +446,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             before.setBackgroundDefault();
         }
         // before
-        else if(null != before) {
+        else if (null != before) {
             before.setTextColorDefault();
             before.setLeftDrawable(highlightPosition == selectPosition);
             before.setBackgroundDefault();
@@ -590,9 +599,83 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
     /*************/
 
+    protected final void resetHighlight() {
+        int selectPosition = getSelectPosition();
+        int highlightPosition = getHighlightPosition();
+        setHighlightPosition(selectPosition);
+        if (selectPosition != highlightPosition) {
+            try {
+                ChannelTextView textView = (ChannelTextView) getChildAt(highlightPosition);
+                textView.setTextColorDefault();
+                textView.setLeftDrawable(false);
+                textView.setBackgroundDefault();
+            } catch (Exception e) {
+            }
+        }
+        try {
+            ChannelTextView textView = (ChannelTextView) getChildAt(selectPosition);
+            if (hasFocus()) {
+                textView.setTextColorHighlight();
+                textView.setLeftDrawable(true);
+                textView.setBackgroundHighlight();
+            } else {
+                textView.setTextColorSelect();
+                textView.setLeftDrawable(true);
+                textView.setBackgroundDefault();
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    protected final void resetTags() {
+        List<ChannelModel> list = getTags();
+        if (null == list || list.size() == 0)
+            return;
+        update(list);
+    }
+
+    private final List<ChannelModel> getTags() {
+        try {
+            List<ChannelModel> tags = (List<ChannelModel>) getTag(R.id.module_channel_tag_all);
+            return tags;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private final void updateTags(boolean clear) {
+
+        if (clear) {
+            setTag(R.id.module_channel_tag_all, null);
+        }
+
+        List<ChannelModel> tags = getTags();
+        if (null != tags)
+            return;
+
+        int count = getChildCount();
+        if (count <= 0) {
+            setTag(R.id.module_channel_tag_all, null);
+        } else {
+            ArrayList<ChannelModel> cache = new ArrayList<>();
+            for (int i = 0; i < count; i++) {
+                try {
+                    ChannelTextView textView = (ChannelTextView) getChildAt(i);
+                    ChannelModel model = (ChannelModel) textView.getTag(R.id.module_channel_tag_item);
+                    cache.add(model);
+                } catch (Exception e) {
+                }
+            }
+            setTag(R.id.module_channel_tag_all, cache);
+        }
+    }
+
     protected final void update(@NonNull List<ChannelModel> list) {
 
         ChannelUtil.logE("**********************");
+
+        // step0 - tag all
+        updateTags(false);
 
         // step1
         removeAllViews();
@@ -632,7 +715,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
         ChannelModel value;
         try {
             View child = getChildAt(position);
-            value = (ChannelModel) child.getTag(R.id.module_channel_item_tag);
+            value = (ChannelModel) child.getTag(R.id.module_channel_tag_item);
         } catch (Exception e) {
             value = null;
         }
