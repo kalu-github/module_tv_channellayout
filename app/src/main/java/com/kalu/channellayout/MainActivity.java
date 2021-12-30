@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import lib.kalu.tv.channel.ChannelLayout;
@@ -87,12 +88,12 @@ public class MainActivity extends AppCompatActivity {
 
         channelLayout.setOnChannelChangeListener(new OnChannelChangeListener() {
             @Override
-            public void onSelect(@NonNull int column, @NonNull int position, @NonNull ChannelModel value) {
+            public void onSelect(@NonNull int column, @NonNull int position, @NonNull int count, @NonNull ChannelModel value) {
                 Log.e("TEST", "onSelect => column = " + column + ", position = " + position + ", value = " + value);
             }
 
             @Override
-            public void onHighlight(@NonNull int column, @NonNull int position, @NonNull ChannelModel value) {
+            public void onHighlight(@NonNull int column, @NonNull int position, @NonNull int count, @NonNull ChannelModel value) {
                 Log.e("TEST", "onHighlight => column = " + column + ", position = " + position + ", value = " + value);
 
                 if (column == 0) {
@@ -129,7 +130,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onMove(@NonNull int column, @NonNull int position, @NonNull ChannelModel value) {
+            public void onInit(@NonNull Map<Integer, List<ChannelModel>> map) {
+                Log.e("TEST", "onInit => map = " + map);
+            }
+
+            @Override
+            public void onMove(@NonNull int column, @NonNull int position, @NonNull int count, @NonNull ChannelModel value) {
                 Log.e("TEST", "onMove => column = " + column + ", position = " + position + ", value = " + value);
                 channelLayout.setVisibility(2, column == 2 ? View.VISIBLE : View.GONE);
                 channelLayout.setVisibility(3, column == 2 ? View.GONE : View.VISIBLE);

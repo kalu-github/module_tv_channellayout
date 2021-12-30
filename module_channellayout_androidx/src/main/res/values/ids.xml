@@ -2,5 +2,6 @@
     <item name="module_channel_item_tag" type="id" />
     <item name="module_channel_item_empty" type="id" />
     <item name="module_channel_item_standard" type="id" />
-    <!--    <item name="module_channel_item_position_focus" type="id" />-->
+    <item name="module_channel_position_select" type="id" />
+    <item name="module_channel_position_highlight" type="id" />
 </resources>

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
@@ -18,18 +19,21 @@ import androidx.annotation.RequiresApi;
 class ChannelTextView extends TextView {
 
     @ColorInt
-    private int mTextColorFocus = getResources().getColor(R.color.module_channellayout_color_333333);
+    private int mTextColorDefault = getResources().getColor(R.color.module_channellayout_color_ababab);
+    @ColorInt
+    private int mTextColorHighlight = getResources().getColor(R.color.module_channellayout_color_333333);
     @ColorInt
     private int mTextColorSelect = getResources().getColor(R.color.module_channellayout_color_ffffff);
-    @ColorInt
-    private int mTextColorDefault = getResources().getColor(R.color.module_channellayout_color_ababab);
 
     @DrawableRes
-    private int mBackgroundResourceFocus = R.drawable.module_channellayout_ic_shape_background_highlight;
+    private int mBackgroundDefault = R.drawable.module_channellayout_ic_background_default;
     @DrawableRes
-    private int mBackgroundResourceSelect = R.drawable.module_channellayout_ic_shape_background_select;
+    private int mBackgroundHighlight = R.drawable.module_channellayout_ic_background_hightlight;
+
     @DrawableRes
-    private int mBackgroundResourceDefault = R.drawable.module_channellayout_ic_shape_background_default;
+    private int mDrawableDefault = R.drawable.module_channellayout_ic_img_default;
+    @DrawableRes
+    private int mDrawableHighlight = R.drawable.module_channellayout_ic_img_highlight;
 
     public ChannelTextView(Context context) {
         super(context);
@@ -66,71 +70,34 @@ class ChannelTextView extends TextView {
     public void setOnLongClickListener(@Nullable OnLongClickListener l) {
     }
 
-    @Override
-    public void setText(CharSequence text, BufferType type) {
-        super.setText(text, type);
-        reset(false);
+    /**************/
+
+    protected final void setBackgroundDefault() {
+        setBackgroundResource(R.drawable.module_channellayout_ic_background_default);
     }
 
-    protected final void select(boolean select) {
-        setSelected(select);
-        setTextColor(mTextColorSelect);
-        setBackgroundResource(mBackgroundResourceSelect);
-        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_drawable_left_hightlight, 0, 0, 0);
+    protected final void setBackgroundHighlight() {
+        setBackgroundResource(R.drawable.module_channellayout_ic_background_hightlight);
     }
 
-    protected final void keep(boolean select) {
-        setSelected(select);
+    protected final void setLeftDrawable(@NonNull boolean show) {
+        if (show) {
+            setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_img_highlight, 0, 0, 0);
+        } else {
+            setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_img_default, 0, 0, 0);
+        }
+    }
+
+    protected final void setTextColorDefault() {
         setTextColor(mTextColorDefault);
-        setBackgroundResource(mBackgroundResourceDefault);
-        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_drawable_left_normal, 0, 0, 0);
     }
 
-    protected final void highlight(boolean select) {
-        setSelected(select);
+    protected final void setTextColorHighlight() {
+        setTextColor(mTextColorHighlight);
+    }
+
+    protected final void setTextColorSelect() {
         setTextColor(mTextColorSelect);
-        setBackgroundResource(mBackgroundResourceSelect);
-        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_drawable_left_hightlight, 0, 0, 0);
-    }
-
-    protected final void focus() {
-        setSelected(true);
-        setTextColor(mTextColorFocus);
-        setBackgroundResource(mBackgroundResourceFocus);
-        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_drawable_left_normal, 0, 0, 0);
-    }
-
-    protected final void reset(boolean select) {
-        setSelected(select);
-        setClickable(true);
-        setTextColor(mTextColorDefault);
-        setBackgroundResource(mBackgroundResourceDefault);
-        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_drawable_left_normal, 0, 0, 0);
-    }
-
-    protected final void select() {
-        setSelected(true);
-        setClickable(false);
-        setTextColor(mTextColorFocus);
-        setBackgroundResource(mBackgroundResourceFocus);
-        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_drawable_left_hightlight, 0, 0, 0);
-    }
-
-    //
-//    protected final void select() {
-//        setSelected(true);
-//        setTextColor(mTextColorSelect);
-//        setBackgroundResource(mBackgroundResourceSelect);
-//        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_hightlight_select, 0, 0, 0);
-//    }
-//
-
-    protected final void selectKeep(){
-        setSelected(false);
-        setClickable(false);
-        setTextColor(mTextColorSelect);
-        setBackgroundResource(mBackgroundResourceSelect);
-        setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_shape_drawable_left_hightlight, 0, 0, 0);
     }
 
     /*************************/
@@ -144,7 +111,10 @@ class ChannelTextView extends TextView {
         setEllipsize(TextUtils.TruncateAt.MARQUEE);
         setSingleLine();
         setHorizontallyScrolling(true);
-        reset(false);
+
+        setTextColorDefault();
+        setBackgroundDefault();
+        setLeftDrawable(false);
     }
 
     /*************************/

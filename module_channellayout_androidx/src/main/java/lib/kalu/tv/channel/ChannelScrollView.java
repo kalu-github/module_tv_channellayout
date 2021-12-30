@@ -97,45 +97,62 @@ class ChannelScrollView extends ScrollView {
         ((ChannelLinearLayoutChild) child).update(list);
     }
 
-    protected final void nextUp(@NonNull int column, @NonNull int position) {
-        if (position <= 0)
-            return;
-        int count1 = getChildCount();
-        if (count1 != 1)
-            return;
-        View childAt = getChildAt(0);
-        if (null == childAt || !(childAt instanceof ChannelLinearLayoutChild))
-            return;
-        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) childAt;
-        layoutChild.nextUp(column, position);
+    protected final boolean nextUp() {
+        try {
+            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
+            int selectPosition = layoutChild.getSelectPosition();
+            if (selectPosition == 0) {
+                return false;
+            } else {
+                layoutChild.nextFocus(selectPosition, Channeldirection.NEXT_UP, true, true);
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    protected final void nextDown(@NonNull int column, @NonNull int position) {
-        int count1 = getChildCount();
-        if (count1 != 1)
+    protected final boolean nextDown() {
+        try {
+            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
+            int count = layoutChild.getChildCount();
+            int selectPosition = layoutChild.getSelectPosition();
+            if (selectPosition + 1 >= count) {
+                return false;
+            } else {
+                layoutChild.nextFocus(selectPosition, Channeldirection.NEXT_DOWN, true, true);
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    protected final void select(@Channeldirection.Value int direction, @NonNull int position, @NonNull boolean select,@NonNull boolean callback) {
+
+        if (direction != Channeldirection.INIT && direction != Channeldirection.SELECT)
             return;
-        View childAt = getChildAt(0);
-        if (null == childAt || !(childAt instanceof ChannelLinearLayoutChild))
-            return;
-        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) childAt;
-        int count2 = layoutChild.getChildCount();
-        if (position + 1 > count2)
-            return;
-        layoutChild.nextDown(column, position);
+
+        try {
+            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
+            layoutChild.nextFocus(position, direction, select, callback);
+        } catch (Exception e) {
+        }
+
     }
 
     /*************/
 
-    protected final void callback(@NonNull int position, @NonNull int direction, @NonNull ChannelModel value) {
+    protected final void callback(@NonNull int position, @NonNull int count, @Channeldirection.Value int direction, @NonNull ChannelModel value) {
 
-        ChannelUtil.logE("callback22 => position = " + position + ", direction = " + direction + ", value = " + value);
+        ChannelUtil.logE("callback22 => position = " + position + ", count = " + count + ", direction = " + direction + ", value = " + value);
         if (position < 0)
             return;
 
         ViewParent parent = getParent();
         if (null != parent && parent instanceof ChannelLayout) {
             int column = ((ChannelLayout) parent).indexOfChild(this);
-            ((ChannelLayout) parent).callback(column, position, direction, value);
+            ((ChannelLayout) parent).callback(column, position, count, direction, value);
         }
     }
 }

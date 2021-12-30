@@ -18,7 +18,12 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import lib.kalu.tv.channel.listener.OnChannelChangeListener;
 import lib.kalu.tv.channel.model.ChannelModel;
@@ -27,6 +32,7 @@ import lib.kalu.tv.channel.model.ChannelModel;
 public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     private final Handler mHandler = new Handler(this);
+    private final Map[] mCache = new Map[2];
 
     public ChannelLayout(Context context) {
         super(context);
@@ -97,8 +103,12 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         super.setVisibility(visibility);
         // 5s隐藏
         autoTime(visibility);
-        // 选中上一次
-        requestFocusLastTime();
+//        // 选中上一次
+////        requestFocusLastTime(visibility);
+//        // 缓存数据
+//        if (visibility == View.VISIBLE && null != onChannelChangeListener) {
+//            onChannelChangeListener.onInit(mCache[0]);
+//        }
     }
 
     private final void autoTime(int visibility) {
@@ -110,61 +120,61 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     }
 
     private final void resetTime() {
-        if (null != mHandler) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
-        if (null != mHandler) {
-            mHandler.sendEmptyMessageDelayed(1, 1000);
-        }
+//        if (null != mHandler) {
+//            mHandler.removeCallbacksAndMessages(null);
+//        }
+//        if (null != mHandler) {
+//            mHandler.sendEmptyMessageDelayed(1, 1000);
+//        }
     }
 
     private final void clearTime() {
-        if (null != mHandler) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
+//        if (null != mHandler) {
+//            mHandler.removeCallbacksAndMessages(null);
+//        }
     }
 
     private final void nextTime(int what) {
-        if (null != mHandler) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
-        if (null != mHandler) {
-            mHandler.removeCallbacksAndMessages(null);
-            mHandler.sendEmptyMessageDelayed(what + 1, 1000);
-        }
+//        if (null != mHandler) {
+//            mHandler.removeCallbacksAndMessages(null);
+//        }
+//        if (null != mHandler) {
+//            mHandler.removeCallbacksAndMessages(null);
+//            mHandler.sendEmptyMessageDelayed(what + 1, 1000);
+//        }
     }
 
-    private final void requestFocusLastTime() {
-
-        if (getVisibility() != View.VISIBLE)
-            return;
-
-        int count = getChildCount();
-        ChannelUtil.logE("requestFocusLastTime => count = " + count);
-
-        for (int i = count - 1; i >= 0; i--) {
-            View scroll = getChildAt(i);
-            if (null == scroll || !(scroll instanceof ChannelScrollView))
-                continue;
-            ChannelLinearLayoutChild layoutChild = ((ChannelLinearLayoutChild) ((ChannelScrollView) scroll).getChildAt(0));
-            int childCount = layoutChild.getChildCount();
-            for (int m = 0; m <= childCount; m++) {
-                View text = layoutChild.getChildAt(m);
-                if (null == text || !(text instanceof ChannelTextView))
-                    continue;
-                // empty
-                if (text.getId() == R.id.module_channel_item_empty) {
-                    break;
-//                    ((ChannelLinearLayoutChild) ((ChannelScrollView) view).getChildAt(0)).removeAllViews();
-                }
-                // select
-                else if (!text.isClickable() && text.getId() == R.id.module_channel_item_standard) {
-                    layoutChild.requestFocus();
-                    return;
-                }
-            }
-        }
-    }
+//    private final void requestFocusLastTime(int visibility) {
+//
+//        if (visibility != View.VISIBLE)
+//            return;
+//
+//        int count = getChildCount();
+//        ChannelUtil.logE("requestFocusLastTime => count = " + count);
+//
+//        for (int i = count - 1; i >= 0; i--) {
+//            View scroll = getChildAt(i);
+//            if (null == scroll || !(scroll instanceof ChannelScrollView))
+//                continue;
+//            ChannelLinearLayoutChild layoutChild = ((ChannelLinearLayoutChild) ((ChannelScrollView) scroll).getChildAt(0));
+//            int childCount = layoutChild.getChildCount();
+//            for (int m = 0; m <= childCount; m++) {
+//                View text = layoutChild.getChildAt(m);
+//                if (null == text || !(text instanceof ChannelTextView))
+//                    continue;
+//                // empty
+//                if (text.getId() == R.id.module_channel_item_empty) {
+//                    break;
+////                    ((ChannelLinearLayoutChild) ((ChannelScrollView) view).getChildAt(0)).removeAllViews();
+//                }
+//                // select
+//                else if (!text.isClickable() && text.getId() == R.id.module_channel_item_standard) {
+//                    layoutChild.requestFocus();
+//                    return;
+//                }
+//            }
+//        }
+//    }
 
     protected boolean removeLastEmpty() {
         boolean hasEmpty = false;
@@ -228,44 +238,6 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         }
     }
 
-    private final void nextUp(@NonNull int column, @NonNull int position) {
-        if (position < 0 || column < 0)
-            return;
-        int count = getChildCount();
-        if (count == 0)
-            return;
-        if (column + 1 > count)
-            return;
-        for (int i = 0; i < count; i++) {
-            if (i != column)
-                continue;
-            View child = getChildAt(i);
-            if (null == child || !(child instanceof ChannelScrollView))
-                continue;
-            ((ChannelScrollView) child).nextUp(column, position);
-            break;
-        }
-    }
-
-    private final void nextDown(@NonNull int column, @NonNull int position) {
-        if (position < 0 || column < 0)
-            return;
-        int count = getChildCount();
-        if (count == 0)
-            return;
-        if (column + 1 > count)
-            return;
-        for (int i = 0; i < count; i++) {
-            if (i != column)
-                continue;
-            View child = getChildAt(i);
-            if (null == child || !(child instanceof ChannelScrollView))
-                continue;
-            ((ChannelScrollView) child).nextDown(column, position);
-            break;
-        }
-    }
-
     @Keep
     public final void update(@NonNull List<List<ChannelModel>> list) {
 
@@ -279,17 +251,22 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         // child
         for (int i = 0; i < size; i++) {
             List<ChannelModel> temp = list.get(i);
-            update(size, i, 0, temp);
+            update(size, i, 0, temp, false);
         }
     }
 
     @Keep
     public final void update(@NonNull int count, @NonNull int column, @NonNull List<ChannelModel> list) {
-        update(count, column, 0, list);
+        update(count, column, 0, list, false);
     }
 
     @Keep
     public final void update(@NonNull int count, @NonNull int column, @NonNull int defaultPosition, @NonNull List<ChannelModel> list) {
+        update(count, column, defaultPosition, list, false);
+    }
+
+    @Keep
+    public final void update(@NonNull int count, @NonNull int column, @NonNull int defaultPosition, @NonNull List<ChannelModel> list, boolean callback) {
 
         ChannelUtil.logE("update => count = " + count + ", column = " + column + ", defaultPosition = " + defaultPosition + ", list = " + list);
         if (null == list || column < 0)
@@ -301,56 +278,68 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             return;
 
         ChannelUtil.logE("addItem[reset0] => count = " + count + ", column = " + column + ", list = " + list);
+
+
+        // cache0
+        if (null == mCache[1]) {
+            if (null != mCache[0]) {
+                mCache[0].remove(column);
+                mCache[0].put(column, list);
+            } else {
+                TreeMap<Integer, List<ChannelModel>> map = new TreeMap<>();
+                map.put(column, list);
+                mCache[0] = map;
+            }
+        }
+        // cache0
+        else {
+            mCache[0] = mCache[1];
+        }
+
+        // cache1
+        if (null != mCache[1]) {
+            mCache[1].remove(column);
+            mCache[1].put(column, list);
+        }
+        // cache1
+        else {
+            TreeMap<Integer, List<ChannelModel>> map = new TreeMap<>();
+            map.put(column, list);
+            mCache[1] = map;
+        }
+
         ((ChannelScrollView) view).update(list);
-        select(column, defaultPosition, defaultPosition > 0);
+        select(Channeldirection.INIT, column, defaultPosition, defaultPosition > 0, callback);
     }
 
     @Keep
     public final void select(@NonNull int column, @NonNull int position) {
-        select(column, position, false);
+        select(Channeldirection.INIT, column, position, false, true);
     }
 
     @Keep
     public final void select(@NonNull int column, @NonNull int position, boolean select) {
-        ChannelUtil.logE("select => ****************************");
-        ChannelUtil.logE("select => column = " + column + ", position = " + position + ", select = " + select);
+        select(Channeldirection.INIT, column, position, select, true);
+    }
 
-        if (position < 0 || column < 0)
+    @Keep
+    public final void select(@NonNull int column, @NonNull int position, @NonNull boolean select, @NonNull boolean callback) {
+        select(Channeldirection.INIT, column, position, select, callback);
+    }
+
+    @Keep
+    public final void select(@Channeldirection.Value int direction, @NonNull int column, @NonNull int position, @NonNull boolean select, @NonNull boolean callback) {
+
+        ChannelUtil.logE("select => direction = " + direction + ", column = " + column + ", position = " + position + ", select = " + select + ", callback = " + callback);
+        if (direction != Channeldirection.INIT && direction != Channeldirection.SELECT)
             return;
 
-        int count = getChildCount();
-        ChannelUtil.logE("select => count = " + count);
-        if (count == 0)
-            return;
-
-        if (column + 1 > count)
-            return;
-
-        for (int i = 0; i < count; i++) {
-            if (i != column)
-                continue;
-            View child = getChildAt(i);
-            ChannelUtil.logE("select => child = " + child);
-            if (null == child || !(child instanceof ChannelScrollView))
-                continue;
-            ChannelScrollView scrollView = (ChannelScrollView) child;
-            int childCount = scrollView.getChildCount();
-            ChannelUtil.logE("select => childCount = " + childCount);
-            if (childCount != 1)
-                continue;
-            View childAt = scrollView.getChildAt(0);
-            ChannelUtil.logE("select => childAt = " + childAt);
-            if (null == childAt || !(childAt instanceof ChannelLinearLayoutChild))
-                continue;
-            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) childAt;
-            int layoutChildChildCount = layoutChild.getChildCount();
-            ChannelUtil.logE("select => layoutChildChildCount = " + layoutChildChildCount);
-            if (position + 1 > layoutChildChildCount)
-                continue;
-            layoutChild.select(column, position, select);
-            break;
+        try {
+            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
+            scrollView.select(direction, position, select, callback);
+        } catch (Exception e) {
+            ChannelUtil.logE("select => " + e.getMessage(), e);
         }
-        ChannelUtil.logE("select => ****************************");
     }
 
     @Keep
@@ -398,52 +387,34 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         return column;
     }
 
-    @Keep
-    public final int getSelectPosition(@NonNull int column) {
-
-        if (column < 0)
-            return -1;
-
-        int count = getChildCount();
-        ChannelUtil.logE("getClickablePosition => count = " + count);
-        if (count <= 0)
-            return -1;
-
-        if (column + 1 > count)
-            return -1;
-
-        View child1 = getChildAt(column);
-        if (null == child1 || !(child1 instanceof ChannelScrollView))
-            return -1;
-
-        int count1 = ((ChannelScrollView) child1).getChildCount();
-        if (count1 != 1)
-            return -1;
-
-        View child2 = ((ChannelScrollView) child1).getChildAt(0);
-        if (null == child2 || !(child2 instanceof ChannelLinearLayoutChild))
-            return -1;
-
-        int count2 = ((ChannelLinearLayoutChild) child2).getChildCount();
-        ChannelUtil.logE("getClickablePosition => count2 = " + count2);
-        if (count2 < 0)
-            return -1;
-
-        int position = -1;
-        for (int i = 0; i < count2; i++) {
-            View child3 = ((ChannelLinearLayoutChild) child2).getChildAt(i);
-            ChannelUtil.logE("getClickablePosition => view = " + child3 + ", count2 = " + count2);
-            if (null == child3)
-                continue;
-            boolean clickable = child3.isClickable();
-            ChannelUtil.logE("getClickablePosition => column = " + column + ", i = " + i + ", clickable = " + clickable + ", text = " + ((TextView) child3).getText());
-            if (!clickable) {
-                position = i;
-                break;
-            }
-        }
-        return position;
-    }
+//    @Keep
+//    public final int getSelectPosition(@NonNull int column) {
+//
+//        int position = -1;
+//        try {
+//            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
+//            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
+//            int count = layoutChild.getChildCount();
+//            for (int i = 0; i < count; i++) {
+//                View child = layoutChild.getChildAt(i);
+//                ChannelUtil.logE("getClickablePosition => view = " + child + ", count = " + count);
+//                if (null == child)
+//                    continue;
+//                boolean clickable = child.isClickable();
+//                ChannelUtil.logE("getClickablePosition => column = " + column + ", i = " + i + ", clickable = " + clickable + ", text = " + ((TextView) child).getText());
+//                if (!clickable) {
+//                    position = i;
+//                    break;
+//                }
+//            }
+//        } catch (Exception e) {
+//        }
+//
+//        if (position == -1) {
+//            position = 0;
+//        }
+//        return position;
+//    }
 
     @Keep
     public final int getChildCount(@NonNull int column) {
@@ -478,27 +449,27 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     }
 
     @Keep
-    public final void selectNextDown(@NonNull int column) {
-        int position = getSelectPosition(column);
-        if (position < 0)
-            return;
-
-        int count = getChildCount(column);
-        if (position + 1 >= count)
-            return;
-        nextDown(column, position);
+    public final boolean selectNextDown(@NonNull int column) {
+        try {
+            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
+            return scrollView.nextDown();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Keep
-    public final void selectNextUp(@NonNull int column) {
-        int position = getSelectPosition(column);
-        if (position <= 0)
-            return;
-        nextUp(column, position);
+    public final boolean selectNextUp(@NonNull int column) {
+        try {
+            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
+            return scrollView.nextUp();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Keep
-    public final void addEmpty(@NonNull int column) {
+    public final void setEmpty(@NonNull int column) {
         int count = getChildCount();
         if (column + 1 >= count)
             return;
@@ -514,19 +485,71 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     }
 
     @Keep
-    public final void removeAllViews(@NonNull int column) {
+    public final void clear(@NonNull int column) {
+        clear(column, false);
+    }
+
+    @Keep
+    public final void clear(@NonNull int column, boolean clearFocus) {
+        ChannelLinearLayoutChild layoutChild = getChannelLinearLayoutChild(column);
+        if (null == layoutChild)
+            return;
+        layoutChild.removeAllViews();
+        if (!clearFocus)
+            return;
+        clearFocusLinearLayout(column);
+    }
+
+    @Keep
+    public final void clearFocusLinearLayout(@NonNull int column) {
+        ChannelLinearLayoutChild layoutChild = getChannelLinearLayoutChild(column);
+        if (null == layoutChild)
+            return;
+        layoutChild.clearFocus();
+    }
+
+    @Keep
+    public final void requestFocusLinearLayout(@NonNull int column) {
+        ChannelLinearLayoutChild layoutChild = getChannelLinearLayoutChild(column);
+        if (null == layoutChild)
+            return;
+        layoutChild.requestFocus();
+    }
+
+    @Keep
+    public final ChannelLinearLayoutChild getChannelLinearLayoutChild(@NonNull int column) {
         int count = getChildCount();
         if (column + 1 >= count)
-            return;
+            return null;
         View child = getChildAt(column);
         if (null == child || !(child instanceof ChannelScrollView))
-            return;
+            return null;
         ChannelScrollView scrollView = (ChannelScrollView) child;
         int childCount = scrollView.getChildCount();
         if (childCount != 1)
-            return;
+            return null;
         ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
-        layoutChild.removeAllViews();
+        return layoutChild;
+    }
+
+    @Keep
+    public final ChannelTextView getChannelTextView(@NonNull int column, int position) {
+        try {
+            ChannelLinearLayoutChild channelLinearLayoutChild = getChannelLinearLayoutChild(column);
+            ChannelTextView channelTextView = (ChannelTextView) channelLinearLayoutChild.getChildAt(position);
+            return channelTextView;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Keep
+    public final void focus(@NonNull int column) {
+//        int position = getSelectPosition(column);
+//        ChannelUtil.logE("focus => column = " + column + ", position = " + position);
+//        ChannelTextView textView = getChannelTextView(column, position);
+//        ChannelUtil.logE("focus => textView = " + textView);
+//        textView.focus();
     }
 
     /*************************/
@@ -539,48 +562,45 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     /*************************/
 
-    protected final void callback(@NonNull int column, @NonNull int position, @NonNull int direction, @NonNull ChannelModel value) {
+    protected final void callback(@NonNull int column, @NonNull int position, @NonNull int count, @Channeldirection.Value int direction, @NonNull ChannelModel value) {
 
-        ChannelUtil.logE("callback11 => column = " + column + ", position = " + position + ", direction = " + direction + ", value = " + value);
+        ChannelUtil.logE("callback11 => column = " + column + ", position = " + position + ", count = " + count + ", direction = " + direction + ", value = " + value);
         if (position < 0 || column < 0)
             return;
 
-        int count = getChildCount();
-        ChannelUtil.logE("callback11 => count = " + count);
-        if (column + 1 > count)
+        int size = getChildCount();
+        ChannelUtil.logE("callback11 => count = " + size);
+        if (column + 1 > size)
             return;
 
         if (null != onChannelChangeListener) {
+
             // right
-            if (direction == View.FOCUS_RIGHT) {
+            if (direction == Channeldirection.RIGHT) {
                 if (position == Integer.MAX_VALUE) {
                     position = -1;
                 }
-                onChannelChangeListener.onMove(column, position, value);
+                onChannelChangeListener.onMove(column, position, count, value);
             }
             // left
-            else if (direction == View.FOCUS_LEFT) {
-                onChannelChangeListener.onMove(column, position, value);
+            else if (direction == Channeldirection.LEFT) {
+                onChannelChangeListener.onMove(column, position, count, value);
             }
-            // init
-            else if (direction == Integer.MIN_VALUE) {
-                onChannelChangeListener.onSelect(column, position, value);
-            }
-            // click
-            else if (direction == Integer.MAX_VALUE) {
-                onChannelChangeListener.onSelect(column, position, value);
+            // select
+            else if (direction == Channeldirection.SELECT || direction == Channeldirection.INIT) {
+                onChannelChangeListener.onSelect(column, position, count, value);
             }
             // nextUp
-            else if (direction == 1111) {
-                onChannelChangeListener.onSelect(column, position, value);
+            else if (direction == Channeldirection.NEXT_UP) {
+                onChannelChangeListener.onSelect(column, position, count, value);
             }
             // nextDown
-            else if (direction == 2222) {
-                onChannelChangeListener.onSelect(column, position, value);
+            else if (direction == Channeldirection.NEXT_DOWN) {
+                onChannelChangeListener.onSelect(column, position, count, value);
             }
             // highlight
             else {
-                onChannelChangeListener.onHighlight(column, position, value);
+                onChannelChangeListener.onHighlight(column, position, count, value);
             }
         }
     }

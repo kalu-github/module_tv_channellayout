@@ -9,18 +9,14 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import lib.kalu.tv.channel.model.ChannelModel;
@@ -93,7 +89,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 ChannelLayout layout = (ChannelLayout) scroll.getParent();
                 int column = layout.indexOfChild(scroll);
                 ChannelUtil.logE("dispatchKeyEvent[down move] => column = " + column);
-                nextFocus(View.FOCUS_DOWN);
+                nextFocus(Channeldirection.DOWN, true);
             } catch (Exception e) {
             }
             return true;
@@ -105,7 +101,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 ChannelLayout layout = (ChannelLayout) scroll.getParent();
                 int column = layout.indexOfChild(scroll);
                 ChannelUtil.logE("dispatchKeyEvent[up move] => column = " + column);
-                nextFocus(View.FOCUS_UP);
+                nextFocus(Channeldirection.UP, true);
             } catch (Exception e) {
             }
             return true;
@@ -125,16 +121,17 @@ class ChannelLinearLayoutChild extends LinearLayout {
                     // 暂无节目
                     if (childCount == 0) {
                         ChannelUtil.logE("dispatchKeyEvent[right move] => empty");
-                        keepSelect(View.FOCUS_RIGHT);
+                        keep(Channeldirection.RIGHT);
+                        layoutNext.callback(Integer.MAX_VALUE, Channeldirection.RIGHT);
                         layoutNext.requestFocus();
-                        layoutNext.callback(Integer.MAX_VALUE, View.FOCUS_RIGHT);
                     }
                     // 正常显示
                     else {
                         ChannelUtil.logE("dispatchKeyEvent[right move] => next");
-                        keepSelect(View.FOCUS_RIGHT);
+                        keep(Channeldirection.RIGHT);
+                        clearFocus();
+                        layoutNext.nextFocus(Channeldirection.RIGHT, true);
                         layoutNext.requestFocus();
-                        layoutNext.nextFocus(View.FOCUS_RIGHT);
                     }
                 }
             } catch (Exception e) {
@@ -166,10 +163,13 @@ class ChannelLinearLayoutChild extends LinearLayout {
                     // 正常显示
                     else {
                         ChannelUtil.logE("dispatchKeyEvent[left move] => next");
-                        keepSelect(View.FOCUS_LEFT);
                     }
+                    // before
+                    keep(Channeldirection.LEFT);
+                    clearFocus();
+                    // next
+                    layoutNext.nextFocus(Channeldirection.LEFT, true);
                     layoutNext.requestFocus();
-                    layoutNext.nextFocus(View.FOCUS_LEFT);
                 }
             } catch (Exception e) {
                 ChannelUtil.logE("dispatchKeyEvent[left move] => exception");
@@ -180,13 +180,10 @@ class ChannelLinearLayoutChild extends LinearLayout {
         else if (showing && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
             View focus = findFocus();
             if (null != focus && focus instanceof ChannelLinearLayoutChild) {
-                int position = findClick();
-                if (position != -1) {
-                    callback(position, Integer.MAX_VALUE);
-                    ChannelUtil.logE("dispatchKeyEvent[enter click] => position = " + position);
-                } else {
-                    ChannelUtil.logE("dispatchKeyEvent[enter click fail] => position = " + position);
-                }
+                int position = getHighlightPosition();
+                setSelectPosition(position);
+                callback(position, Channeldirection.SELECT);
+                ChannelUtil.logE("dispatchKeyEvent[enter click] => position = " + position);
                 return true;
             }
         }
@@ -194,13 +191,10 @@ class ChannelLinearLayoutChild extends LinearLayout {
         else if (showing && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
             View focus = findFocus();
             if (null != focus && focus instanceof ChannelLinearLayoutChild) {
-                int position = findClick();
-                if (position != -1) {
-                    callback(position, Integer.MAX_VALUE);
-                    ChannelUtil.logE("dispatchKeyEvent[center click] => position = " + position);
-                } else {
-                    ChannelUtil.logE("dispatchKeyEvent[center click fail] => position = " + position);
-                }
+                int position = getHighlightPosition();
+                setSelectPosition(position);
+                callback(position, Channeldirection.SELECT);
+                ChannelUtil.logE("dispatchKeyEvent[center click] => position = " + position);
                 return true;
             }
         }
@@ -211,6 +205,93 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
         return super.dispatchKeyEvent(event);
     }
+
+    /**************/
+
+    protected final int getHighlightPosition() {
+        try {
+            return (int) getTag(R.id.module_channel_position_highlight);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private final void setHighlightPosition(@NonNull int position) {
+        if (position < 0)
+            return;
+        int count = getChildCount();
+        if (position >= count)
+            return;
+
+        try {
+            int highlightPosition = getHighlightPosition();
+            if (highlightPosition != position) {
+                ChannelTextView textView = (ChannelTextView) getChildAt(highlightPosition);
+                textView.setBackgroundDefault();
+                textView.setLeftDrawable(false);
+                textView.setBackgroundDefault();
+            }
+        } catch (Exception e) {
+        }
+
+        setTag(R.id.module_channel_position_highlight, position);
+    }
+
+    protected final int getSelectPosition() {
+        try {
+            return (int) getTag(R.id.module_channel_position_select);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private final void setSelectPosition(@NonNull int position) {
+        if (position < 0)
+            return;
+        int count = getChildCount();
+        if (position >= count)
+            return;
+
+        try {
+            int selectPosition = getSelectPosition();
+            if (selectPosition != position) {
+                ChannelTextView textView = (ChannelTextView) getChildAt(selectPosition);
+                textView.setBackgroundDefault();
+                textView.setLeftDrawable(false);
+                textView.setBackgroundDefault();
+            }
+        } catch (Exception e) {
+        }
+        setTag(R.id.module_channel_position_select, position);
+    }
+
+    /**************/
+
+    private final void keep(@Channeldirection.Value int direction) {
+
+        if (direction != Channeldirection.LEFT && direction != Channeldirection.RIGHT)
+            return;
+
+        int selectPosition = getSelectPosition();
+        int highlightPosition = getHighlightPosition();
+        ChannelUtil.logE("keep => direction = " + direction + ", selectPosition = " + selectPosition + ", highlightPosition = " + highlightPosition);
+
+        // 1
+        ChannelTextView view = null;
+        try {
+            view = (ChannelTextView) getChildAt(highlightPosition);
+        } catch (Exception e) {
+        }
+
+        // 2
+        if (null != view) {
+            view.setTextColorSelect();
+            view.setLeftDrawable(selectPosition == highlightPosition);
+            view.setBackgroundDefault();
+        }
+    }
+
+    /**************/
 
     private final void init() {
         setClickable(true);
@@ -262,263 +343,168 @@ class ChannelLinearLayoutChild extends LinearLayout {
         addView(child);
     }
 
-    private final int findClick() {
-        int num = 0;
-        int position = -1;
-        int count = getChildCount();
-        for (int i = 0; i < count; i++) {
-            View temp = getChildAt(i);
-            if (null == temp || !(temp instanceof ChannelTextView))
-                continue;
+    protected final void nextFocus(@Channeldirection.Value int direction, boolean select) {
 
-            boolean selected = temp.isSelected();
-            boolean clickable = temp.isClickable();
-
-            // click
-            if (selected) {
-                if (clickable) {
-                    ((ChannelTextView) temp).select();
-                    position = i;
-                }
-                num++;
-                continue;
-            }
-            // clickable
-            else if (!clickable) {
-                ((ChannelTextView) temp).reset(false);
-                num++;
-                continue;
-            }
-
-            if (num >= 2)
-                break;
-        }
-        return position;
-    }
-
-    private final int findColumn() {
-        int column;
-        try {
-            column = ((ViewGroup) getParent().getParent()).indexOfChild((View) getParent());
-        } catch (Exception e) {
-            column = -1;
-        }
-
-        ChannelUtil.logE("findColumn => column = " + column);
-        return column;
-    }
-
-    private final int findFocusPosition(@NonNull int column) {
-        int position = 0;
-        int count = getChildCount();
-        for (int i = 0; i < count; i++) {
-            View temp = getChildAt(i);
-            if (null == temp)
-                continue;
-
-            boolean selected = temp.isSelected();
-            if (selected) {
-                position = i;
-                break;
-            }
-        }
-
-        ChannelUtil.logE("findFocusPosition => column = " + column + ", position = " + position);
-        return position;
-    }
-
-    private final int findSelectPosition(@NonNull int column) {
-        int position = 0;
-        int count = getChildCount();
-        for (int i = 0; i < count; i++) {
-            View temp = getChildAt(i);
-            if (null == temp)
-                continue;
-
-            boolean clickable = temp.isClickable();
-            if (!clickable) {
-                position = i;
-                break;
-            }
-        }
-
-        ChannelUtil.logE("findSelectPosition => column = " + column + ", position = " + position);
-        return position;
-    }
-
-    private final void keepSelect(@NonNull int direction) {
-
-        int column = findColumn();
-        int focusPosition = findFocusPosition(column);
-        int selectPosition = findSelectPosition(column);
-
-        View viewFocus = null;
-        try {
-            viewFocus = getChildAt(focusPosition);
-        } catch (Exception e) {
-        }
-
-        View viewSelect = null;
-        try {
-            viewSelect = getChildAt(selectPosition);
-        } catch (Exception e) {
-        }
-
-        String tag = (direction == View.FOCUS_LEFT ? "left" : "right");
-        ChannelUtil.logE("keepSelect[" + tag + "] => column = " + column + ", focusPosition = " + focusPosition + ", selectPosition = " + selectPosition + ", viewFocus = " + viewFocus + ", viewSelect = " + viewSelect);
-
-        if (null != viewFocus) {
-            if (column <= 0) {
-                ((ChannelTextView) viewFocus).select(true);
-            } else {
-                ((ChannelTextView) viewFocus).reset(false);
-            }
-        }
-
-        if (null != viewSelect) {
-            if (column <= 0) {
-                ((ChannelTextView) viewSelect).select(true);
-            } else {
-                ((ChannelTextView) viewSelect).highlight(true);
-            }
-        }
-
-        clearFocus();
-    }
-
-    private final void nextFocus(@NonNull int direction) {
-
-        if (direction != View.FOCUS_DOWN && direction != View.FOCUS_UP && direction != View.FOCUS_LEFT && direction != View.FOCUS_RIGHT && direction != Integer.MIN_VALUE && direction != Integer.MAX_VALUE)
+        if (direction < Channeldirection.MIN || direction > Channeldirection.MAX)
             return;
 
-        int column = findColumn();
-        if (column < 0)
-            return;
-
-        int focusPosition = findFocusPosition(column);
-        if (focusPosition < 0)
-            return;
-
-        nextFocus(column, focusPosition, direction, false);
+        int highlightPosition = getHighlightPosition();
+        nextFocus(highlightPosition, direction, select, true);
     }
 
-    private final void nextFocus(@NonNull int column, @NonNull int focusPosition, @NonNull int direction, boolean select) {
+    protected final void nextFocus(@NonNull int highlightPosition, @Channeldirection.Value int direction, boolean select, @NonNull boolean callback) {
 
-        if (direction != 1111 && direction != 2222 && direction != View.FOCUS_DOWN && direction != View.FOCUS_UP && direction != View.FOCUS_LEFT && direction != View.FOCUS_RIGHT && direction != Integer.MIN_VALUE && direction != Integer.MAX_VALUE)
+        if (direction < Channeldirection.MIN || direction > Channeldirection.MAX)
             return;
 
         ChannelUtil.logE("nextFocus => ****************************");
+
+        int selectPosition = getSelectPosition();
+        int count = getChildCount();
         int nextPosition;
 
         // down
-        if (direction == View.FOCUS_DOWN) {
-            nextPosition = focusPosition + 1;
+        if (direction == Channeldirection.DOWN) {
+            nextPosition = highlightPosition + 1;
         }
         // nextDown
-        else if (direction == 2222) {
-            nextPosition = focusPosition + 1;
+        else if (direction == Channeldirection.NEXT_DOWN) {
+            nextPosition = highlightPosition + 1;
         }
         // up
-        else if (direction == View.FOCUS_UP) {
-            nextPosition = focusPosition - 1;
+        else if (direction == Channeldirection.UP) {
+            nextPosition = highlightPosition - 1;
         }
         // nextUp
-        else if (direction == 1111) {
-            nextPosition = focusPosition - 1;
+        else if (direction == Channeldirection.NEXT_UP) {
+            nextPosition = highlightPosition - 1;
         }
         // init
         else {
-            nextPosition = focusPosition;
+            nextPosition = highlightPosition;
         }
 
-        int count = getChildCount();
-        ChannelUtil.logE("nextFocus => column = " + column + ", focusPosition = " + focusPosition + ", nextPosition = " + nextPosition + ", count = " + count + ", direction = " + direction + ", select = " + select);
+        ChannelUtil.logE("nextFocus => highlightPosition = " + highlightPosition + ", selectPosition = " + selectPosition + ", nextPosition = " + nextPosition + ", count = " + count);
         if (nextPosition < 0 || nextPosition >= count)
             return;
 
-        View before = null;
+        ChannelTextView before = null;
         try {
-            before = getChildAt(focusPosition);
+            if (nextPosition != highlightPosition) {
+                before = (ChannelTextView) getChildAt(highlightPosition);
+            }
         } catch (Exception e) {
         }
-        View next = null;
+        ChannelTextView next = null;
         try {
-            next = getChildAt(nextPosition);
+            next = (ChannelTextView) getChildAt(nextPosition);
         } catch (Exception e) {
         }
-        if (null != before && null != next && before == next) {
-            before = null;
+
+        // setHighlightPosition
+        setHighlightPosition(nextPosition);
+        int highlightPosition1 = getHighlightPosition();
+        ChannelUtil.logE("nextFocus => highlightPosition1 = " + highlightPosition1);
+
+        // setSelectPosition
+        if (direction == Channeldirection.NEXT_UP || direction == Channeldirection.NEXT_DOWN || direction == Channeldirection.INIT || direction == Channeldirection.SELECT) {
+            setSelectPosition(nextPosition);
+            int selectPosition1 = getSelectPosition();
+            ChannelUtil.logE("nextFocus => selectPosition1 = " + selectPosition1);
         }
 
         try {
-            ChannelUtil.logE("nextFocus => before = " + ((TextView) before).getText() + ", clickable = " + before.isClickable());
+            ChannelUtil.logE("nextFocus => before = " + before.getText());
         } catch (Exception e) {
             ChannelUtil.logE("nextFocus => before = null");
         }
         try {
-            ChannelUtil.logE("nextFocus => next = " + ((TextView) next).getText() + ", clickable = " + next.isClickable());
+            ChannelUtil.logE("nextFocus => next = " + next.getText());
         } catch (Exception e) {
             ChannelUtil.logE("nextFocus => next = null, message = " + e.getMessage(), e);
         }
 
         // before
         if (null != before) {
-
-            boolean clickable = before.isClickable();
-            // left
-            if (!clickable && direction == View.FOCUS_LEFT) {
-                ((ChannelTextView) before).highlight(true);
-            }
-            // right
-            else if (!clickable && direction == View.FOCUS_RIGHT) {
-                ((ChannelTextView) before).highlight(true);
-            }
-            // down
-            else if (!clickable && direction == View.FOCUS_DOWN) {
-                ((ChannelTextView) before).selectKeep();
-            }
-            // up
-            else if (!clickable && direction == View.FOCUS_UP) {
-                ((ChannelTextView) before).selectKeep();
-            }
-            // reset
-            else {
-                ((ChannelTextView) before).reset(false);
-            }
+            before.setTextColorDefault();
+            before.setLeftDrawable(highlightPosition == selectPosition);
+            before.setBackgroundDefault();
         }
 
         // next
         if (null != next) {
 
             // scroll => init
-            if (direction == Integer.MIN_VALUE) {
+            if (direction == Channeldirection.INIT) {
                 scrolInit(next);
             }
             // scroll => down
-            else if (direction == View.FOCUS_DOWN) {
+            else if (direction == Channeldirection.DOWN) {
                 scrolDown(next);
             }
             // scroll => up
-            else if (direction == View.FOCUS_UP) {
+            else if (direction == Channeldirection.UP) {
                 scrolUp(next);
             }
 
+            // up down
+            if (direction == Channeldirection.UP || direction == Channeldirection.DOWN) {
+                next.setLeftDrawable(false);
+                next.setTextColorHighlight();
+                next.setBackgroundHighlight();
+            }
+            // next-up next-down
+            else if (direction == Channeldirection.NEXT_UP || direction == Channeldirection.NEXT_DOWN) {
+                next.setLeftDrawable(false);
+                next.setTextColorHighlight();
+                next.setBackgroundHighlight();
+            }
+            // left right
+            else if (direction == Channeldirection.LEFT || direction == Channeldirection.RIGHT) {
+                next.setLeftDrawable(false);
+                next.setTextColorHighlight();
+                next.setBackgroundHighlight();
+            }
             // select
-            if (select) {
-                ((ChannelTextView) next).select();
+            else if (direction == Channeldirection.SELECT) {
+                next.setLeftDrawable(false);
+                next.setTextColorHighlight();
+                next.setBackgroundHighlight();
             }
-            // init
-            else if (direction == Integer.MIN_VALUE) {
-                ((ChannelTextView) next).highlight(true);
+            // init1
+            else if (select && direction == Channeldirection.INIT) {
+                next.setLeftDrawable(false);
+                next.setTextColorHighlight();
+                next.setBackgroundHighlight();
             }
-            // default
-            else {
-                ((ChannelTextView) next).focus();
+            // init2
+            else if (direction == Channeldirection.INIT) {
+                next.setLeftDrawable(true);
+                next.setTextColorDefault();
+                next.setBackgroundDefault();
             }
 
-            // callback
-            callback(nextPosition, direction);
+            // requestFocus
+            if (select) {
+                requestFocus();
+            }
+            // clearFocus
+            else {
+                clearFocus();
+            }
         }
+
+        // callback
+        if (callback && null != next) {
+            // callback
+            if (direction == Channeldirection.SELECT && !select) {
+            }
+            // callback
+            else {
+                callback(nextPosition, direction);
+            }
+        }
+
         ChannelUtil.logE("nextFocus => ****************************");
     }
 
@@ -564,36 +550,31 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
     /*************/
 
-    protected final void select(@NonNull int column, @NonNull int position) {
-        select(column, position, false);
-    }
+//    protected final void select(@NonNull int column, @NonNull int position) {
+//        select(column, position, false);
+//    }
+//    protected final void select(@NonNull int position, @NonNull boolean select) {
+//        int count = getChildCount();
+//        if (position + 1 > count)
+//            return;
+//
+//        if (select) {
+//            requestFocus();
+//        }
+//
+//        nextFocus(position, Channeldirection.SELECT, select);
+//    }
 
-    protected final void select(@NonNull int column, @NonNull int position, @NonNull boolean select) {
-        int count = getChildCount();
-        if (position + 1 > count)
-            return;
-
-        if (select) {
-            requestFocus();
-        }
-        nextFocus(column, position, Integer.MIN_VALUE, select);
-    }
-
-    protected final void nextUp(@NonNull int column, @NonNull int position) {
-        int count = getChildCount();
-        if (position + 1 > count)
-            return;
-
-        nextFocus(column, position, 1111, true);
-    }
-
-    protected final void nextDown(@NonNull int column, @NonNull int position) {
-        int count = getChildCount();
-        if (position + 1 > count)
-            return;
-
-        nextFocus(column, position, 2222, true);
-    }
+//    protected final void select(@NonNull int column, @NonNull int position , @NonNull int direction, @NonNull boolean select) {
+//        int count = getChildCount();
+//        if (position + 1 > count)
+//            return;
+//
+//        if (select) {
+//            requestFocus();
+//        }
+//        nextFocus(column, position, direction, select);
+//    }
 
     /*************/
 
@@ -624,9 +605,9 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
     /*************/
 
-    protected final void callback(int position, int direction) {
+    protected final void callback(@NonNull int position, @Channeldirection.Value int direction) {
 
-        ChannelUtil.logE("callback33 => position = " + position);
+        ChannelUtil.logE("callback33 => position = " + position + ", direction = " + direction);
         if (position < 0)
             return;
 
@@ -646,6 +627,6 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
         if (null == getParent() || !(getParent() instanceof ChannelScrollView))
             return;
-        ((ChannelScrollView) getParent()).callback(position, direction, value);
+        ((ChannelScrollView) getParent()).callback(position, count, direction, value);
     }
 }
