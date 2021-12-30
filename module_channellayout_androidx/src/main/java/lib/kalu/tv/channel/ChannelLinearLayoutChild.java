@@ -425,7 +425,19 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
 
         // before
-        if (null != before) {
+        if (null != before && direction == Channeldirection.NEXT_DOWN) {
+            before.setTextColorDefault();
+            before.setLeftDrawable(false);
+            before.setBackgroundDefault();
+        }
+        // before
+        else if (null != before && direction == Channeldirection.NEXT_UP) {
+            before.setTextColorDefault();
+            before.setLeftDrawable(false);
+            before.setBackgroundDefault();
+        }
+        // before
+        else {
             before.setTextColorDefault();
             before.setLeftDrawable(highlightPosition == selectPosition);
             before.setBackgroundDefault();
