@@ -684,7 +684,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
     }
 
-    private final void updateTags(boolean clear) {
+    protected final void updateTags(boolean clear) {
 
         if (clear) {
             setTag(R.id.module_channel_tag_all, null);

@@ -180,8 +180,18 @@ class ChannelScrollView extends ScrollView {
     protected final void focus() {
         try {
             ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
-            layoutChild.resetHighlight();
             layoutChild.requestFocus();
+            layoutChild.resetHighlight();
+        } catch (Exception e) {
+        }
+    }
+
+    protected final void clear() {
+        try {
+            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
+            layoutChild.clearFocus();
+            layoutChild.removeAllViews();
+            layoutChild.updateTags(true);
         } catch (Exception e) {
         }
     }

@@ -504,74 +504,87 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     @Keep
     public final void clear(@NonNull int column) {
-        clear(column, false);
+        clear(column, true);
     }
 
     @Keep
-    public final void clear(@NonNull int column, boolean clearFocus) {
-        ChannelLinearLayoutChild layoutChild = getChannelLinearLayoutChild(column);
-        if (null == layoutChild)
-            return;
-        layoutChild.removeAllViews();
-        if (!clearFocus)
-            return;
-        clearFocusLinearLayout(column);
-    }
+    public final void clear(@NonNull int column, boolean focusMove) {
 
-    @Keep
-    public final void clearFocusLinearLayout(@NonNull int column) {
-        ChannelLinearLayoutChild layoutChild = getChannelLinearLayoutChild(column);
-        if (null == layoutChild)
-            return;
-        layoutChild.clearFocus();
-    }
-
-    @Keep
-    public final void requestFocusLinearLayout(@NonNull int column) {
-        try {
-            ChannelLinearLayoutChild layoutChild = getChannelLinearLayoutChild(column);
-            if (null == layoutChild)
-                return;
-            layoutChild.requestFocus();
-        } catch (Exception e) {
-        }
-    }
-
-    @Keep
-    public final ChannelLinearLayoutChild getChannelLinearLayoutChild(@NonNull int column) {
-        int count = getChildCount();
-        if (column + 1 >= count)
-            return null;
-        View child = getChildAt(column);
-        if (null == child || !(child instanceof ChannelScrollView))
-            return null;
-        ChannelScrollView scrollView = (ChannelScrollView) child;
-        int childCount = scrollView.getChildCount();
-        if (childCount != 1)
-            return null;
-        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
-        return layoutChild;
-    }
-
-    @Keep
-    public final ChannelTextView getChannelTextView(@NonNull int column, int position) {
-        try {
-            ChannelLinearLayoutChild channelLinearLayoutChild = getChannelLinearLayoutChild(column);
-            ChannelTextView channelTextView = (ChannelTextView) channelLinearLayoutChild.getChildAt(position);
-            return channelTextView;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    @Keep
-    public final void focus(@NonNull int column) {
+        // remove
         try {
             ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
+            scrollView.clear();
+        } catch (Exception e) {
+        }
+
+        if (!focusMove)
+            return;
+
+        // update
+        focusMove(Channeldirection.LEFT, column);
+    }
+
+    @Keep
+    public final void focusMove(@Channeldirection.Value int direction, @NonNull int column) {
+
+        if (direction != Channeldirection.LEFT)
+            return;
+
+        //  focus move left
+        if (column <= 0)
+            return;
+        try {
+            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column - 1);
             scrollView.focus();
         } catch (Exception e) {
         }
     }
+//
+//    @Keep
+//    public final void clearFocusLinearLayout(@NonNull int column) {
+//        ChannelLinearLayoutChild layoutChild = getChannelLinearLayoutChild(column);
+//        if (null == layoutChild)
+//            return;
+//        layoutChild.clearFocus();
+//    }
+//
+//    @Keep
+//    public final void requestFocusLinearLayout(@NonNull int column) {
+//        try {
+//            ChannelLinearLayoutChild layoutChild = getChannelLinearLayoutChild(column);
+//            if (null == layoutChild)
+//                return;
+//            layoutChild.requestFocus();
+//        } catch (Exception e) {
+//        }
+//    }
+
+//    @Keep
+//    public final ChannelLinearLayoutChild getChannelLinearLayoutChild(@NonNull int column) {
+//        int count = getChildCount();
+//        if (column + 1 >= count)
+//            return null;
+//        View child = getChildAt(column);
+//        if (null == child || !(child instanceof ChannelScrollView))
+//            return null;
+//        ChannelScrollView scrollView = (ChannelScrollView) child;
+//        int childCount = scrollView.getChildCount();
+//        if (childCount != 1)
+//            return null;
+//        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
+//        return layoutChild;
+//    }
+//
+//    @Keep
+//    public final ChannelTextView getChannelTextView(@NonNull int column, int position) {
+//        try {
+//            ChannelLinearLayoutChild channelLinearLayoutChild = getChannelLinearLayoutChild(column);
+//            ChannelTextView channelTextView = (ChannelTextView) channelLinearLayoutChild.getChildAt(position);
+//            return channelTextView;
+//        } catch (Exception e) {
+//            return null;
+//        }
+//    }
 
     /*************************/
 
