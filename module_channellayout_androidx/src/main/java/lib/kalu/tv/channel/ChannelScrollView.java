@@ -177,6 +177,15 @@ class ChannelScrollView extends ScrollView {
         }
     }
 
+    protected final void focus() {
+        try {
+            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
+            layoutChild.resetHighlight();
+            layoutChild.requestFocus();
+        } catch (Exception e) {
+        }
+    }
+
     /*************/
 
     protected final void callback(@NonNull int position, @NonNull int count, @Channeldirection.Value int direction, @NonNull ChannelModel value) {

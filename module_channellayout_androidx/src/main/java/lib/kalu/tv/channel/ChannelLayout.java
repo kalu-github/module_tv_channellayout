@@ -528,10 +528,13 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     @Keep
     public final void requestFocusLinearLayout(@NonNull int column) {
-        ChannelLinearLayoutChild layoutChild = getChannelLinearLayoutChild(column);
-        if (null == layoutChild)
-            return;
-        layoutChild.requestFocus();
+        try {
+            ChannelLinearLayoutChild layoutChild = getChannelLinearLayoutChild(column);
+            if (null == layoutChild)
+                return;
+            layoutChild.requestFocus();
+        } catch (Exception e) {
+        }
     }
 
     @Keep
@@ -563,11 +566,11 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     @Keep
     public final void focus(@NonNull int column) {
-//        int position = getSelectPosition(column);
-//        ChannelUtil.logE("focus => column = " + column + ", position = " + position);
-//        ChannelTextView textView = getChannelTextView(column, position);
-//        ChannelUtil.logE("focus => textView = " + textView);
-//        textView.focus();
+        try {
+            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
+            scrollView.focus();
+        } catch (Exception e) {
+        }
     }
 
     /*************************/
