@@ -181,18 +181,22 @@ class ChannelLinearLayoutChild extends LinearLayout {
         else if (showing && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
             View focus = findFocus();
             if (null != focus && focus instanceof ChannelLinearLayoutChild) {
-                int selectPosition = getSelectPosition();
-                int highlightPosition = getHighlightPosition();
-                if (selectPosition != highlightPosition) {
-                    updateTags(true);
-                    setSelectPosition(highlightPosition);
-                    try {
-                        ChannelScrollView scrollView = (ChannelScrollView) getParent();
-                        scrollView.updateParentHighlight();
-                    } catch (Exception e) {
+                ChannelScrollView scrollView = (ChannelScrollView) getParent();
+                ChannelLayout channelLayout = (ChannelLayout) scrollView.getParent();
+                int index = channelLayout.indexOfChild(scrollView);
+                if (index > 0) {
+                    int selectPosition = getSelectPosition();
+                    int highlightPosition = getHighlightPosition();
+                    if (selectPosition != highlightPosition) {
+                        updateTags(true);
+                        setSelectPosition(highlightPosition);
+                        try {
+                            scrollView.updateParentHighlight();
+                        } catch (Exception e) {
+                        }
+                        callback(highlightPosition, Channeldirection.SELECT);
+                        ChannelUtil.logE("dispatchKeyEvent[enter click] => position = " + highlightPosition);
                     }
-                    callback(highlightPosition, Channeldirection.SELECT);
-                    ChannelUtil.logE("dispatchKeyEvent[enter click] => position = " + highlightPosition);
                 }
                 return true;
             }
@@ -201,18 +205,22 @@ class ChannelLinearLayoutChild extends LinearLayout {
         else if (showing && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
             View focus = findFocus();
             if (null != focus && focus instanceof ChannelLinearLayoutChild) {
-                int selectPosition = getSelectPosition();
-                int highlightPosition = getHighlightPosition();
-                if (selectPosition != highlightPosition) {
-                    updateTags(true);
-                    setSelectPosition(highlightPosition);
-                    try {
-                        ChannelScrollView scrollView = (ChannelScrollView) getParent();
-                        scrollView.updateParentHighlight();
-                    } catch (Exception e) {
+                ChannelScrollView scrollView = (ChannelScrollView) getParent();
+                ChannelLayout channelLayout = (ChannelLayout) scrollView.getParent();
+                int index = channelLayout.indexOfChild(scrollView);
+                if (index > 0) {
+                    int selectPosition = getSelectPosition();
+                    int highlightPosition = getHighlightPosition();
+                    if (selectPosition != highlightPosition) {
+                        updateTags(true);
+                        setSelectPosition(highlightPosition);
+                        try {
+                            scrollView.updateParentHighlight();
+                        } catch (Exception e) {
+                        }
+                        callback(highlightPosition, Channeldirection.SELECT);
+                        ChannelUtil.logE("dispatchKeyEvent[center click] => position = " + highlightPosition);
                     }
-                    callback(highlightPosition, Channeldirection.SELECT);
-                    ChannelUtil.logE("dispatchKeyEvent[center click] => position = " + highlightPosition);
                 }
                 return true;
             }
@@ -281,6 +289,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             }
         } catch (Exception e) {
         }
+
         setTag(R.id.module_channel_position_select, position);
     }
 
@@ -638,6 +647,8 @@ class ChannelLinearLayoutChild extends LinearLayout {
             }
         } catch (Exception e) {
         }
+
+        callback(highlightPosition, Channeldirection.SELECT);
     }
 
     protected final void resetHighlight() {
