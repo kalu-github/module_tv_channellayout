@@ -120,28 +120,28 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     }
 
     private final void resetTime() {
-//        if (null != mHandler) {
-//            mHandler.removeCallbacksAndMessages(null);
-//        }
-//        if (null != mHandler) {
-//            mHandler.sendEmptyMessageDelayed(1, 1000);
-//        }
+        if (null != mHandler) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+        if (null != mHandler) {
+            mHandler.sendEmptyMessageDelayed(1, 1000);
+        }
     }
 
     private final void clearTime() {
-//        if (null != mHandler) {
-//            mHandler.removeCallbacksAndMessages(null);
-//        }
+        if (null != mHandler) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
     }
 
     private final void nextTime(int what) {
-//        if (null != mHandler) {
-//            mHandler.removeCallbacksAndMessages(null);
-//        }
-//        if (null != mHandler) {
-//            mHandler.removeCallbacksAndMessages(null);
-//            mHandler.sendEmptyMessageDelayed(what + 1, 1000);
-//        }
+        if (null != mHandler) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+        if (null != mHandler) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler.sendEmptyMessageDelayed(what + 1, 1000);
+        }
     }
 
 //    private final void requestFocusLastTime(int visibility) {
