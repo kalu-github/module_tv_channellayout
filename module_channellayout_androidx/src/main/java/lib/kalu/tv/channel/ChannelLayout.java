@@ -504,7 +504,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     @Keep
     public final void clear(@NonNull int column) {
-        clear(column, true);
+        clear(column, false);
     }
 
     @Keep

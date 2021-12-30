@@ -129,10 +129,10 @@ class ChannelLinearLayoutChild extends LinearLayout {
                     // 正常显示
                     else {
                         ChannelUtil.logE("dispatchKeyEvent[right move] => next");
-                        keep(Channeldirection.RIGHT);
                         clearFocus();
-                        layoutNext.nextFocus(Channeldirection.RIGHT, true);
+                        keep(Channeldirection.RIGHT);
                         layoutNext.requestFocus();
+                        layoutNext.nextFocus(Channeldirection.RIGHT, true);
                     }
                 }
             } catch (Exception e) {
@@ -166,11 +166,11 @@ class ChannelLinearLayoutChild extends LinearLayout {
                         ChannelUtil.logE("dispatchKeyEvent[left move] => next");
                     }
                     // before
-                    keep(Channeldirection.LEFT);
                     clearFocus();
+                    keep(Channeldirection.LEFT);
                     // next
-                    layoutNext.nextFocus(Channeldirection.LEFT, true);
                     layoutNext.requestFocus();
+                    layoutNext.nextFocus(Channeldirection.LEFT, true);
                 }
             } catch (Exception e) {
                 ChannelUtil.logE("dispatchKeyEvent[left move] => exception");
@@ -189,7 +189,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                     int highlightPosition = getHighlightPosition();
                     if (selectPosition != highlightPosition) {
                         updateTags(true);
-                        setSelectPosition(highlightPosition);
+                        setSelectPosition(highlightPosition, true);
                         try {
                             scrollView.updateParentHighlight();
                         } catch (Exception e) {
@@ -213,7 +213,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                     int highlightPosition = getHighlightPosition();
                     if (selectPosition != highlightPosition) {
                         updateTags(true);
-                        setSelectPosition(highlightPosition);
+                        setSelectPosition(highlightPosition, true);
                         try {
                             scrollView.updateParentHighlight();
                         } catch (Exception e) {
@@ -243,7 +243,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
     }
 
-    private final void setHighlightPosition(@NonNull int position) {
+    private final void setHighlightPosition(@NonNull int position, @NonNull boolean resetBefore) {
         if (position < 0)
             return;
         int count = getChildCount();
@@ -251,12 +251,14 @@ class ChannelLinearLayoutChild extends LinearLayout {
             return;
 
         try {
-            int highlightPosition = getHighlightPosition();
-            if (highlightPosition != position) {
-                ChannelTextView textView = (ChannelTextView) getChildAt(highlightPosition);
-                textView.setBackgroundDefault();
-                textView.setLeftDrawable(false);
-                textView.setBackgroundDefault();
+            if (resetBefore) {
+                int highlightPosition = getHighlightPosition();
+                if (highlightPosition != position) {
+                    ChannelTextView textView = (ChannelTextView) getChildAt(highlightPosition);
+                    textView.setBackgroundDefault();
+                    textView.setLeftDrawable(false);
+                    textView.setBackgroundDefault();
+                }
             }
         } catch (Exception e) {
         }
@@ -272,7 +274,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
     }
 
-    private final void setSelectPosition(@NonNull int position) {
+    private final void setSelectPosition(@NonNull int position, @NonNull boolean resetBefore) {
         if (position < 0)
             return;
         int count = getChildCount();
@@ -280,12 +282,14 @@ class ChannelLinearLayoutChild extends LinearLayout {
             return;
 
         try {
-            int selectPosition = getSelectPosition();
-            if (selectPosition != position) {
-                ChannelTextView textView = (ChannelTextView) getChildAt(selectPosition);
-                textView.setBackgroundDefault();
-                textView.setLeftDrawable(false);
-                textView.setBackgroundDefault();
+            if (resetBefore) {
+                int selectPosition = getSelectPosition();
+                if (selectPosition != position) {
+                    ChannelTextView textView = (ChannelTextView) getChildAt(selectPosition);
+                    textView.setBackgroundDefault();
+                    textView.setLeftDrawable(false);
+                    textView.setBackgroundDefault();
+                }
             }
         } catch (Exception e) {
         }
@@ -430,13 +434,13 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
 
         // setHighlightPosition
-        setHighlightPosition(nextPosition);
+        setHighlightPosition(nextPosition, false);
         int highlightPosition1 = getHighlightPosition();
         ChannelUtil.logE("nextFocus => highlightPosition1 = " + highlightPosition1);
 
         // setSelectPosition
         if (direction == Channeldirection.NEXT_UP || direction == Channeldirection.NEXT_DOWN || direction == Channeldirection.INIT || direction == Channeldirection.SELECT) {
-            setSelectPosition(nextPosition);
+            setSelectPosition(nextPosition, false);
             int selectPosition1 = getSelectPosition();
             ChannelUtil.logE("nextFocus => selectPosition1 = " + selectPosition1);
         }
@@ -624,7 +628,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
         if (selectPosition == highlightPosition)
             return;
 
-        setSelectPosition(highlightPosition);
+        setSelectPosition(highlightPosition, true);
         if (selectPosition != highlightPosition) {
             try {
                 ChannelTextView textView = (ChannelTextView) getChildAt(selectPosition);
@@ -654,7 +658,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
     protected final void resetHighlight() {
         int selectPosition = getSelectPosition();
         int highlightPosition = getHighlightPosition();
-        setHighlightPosition(selectPosition);
+        setHighlightPosition(selectPosition, false);
         if (selectPosition != highlightPosition) {
             try {
                 ChannelTextView textView = (ChannelTextView) getChildAt(highlightPosition);
