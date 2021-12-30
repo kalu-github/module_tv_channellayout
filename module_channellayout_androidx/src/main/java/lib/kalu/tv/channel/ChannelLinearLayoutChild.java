@@ -437,7 +437,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             before.setBackgroundDefault();
         }
         // before
-        else {
+        else if(null != before) {
             before.setTextColorDefault();
             before.setLeftDrawable(highlightPosition == selectPosition);
             before.setBackgroundDefault();
