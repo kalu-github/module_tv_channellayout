@@ -157,6 +157,26 @@ class ChannelScrollView extends ScrollView {
         }
     }
 
+    protected final void updateParentHighlight() {
+        try {
+            ChannelLayout channelLayout = (ChannelLayout) getParent();
+            int index = channelLayout.indexOfChild(this);
+            if (index > 0) {
+                ChannelScrollView scrollView = (ChannelScrollView) channelLayout.getChildAt(index - 1);
+                scrollView.refreshParentHighlight();
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    private final void refreshParentHighlight() {
+        try {
+            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
+            layoutChild.forceSelectEqualsHighlight();
+        } catch (Exception e) {
+        }
+    }
+
     /*************/
 
     protected final void callback(@NonNull int position, @NonNull int count, @Channeldirection.Value int direction, @NonNull ChannelModel value) {

@@ -186,6 +186,11 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 if (selectPosition != highlightPosition) {
                     updateTags(true);
                     setSelectPosition(highlightPosition);
+                    try {
+                        ChannelScrollView scrollView = (ChannelScrollView) getParent();
+                        scrollView.updateParentHighlight();
+                    } catch (Exception e) {
+                    }
                     callback(highlightPosition, Channeldirection.SELECT);
                     ChannelUtil.logE("dispatchKeyEvent[enter click] => position = " + highlightPosition);
                 }
@@ -201,6 +206,11 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 if (selectPosition != highlightPosition) {
                     updateTags(true);
                     setSelectPosition(highlightPosition);
+                    try {
+                        ChannelScrollView scrollView = (ChannelScrollView) getParent();
+                        scrollView.updateParentHighlight();
+                    } catch (Exception e) {
+                    }
                     callback(highlightPosition, Channeldirection.SELECT);
                     ChannelUtil.logE("dispatchKeyEvent[center click] => position = " + highlightPosition);
                 }
@@ -598,6 +608,34 @@ class ChannelLinearLayoutChild extends LinearLayout {
 //    }
 
     /*************/
+
+    protected final void forceSelectEqualsHighlight() {
+        int selectPosition = getSelectPosition();
+        int highlightPosition = getHighlightPosition();
+        setSelectPosition(highlightPosition);
+        if (selectPosition != highlightPosition) {
+            try {
+                ChannelTextView textView = (ChannelTextView) getChildAt(selectPosition);
+                textView.setTextColorDefault();
+                textView.setLeftDrawable(false);
+                textView.setBackgroundDefault();
+            } catch (Exception e) {
+            }
+        }
+        try {
+            ChannelTextView textView = (ChannelTextView) getChildAt(highlightPosition);
+            if (hasFocus()) {
+                textView.setTextColorHighlight();
+                textView.setLeftDrawable(true);
+                textView.setBackgroundHighlight();
+            } else {
+                textView.setTextColorSelect();
+                textView.setLeftDrawable(true);
+                textView.setBackgroundDefault();
+            }
+        } catch (Exception e) {
+        }
+    }
 
     protected final void resetHighlight() {
         int selectPosition = getSelectPosition();
