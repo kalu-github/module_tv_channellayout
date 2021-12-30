@@ -612,6 +612,9 @@ class ChannelLinearLayoutChild extends LinearLayout {
     protected final void forceSelectEqualsHighlight() {
         int selectPosition = getSelectPosition();
         int highlightPosition = getHighlightPosition();
+        if (selectPosition == highlightPosition)
+            return;
+
         setSelectPosition(highlightPosition);
         if (selectPosition != highlightPosition) {
             try {
