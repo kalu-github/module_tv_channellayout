@@ -1,6 +1,7 @@
 package lib.kalu.tv.channel;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -286,7 +287,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 int selectPosition = getSelectPosition();
                 if (selectPosition != position) {
                     ChannelTextView textView = (ChannelTextView) getChildAt(selectPosition);
-                    textView.setBackgroundDefault();
+                    textView.setTextColorDefault();
                     textView.setLeftDrawable(false);
                     textView.setBackgroundDefault();
                 }
@@ -317,8 +318,14 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
         // 2
         if (null != view) {
-            view.setTextColorSelect();
-            view.setLeftDrawable(selectPosition == highlightPosition);
+
+            if (highlightPosition == selectPosition) {
+                view.setTextColorPlaying();
+                view.setLeftDrawable(true);
+            } else {
+                view.setTextColorSelect();
+                view.setLeftDrawable(false);
+            }
             view.setBackgroundDefault();
         }
     }
@@ -470,8 +477,13 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
         // before
         else if (null != before) {
-            before.setTextColorDefault();
-            before.setLeftDrawable(highlightPosition == selectPosition);
+            if (highlightPosition == selectPosition) {
+                before.setTextColorPlaying();
+                before.setLeftDrawable(true);
+            } else {
+                before.setTextColorDefault();
+                before.setLeftDrawable(false);
+            }
             before.setBackgroundDefault();
         }
 
@@ -524,7 +536,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             // init2
             else if (direction == Channeldirection.INIT) {
                 next.setLeftDrawable(true);
-                next.setTextColorDefault();
+                next.setTextColorPlaying();
                 next.setBackgroundDefault();
             }
 
@@ -645,7 +657,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 textView.setLeftDrawable(true);
                 textView.setBackgroundHighlight();
             } else {
-                textView.setTextColorSelect();
+                textView.setTextColorPlaying();
                 textView.setLeftDrawable(true);
                 textView.setBackgroundDefault();
             }

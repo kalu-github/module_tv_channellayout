@@ -18,12 +18,25 @@ import androidx.annotation.RequiresApi;
 @SuppressLint("AppCompatCustomView")
 class ChannelTextView extends TextView {
 
+    /**
+     * 默认
+     */
     @ColorInt
     private int mTextColorDefault = getResources().getColor(R.color.module_channellayout_color_ababab);
+    /**
+     * 高亮
+     */
     @ColorInt
     private int mTextColorHighlight = getResources().getColor(R.color.module_channellayout_color_333333);
+    /**
+     * 选中
+     */
+    private int mTextColorSelect = getResources().getColor(R.color.module_channellayout_color_ffc700);
+    /**
+     * 在播
+     */
     @ColorInt
-    private int mTextColorSelect = getResources().getColor(R.color.module_channellayout_color_ffffff);
+    private int mTextColorPlaying = getResources().getColor(R.color.module_channellayout_color_ffffff);
 
     @DrawableRes
     private int mBackgroundDefault = R.drawable.module_channellayout_ic_background_default;
@@ -98,6 +111,10 @@ class ChannelTextView extends TextView {
 
     protected final void setTextColorSelect() {
         setTextColor(mTextColorSelect);
+    }
+
+    protected final void setTextColorPlaying() {
+        setTextColor(mTextColorPlaying);
     }
 
     /*************************/
