@@ -129,10 +129,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            @Override
-            public void onInit(@NonNull Map<Integer, List<ChannelModel>> map) {
-                Log.e("TEST", "onInit => map = " + map);
-            }
+//            @Override
+//            public void onInit(@NonNull Map<Integer, List<ChannelModel>> map) {
+//                Log.e("TEST", "onInit => map = " + map);
+//            }
 
             @Override
             public void onMove(@NonNull int column, @NonNull int position, @NonNull int count, @NonNull ChannelModel value) {

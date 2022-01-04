@@ -94,7 +94,7 @@ class ChannelScrollView extends ScrollView {
             return;
 
         // update
-        ((ChannelLinearLayoutChild) child).update(list);
+        ((ChannelLinearLayoutChild) child).update(list, true);
     }
 
     protected final boolean nextUp() {
@@ -141,21 +141,13 @@ class ChannelScrollView extends ScrollView {
 
     }
 
-    protected final void resetTags() {
-        try {
-            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
-            layoutChild.resetTags();
-        } catch (Exception e) {
-        }
-    }
-
-    protected final void resethighLight() {
-        try {
-            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
-            layoutChild.resetHighlight();
-        } catch (Exception e) {
-        }
-    }
+//    protected final void resetTags() {
+//        try {
+//            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
+//            layoutChild.resetTags();
+//        } catch (Exception e) {
+//        }
+//    }
 
     protected final void updateParentHighlight() {
         try {
@@ -181,17 +173,25 @@ class ChannelScrollView extends ScrollView {
         try {
             ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
             layoutChild.requestFocus();
-            layoutChild.resetHighlight();
+            layoutChild.focus();
         } catch (Exception e) {
         }
     }
+
+//    protected final void resethighLight() {
+//        try {
+//            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
+//            layoutChild.resetHighlight();
+//        } catch (Exception e) {
+//        }
+//    }
 
     protected final void clear() {
         try {
             ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
             layoutChild.clearFocus();
             layoutChild.removeAllViews();
-            layoutChild.updateTags(true);
+            layoutChild.updateTags(null);
         } catch (Exception e) {
         }
     }

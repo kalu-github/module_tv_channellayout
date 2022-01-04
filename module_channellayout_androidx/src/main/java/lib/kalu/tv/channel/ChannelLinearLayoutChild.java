@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lib.kalu.tv.channel.model.ChannelModel;
@@ -189,7 +190,8 @@ class ChannelLinearLayoutChild extends LinearLayout {
                     int selectPosition = getSelectPosition();
                     int highlightPosition = getHighlightPosition();
                     if (selectPosition != highlightPosition) {
-                        updateTags(true);
+                        List<ChannelModel> tags = getTags(true);
+                        updateTags(tags);
                         setSelectPosition(highlightPosition, true);
                         try {
                             scrollView.updateParentHighlight();
@@ -213,7 +215,8 @@ class ChannelLinearLayoutChild extends LinearLayout {
                     int selectPosition = getSelectPosition();
                     int highlightPosition = getHighlightPosition();
                     if (selectPosition != highlightPosition) {
-                        updateTags(true);
+                        List<ChannelModel> tags = getTags(true);
+                        updateTags(tags);
                         setSelectPosition(highlightPosition, true);
                         try {
                             scrollView.updateParentHighlight();
@@ -342,7 +345,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
         setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
     }
 
-    private final void addItem(@NonNull ChannelModel model) {
+    private final void addItem(@NonNull int index, @NonNull ChannelModel model) {
 
         if (null == model)
             return;
@@ -363,7 +366,19 @@ class ChannelLinearLayoutChild extends LinearLayout {
         child.setPadding(left, top, right, bottom);
         child.setText(initText);
         child.setTag(R.id.module_channel_tag_item, model);
-        addView(child);
+
+        int selectPosition = getSelectPosition();
+        setHighlightPosition(selectPosition, false);
+
+        if (selectPosition == index) {
+            child.setTextColorPlaying();
+            child.setLeftDrawable(true);
+        } else {
+            child.setTextColorDefault();
+            child.setLeftDrawable(false);
+        }
+        child.setBackgroundDefault();
+        addView(child, index);
     }
 
     protected final void addEmpty() {
@@ -667,7 +682,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
         callback(highlightPosition, Channeldirection.SELECT);
     }
 
-    protected final void resetHighlight() {
+    protected final void focus() {
         int selectPosition = getSelectPosition();
         int highlightPosition = getHighlightPosition();
         setHighlightPosition(selectPosition, false);
@@ -695,14 +710,24 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
     }
 
-    protected final void resetTags() {
-        List<ChannelModel> list = getTags();
-        if (null == list || list.size() == 0)
-            return;
-        update(list);
-    }
+    private final List<ChannelModel> getTags(boolean click) {
 
-    private final List<ChannelModel> getTags() {
+        // 新
+        if (click) {
+            ArrayList<ChannelModel> list = new ArrayList<>();
+            int count = getChildCount();
+            for (int i = 0; i < count; i++) {
+                try {
+                    ChannelTextView textView = (ChannelTextView) getChildAt(i);
+                    ChannelModel model = (ChannelModel) textView.getTag(R.id.module_channel_tag_item);
+                    list.add(model);
+                } catch (Exception e) {
+                }
+            }
+            setTag(R.id.module_channel_tag_all, list);
+            return list;
+        }
+
         try {
             List<ChannelModel> tags = (List<ChannelModel>) getTag(R.id.module_channel_tag_all);
             return tags;
@@ -711,42 +736,36 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
     }
 
-    protected final void updateTags(boolean clear) {
-
-        if (clear) {
-            setTag(R.id.module_channel_tag_all, null);
-        }
-
-        List<ChannelModel> tags = getTags();
-        if (null != tags)
-            return;
-
-        int count = getChildCount();
-        if (count <= 0) {
-            setTag(R.id.module_channel_tag_all, null);
-        } else {
-            ArrayList<ChannelModel> cache = new ArrayList<>();
-            for (int i = 0; i < count; i++) {
-                try {
-                    ChannelTextView textView = (ChannelTextView) getChildAt(i);
-                    ChannelModel model = (ChannelModel) textView.getTag(R.id.module_channel_tag_item);
-                    cache.add(model);
-                } catch (Exception e) {
-                }
-            }
-            setTag(R.id.module_channel_tag_all, cache);
-        }
+    protected final void updateTags(@NonNull List<ChannelModel> list) {
+        setTag(R.id.module_channel_tag_all, list);
     }
 
-    protected final void update(@NonNull List<ChannelModel> list) {
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+
+        List<ChannelModel> list = getTags(false);
+        ChannelUtil.logE("onVisibilityChanged => visibility = " + visibility + ", list = " + list);
+        if (null == list || list.size() <= 0 || visibility == View.VISIBLE)
+            return;
+        update(list, false);
+    }
+
+    protected final void update(@NonNull List<ChannelModel> list, boolean init) {
 
         ChannelUtil.logE("**********************");
 
         // step0 - tag all
-        updateTags(false);
+        List<ChannelModel> tags = getTags(false);
+        updateTags(null != tags ? tags : list);
 
         // step1
         removeAllViews();
+
+        if (init) {
+            setSelectPosition(0, true);
+            setHighlightPosition(0, true);
+        }
 
         int size = list.size();
         ChannelUtil.logE("update => size = " + size);
@@ -760,7 +779,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 continue;
 
             ChannelUtil.logE("update => i = " + i + " initText = " + initText);
-            addItem(temp);
+            addItem(i, temp);
         }
 
         ChannelUtil.logE("**********************");
