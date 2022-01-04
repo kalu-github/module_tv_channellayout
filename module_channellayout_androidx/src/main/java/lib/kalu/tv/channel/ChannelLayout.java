@@ -245,24 +245,29 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         // child
         for (int i = 0; i < size; i++) {
             List<ChannelModel> temp = list.get(i);
-            update(size, i, 0, temp, false);
+            update(size, i, -1, false, temp, false);
         }
     }
 
     @Keep
     public final void update(@NonNull int count, @NonNull int column, @NonNull List<ChannelModel> list) {
-        update(count, column, 0, list, false);
+        update(count, column, -1, false, list, false);
     }
 
     @Keep
-    public final void update(@NonNull int count, @NonNull int column, @NonNull int defaultPosition, @NonNull List<ChannelModel> list) {
-        update(count, column, defaultPosition, list, false);
+    public final void update(@NonNull int count, @NonNull int column, @NonNull int position, @NonNull List<ChannelModel> list) {
+        update(count, column, position, false, list, false);
     }
 
     @Keep
-    public final void update(@NonNull int count, @NonNull int column, @NonNull int defaultPosition, @NonNull List<ChannelModel> list, boolean callback) {
+    public final void update(@NonNull int count, @NonNull int column, @NonNull int position, @NonNull boolean requestFocus, @NonNull List<ChannelModel> list) {
+        update(count, column, position, requestFocus, list, false);
+    }
 
-        ChannelUtil.logE("update => count = " + count + ", column = " + column + ", defaultPosition = " + defaultPosition + ", list = " + list);
+    @Keep
+    public final void update(@NonNull int count, @NonNull int column, @NonNull int position, @NonNull boolean requestFocus, @NonNull List<ChannelModel> list, boolean callback) {
+
+        ChannelUtil.logE("update => count = " + count + ", column = " + column + ", position = " + position + ", requestFocus = " + requestFocus + ", list = " + list);
         if (null == list || column < 0)
             return;
 
@@ -271,9 +276,12 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         if (null == view || !(view instanceof ChannelScrollView))
             return;
 
-        ChannelUtil.logE("addItem[reset0] => count = " + count + ", column = " + column + ", list = " + list);
+        ChannelUtil.logE("update => count = " + count + ", column = " + column + ", list = " + list);
         ((ChannelScrollView) view).update(list);
-        select(Channeldirection.INIT, column, defaultPosition, defaultPosition > 0, callback);
+
+        if (position < 0)
+            return;
+        select(Channeldirection.INIT, column, position, requestFocus, callback);
     }
 
     @Keep
@@ -282,25 +290,25 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     }
 
     @Keep
-    public final void select(@NonNull int column, @NonNull int position, boolean select) {
-        select(Channeldirection.INIT, column, position, select, true);
+    public final void select(@NonNull int column, @NonNull int position, boolean requestFocus) {
+        select(Channeldirection.INIT, column, position, requestFocus, true);
     }
 
     @Keep
-    public final void select(@NonNull int column, @NonNull int position, @NonNull boolean select, @NonNull boolean callback) {
-        select(Channeldirection.INIT, column, position, select, callback);
+    public final void select(@NonNull int column, @NonNull int position, @NonNull boolean requestFocus, @NonNull boolean callback) {
+        select(Channeldirection.INIT, column, position, requestFocus, callback);
     }
 
     @Keep
-    public final void select(@Channeldirection.Value int direction, @NonNull int column, @NonNull int position, @NonNull boolean select, @NonNull boolean callback) {
+    public final void select(@Channeldirection.Value int direction, @NonNull int column, @NonNull int position, @NonNull boolean requestFocus, @NonNull boolean callback) {
 
-        ChannelUtil.logE("select => direction = " + direction + ", column = " + column + ", position = " + position + ", select = " + select + ", callback = " + callback);
+        ChannelUtil.logE("select => direction = " + direction + ", column = " + column + ", position = " + position + ", requestFocus = " + requestFocus + ", callback = " + callback);
         if (direction != Channeldirection.INIT && direction != Channeldirection.SELECT)
             return;
 
         try {
             ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
-            scrollView.select(direction, position, select, callback);
+            scrollView.select(direction, position, requestFocus, callback);
         } catch (Exception e) {
             ChannelUtil.logE("select => " + e.getMessage(), e);
         }
@@ -467,11 +475,11 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             return;
 
         // update
-        focusMove(Channeldirection.LEFT, column);
+        focusAuto(Channeldirection.LEFT, column);
     }
 
     @Keep
-    public final void focusMove(@Channeldirection.Value int direction, @NonNull int column) {
+    public final void focusAuto(@Channeldirection.Value int direction, @NonNull int column) {
 
         if (direction != Channeldirection.LEFT)
             return;
@@ -481,7 +489,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             return;
         try {
             ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column - 1);
-            scrollView.focus();
+            scrollView.focusAuto();
         } catch (Exception e) {
         }
     }
@@ -534,10 +542,10 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     /*************************/
 
-    private OnChannelChangeListener onChannelChangeListener;
+    private OnChannelChangeListener mOnChannelChangeListener;
 
     public final void setOnChannelChangeListener(@NonNull OnChannelChangeListener listener) {
-        this.onChannelChangeListener = listener;
+        this.mOnChannelChangeListener = listener;
     }
 
     /*************************/
@@ -553,34 +561,34 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         if (column + 1 > size)
             return;
 
-        if (null != onChannelChangeListener) {
+        if (null != mOnChannelChangeListener) {
 
             // right
             if (direction == Channeldirection.RIGHT) {
                 if (position == Integer.MAX_VALUE) {
                     position = -1;
                 }
-                onChannelChangeListener.onMove(column, position, count, value);
+                mOnChannelChangeListener.onMove(column, position, count, value);
             }
             // left
             else if (direction == Channeldirection.LEFT) {
-                onChannelChangeListener.onMove(column, position, count, value);
+                mOnChannelChangeListener.onMove(column, position, count, value);
             }
             // select
             else if (direction == Channeldirection.SELECT || direction == Channeldirection.INIT) {
-                onChannelChangeListener.onSelect(column, position, count, value);
+                mOnChannelChangeListener.onSelect(column, position, count, value);
             }
             // nextUp
             else if (direction == Channeldirection.NEXT_UP) {
-                onChannelChangeListener.onSelect(column, position, count, value);
+                mOnChannelChangeListener.onSelect(column, position, count, value);
             }
             // nextDown
             else if (direction == Channeldirection.NEXT_DOWN) {
-                onChannelChangeListener.onSelect(column, position, count, value);
+                mOnChannelChangeListener.onSelect(column, position, count, value);
             }
             // highlight
             else {
-                onChannelChangeListener.onHighlight(column, position, count, value);
+                mOnChannelChangeListener.onHighlight(column, position, count, value);
             }
         }
     }

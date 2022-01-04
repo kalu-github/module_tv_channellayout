@@ -94,7 +94,7 @@ class ChannelScrollView extends ScrollView {
             return;
 
         // update
-        ((ChannelLinearLayoutChild) child).update(list, true);
+        ((ChannelLinearLayoutChild) child).update(list);
     }
 
     protected final boolean nextUp() {
@@ -128,14 +128,14 @@ class ChannelScrollView extends ScrollView {
         }
     }
 
-    protected final void select(@Channeldirection.Value int direction, @NonNull int position, @NonNull boolean select, @NonNull boolean callback) {
+    protected final void select(@Channeldirection.Value int direction, @NonNull int position, @NonNull boolean requestFocus, @NonNull boolean callback) {
 
         if (direction != Channeldirection.INIT && direction != Channeldirection.SELECT)
             return;
 
         try {
             ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
-            layoutChild.nextFocus(position, direction, select, callback);
+            layoutChild.nextFocus(position, direction, requestFocus, callback);
         } catch (Exception e) {
         }
 
@@ -169,11 +169,11 @@ class ChannelScrollView extends ScrollView {
         }
     }
 
-    protected final void focus() {
+    protected final void focusAuto() {
         try {
             ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
             layoutChild.requestFocus();
-            layoutChild.focus();
+            layoutChild.updateHighlightPosition();
         } catch (Exception e) {
         }
     }
