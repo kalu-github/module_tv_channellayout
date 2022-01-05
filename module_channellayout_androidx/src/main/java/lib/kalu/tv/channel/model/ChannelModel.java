@@ -13,8 +13,14 @@ public interface ChannelModel {
     CharSequence initText();
 
     @DrawableRes
-    int drawableHighlight();
+    int leftImgHighlight();
 
     @DrawableRes
-    int drawableDefault();
+    int leftImgDefault();
+
+    @DrawableRes
+    int rightImgHighlight();
+
+    @DrawableRes
+    int rightImgDefault();
 }

@@ -3,17 +3,21 @@ package lib.kalu.tv.channel;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.TextView;
 
+import androidx.annotation.BoolRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import lib.kalu.tv.channel.model.ChannelModel;
 
 @SuppressLint("AppCompatCustomView")
 class ChannelTextView extends TextView {
@@ -44,9 +48,13 @@ class ChannelTextView extends TextView {
     private int mBackgroundHighlight = R.drawable.module_channellayout_ic_background_hightlight;
 
     @DrawableRes
-    private int mDrawableDefault = R.drawable.module_channellayout_ic_img_default;
+    private int mLeftImgDefault = 0;
     @DrawableRes
-    private int mDrawableHighlight = R.drawable.module_channellayout_ic_img_highlight;
+    private int mLeftImgHighlight = 0;
+    @DrawableRes
+    private int mRightImgDefault = 0;
+    @DrawableRes
+    private int mRightImgHighlight = 0;
 
     public ChannelTextView(Context context) {
         super(context);
@@ -93,14 +101,36 @@ class ChannelTextView extends TextView {
         setBackgroundResource(R.drawable.module_channellayout_ic_background_hightlight);
     }
 
-    protected final void setLeftDrawable(@NonNull boolean show) {
+    /*************************/
 
-        if (show) {
-            setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_img_highlight, 0, 0, 0);
-        } else {
-            setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_img_default, 0, 0, 0);
+    protected final void setCompoundDrawables(@NonNull boolean left) {
+        setCompoundDrawables(left, false);
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    protected final void setCompoundDrawables(@NonNull boolean left, @NonNull boolean right) {
+
+        @DrawableRes
+        int imgLeft;
+        @DrawableRes
+        int imgRight;
+
+        try {
+            ChannelModel temp = (ChannelModel) getTag(R.id.module_channel_tag_item);
+            imgLeft = left ? temp.leftImgHighlight() : temp.leftImgDefault();
+            imgRight = right ? temp.rightImgHighlight() : temp.rightImgDefault();
+        } catch (Exception e) {
+            imgLeft = left ? mLeftImgHighlight : mLeftImgDefault;
+            imgRight = right ? mRightImgHighlight : mRightImgDefault;
+        }
+
+        try {
+            setCompoundDrawablesWithIntrinsicBounds(imgLeft, 0, imgRight, 0);
+        } catch (Exception e) {
         }
     }
+
+    /*************************/
 
     protected final void setTextColorDefault() {
         setTextColor(mTextColorDefault);
@@ -132,7 +162,7 @@ class ChannelTextView extends TextView {
 
         setTextColorDefault();
         setBackgroundDefault();
-        setLeftDrawable(false);
+        setCompoundDrawables(false, false);
     }
 
     /*************************/
