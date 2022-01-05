@@ -94,6 +94,7 @@ class ChannelTextView extends TextView {
     }
 
     protected final void setLeftDrawable(@NonNull boolean show) {
+
         if (show) {
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.module_channellayout_ic_img_highlight, 0, 0, 0);
         } else {

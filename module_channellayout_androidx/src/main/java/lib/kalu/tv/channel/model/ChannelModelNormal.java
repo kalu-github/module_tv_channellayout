@@ -31,7 +31,12 @@ public class ChannelModelNormal implements ChannelModel {
     }
 
     @Override
-    public int drawableLeft() {
+    public int drawableHighlight() {
+        return 0;
+    }
+
+    @Override
+    public int drawableDefault() {
         return 0;
     }
 }

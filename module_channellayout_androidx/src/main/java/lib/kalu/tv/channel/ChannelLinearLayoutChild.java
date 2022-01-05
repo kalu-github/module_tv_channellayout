@@ -306,6 +306,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
     protected final void updateHighlightPosition() {
         int selectPosition = getSelectPosition();
         setHighlightPosition(selectPosition, true);
+        ChannelUtil.logE("updateHighlightPosition => highlightPosition = " + getHighlightPosition());
     }
 
     protected final void updateSelectPosition() {
@@ -470,24 +471,22 @@ class ChannelLinearLayoutChild extends LinearLayout {
         // setHighlightPosition1
         if (direction == Channeldirection.UP || direction == Channeldirection.DOWN) {
             setHighlightPosition(nextPosition, false);
-            ChannelUtil.logE("nextFocus => highlightPosition = " + getHighlightPosition());
         }
         // setHighlightPosition2
         else if (nextPosition > 0 && direction == Channeldirection.INIT) {
             setHighlightPosition(nextPosition, false);
-            ChannelUtil.logE("nextFocus => highlightPosition = " + getHighlightPosition());
         }
 
         // setSelectPosition1
         if (direction == Channeldirection.NEXT_UP || direction == Channeldirection.NEXT_DOWN) {
             setSelectPosition(nextPosition, false);
-            ChannelUtil.logE("nextFocus => selectPosition = " + getSelectPosition());
         }
         // setSelectPosition2
         else if (nextPosition > 0 && direction == Channeldirection.INIT) {
             setSelectPosition(nextPosition, false);
-            ChannelUtil.logE("nextFocus => selectPosition = " + getSelectPosition());
         }
+
+        ChannelUtil.logE("nextFocus => selectPosition = " + getSelectPosition() + ", highlightPosition = " + getHighlightPosition());
 
         try {
             ChannelUtil.logE("nextFocus => before = " + before.getText());
@@ -795,6 +794,9 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
     protected final void update(@NonNull List<ChannelModel> list) {
 
+        if (null == list || list.size() == 0)
+            return;
+
         ChannelUtil.logE("**********************");
 
         // step0 - tag all
@@ -802,17 +804,12 @@ class ChannelLinearLayoutChild extends LinearLayout {
         updateTags(null != tags ? tags : list);
 
         // step1
+        updateHighlightPosition();
         removeAllViews();
 
-//        if (init) {
-//            setSelectPosition(0, true);
-//            setHighlightPosition(0, true);
-//        }
-
+        // step2
         int size = list.size();
         ChannelUtil.logE("update => size = " + size);
-
-        // step2
         for (int i = 0; i < size; i++) {
 
             ChannelModel temp = list.get(i);
@@ -820,7 +817,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             if (null == initText || initText.length() == 0)
                 continue;
 
-            ChannelUtil.logE("update => i = " + i + " initText = " + initText);
+//            ChannelUtil.logE("update => i = " + i + " initText = " + initText);
             addItem(i, temp);
         }
 
