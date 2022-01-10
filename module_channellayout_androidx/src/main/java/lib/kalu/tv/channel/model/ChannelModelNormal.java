@@ -19,12 +19,25 @@ public class ChannelModelNormal implements ChannelModel {
     private @DrawableRes
     int rightImgHighlight = 0;
 
-    public ChannelModelNormal(@NonNull int id,
-                              @NonNull String text,
-                              @NonNull String url) {
-        this.id = id;
+    public ChannelModelNormal(@NonNull String text,
+                              @DrawableRes int leftImgDefault,
+                              @DrawableRes int leftImgHighlight) {
+        this.id = Integer.MIN_VALUE;
+        this.text = text;
+        this.url = null;
+        this.leftImgDefault = leftImgDefault;
+        this.leftImgHighlight = leftImgHighlight;
+    }
+
+    public ChannelModelNormal(@NonNull String text,
+                              @NonNull String url,
+                              @DrawableRes int leftImgDefault,
+                              @DrawableRes int leftImgHighlight) {
+        this.id = Integer.MIN_VALUE;
         this.text = text;
         this.url = url;
+        this.leftImgDefault = leftImgDefault;
+        this.leftImgHighlight = leftImgHighlight;
     }
 
     public ChannelModelNormal(@NonNull int id,

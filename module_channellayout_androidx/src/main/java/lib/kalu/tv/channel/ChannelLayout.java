@@ -99,11 +99,25 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     @Override
     public void setVisibility(int visibility) {
-        super.setVisibility(visibility);
-        // 5s隐藏
-        autoTime(visibility);
+        // show
+        if (visibility == View.VISIBLE) {
+            show();
+        }
+        // gone
+        else {
+            gone();
+        }
     }
 
+    private final void show() {
+        super.setVisibility(View.VISIBLE);
+        autoTime(View.VISIBLE);
+    }
+
+    private final void gone() {
+        super.setVisibility(View.INVISIBLE);
+        autoTime(View.INVISIBLE);
+    }
 
     private final void autoTime(int visibility) {
         if (visibility == View.VISIBLE) {
