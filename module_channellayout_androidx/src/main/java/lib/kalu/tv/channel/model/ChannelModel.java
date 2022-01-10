@@ -6,6 +6,8 @@ import androidx.annotation.Keep;
 @Keep
 public interface ChannelModel {
 
+    int NULL = Integer.MIN_VALUE;
+
     int initId();
 
     CharSequence initUrl();

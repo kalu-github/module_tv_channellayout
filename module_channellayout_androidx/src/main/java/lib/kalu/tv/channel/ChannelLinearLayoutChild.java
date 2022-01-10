@@ -112,37 +112,49 @@ class ChannelLinearLayoutChild extends LinearLayout {
         // right move
         else if (showing && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             try {
-                int selectPosition = getSelectPosition();
-                ChannelModel temp = (ChannelModel) getChildAt(selectPosition).getTag(R.id.module_channel_tag_item);
-                if (temp.initId() != Integer.MIN_VALUE) {
+//                int selectPosition = getSelectPosition();
+//                ChannelModel tag = (ChannelModel) getChildAt(selectPosition).getTag(R.id.module_channel_tag_item);
+////                ChannelUtil.logE("dispatchKeyEvent[right move] => selectPosition = " + selectPosition + ", tag = " + tag.toString());
+//
+//                // null
+//                if (tag.initId() == Integer.MIN_VALUE) {
+//                    ChannelUtil.logE("dispatchKeyEvent[right move] => null");
+//                }
+//                // next
+//                else {
+
                     ChannelScrollView scroll = (ChannelScrollView) getParent();
                     ChannelLayout layout = (ChannelLayout) scroll.getParent();
                     int column = layout.indexOfChild(scroll);
                     int count = layout.getChildCount();
                     ChannelUtil.logE("dispatchKeyEvent[right move] => column = " + column + ", count = " + count);
-                    if (column + 1 < count) {
-                        ChannelScrollView scrollNext = (ChannelScrollView) layout.getChildAt(column + 1);
-                        ChannelLinearLayoutChild layoutNext = (ChannelLinearLayoutChild) scrollNext.getChildAt(0);
-//                        int childCount = layoutNext.getChildCount();
-//                        // 暂无节目
-//                        if (childCount == 0) {
-//                            ChannelUtil.logE("dispatchKeyEvent[right move] => empty");
-//                            keep(Channeldirection.RIGHT);
-//                            layoutNext.callback(Integer.MAX_VALUE, Channeldirection.RIGHT);
-//                            layoutNext.requestFocus();
-//                        }
-//                         正常显示
-//                        else {
+
+                    ChannelScrollView scrollNext = (ChannelScrollView) layout.getChildAt(column + 1);
+                    ChannelLinearLayoutChild layoutNext = (ChannelLinearLayoutChild) scrollNext.getChildAt(0);
+                    int countNext = layoutNext.getChildCount();
+
+                    // error
+                    if (column + 1 >= count) {
+                        ChannelUtil.logE("dispatchKeyEvent[right move] => error");
+                    }
+                    // empty
+                    else if (countNext <= 0) {
+                        ChannelUtil.logE("dispatchKeyEvent[right move] => empty");
+                        keep(Channeldirection.RIGHT);
+                        layoutNext.callback(Integer.MAX_VALUE, Channeldirection.RIGHT);
+                        layoutNext.requestFocus();
+                    }
+                    // next
+                    else {
                         ChannelUtil.logE("dispatchKeyEvent[right move] => next");
                         clearFocus();
                         keep(Channeldirection.RIGHT);
                         layoutNext.requestFocus();
                         layoutNext.nextFocus(Channeldirection.RIGHT, true);
-//                        }
                     }
-                }
+//                }
             } catch (Exception e) {
-                ChannelUtil.logE("dispatchKeyEvent[right move] => exception");
+                ChannelUtil.logE("dispatchKeyEvent[right move] => exception = " + e.getMessage(), e);
             }
             return true;
         }

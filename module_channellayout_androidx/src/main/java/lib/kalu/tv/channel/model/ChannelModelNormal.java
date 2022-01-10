@@ -22,7 +22,7 @@ public class ChannelModelNormal implements ChannelModel {
     public ChannelModelNormal(@NonNull String text,
                               @DrawableRes int leftImgDefault,
                               @DrawableRes int leftImgHighlight) {
-        this.id = Integer.MIN_VALUE;
+        this.id = NULL;
         this.text = text;
         this.url = null;
         this.leftImgDefault = leftImgDefault;
@@ -33,7 +33,7 @@ public class ChannelModelNormal implements ChannelModel {
                               @NonNull String url,
                               @DrawableRes int leftImgDefault,
                               @DrawableRes int leftImgHighlight) {
-        this.id = Integer.MIN_VALUE;
+        this.id = NULL;
         this.text = text;
         this.url = url;
         this.leftImgDefault = leftImgDefault;
@@ -85,5 +85,18 @@ public class ChannelModelNormal implements ChannelModel {
     @Override
     public int rightImgDefault() {
         return rightImgDefault;
+    }
+
+    @Override
+    public String toString() {
+        return "ChannelModelNormal{" +
+                "id=" + id +
+                ", text='" + text + '\'' +
+                ", url='" + url + '\'' +
+                ", leftImgDefault=" + leftImgDefault +
+                ", leftImgHighlight=" + leftImgHighlight +
+                ", rightImgDefault=" + rightImgDefault +
+                ", rightImgHighlight=" + rightImgHighlight +
+                '}';
     }
 }
