@@ -554,13 +554,13 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
         // callback
         if (callback && null != next) {
-            // callback
-            if (direction == Channeldirection.INIT && !requestFocus) {
-            }
-            // callback
-            else {
+//            // callback
+//            if (direction == Channeldirection.INIT && !requestFocus) {
+//            }
+//            // callback
+//            else {
                 callback(selectPosition, nextPosition, direction);
-            }
+//            }
         }
 
         ChannelUtil.logE("nextFocus => ****************************");
