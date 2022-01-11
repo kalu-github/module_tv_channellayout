@@ -73,9 +73,25 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public int drawableLeft() {
+                    public int leftImgHighlight() {
                         return 0;
                     }
+
+                    @Override
+                    public int leftImgDefault() {
+                        return 0;
+                    }
+
+                    @Override
+                    public int rightImgHighlight() {
+                        return 0;
+                    }
+
+                    @Override
+                    public int rightImgDefault() {
+                        return 0;
+                    }
+
                 };
                 item.add(model);
             }
@@ -87,10 +103,10 @@ public class MainActivity extends AppCompatActivity {
         channelLayout.update(list);
 
         channelLayout.setOnChannelChangeListener(new OnChannelChangeListener() {
-            @Override
-            public void onSelect(@NonNull int column, @NonNull int position, @NonNull int count, @NonNull ChannelModel value) {
-                Log.e("TEST", "onSelect => column = " + column + ", position = " + position + ", value = " + value);
-            }
+//            @Override
+//            public void onSelect(@NonNull int column, @NonNull int position, @NonNull int count, @NonNull ChannelModel value) {
+//                Log.e("TEST", "onSelect => column = " + column + ", position = " + position + ", value = " + value);
+//            }
 
             @Override
             public void onHighlight(@NonNull int column, @NonNull int position, @NonNull int count, @NonNull ChannelModel value) {
@@ -119,7 +135,22 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public int drawableLeft() {
+                            public int leftImgHighlight() {
+                                return 0;
+                            }
+
+                            @Override
+                            public int leftImgDefault() {
+                                return 0;
+                            }
+
+                            @Override
+                            public int rightImgHighlight() {
+                                return 0;
+                            }
+
+                            @Override
+                            public int rightImgDefault() {
                                 return 0;
                             }
                         };
@@ -139,6 +170,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("TEST", "onMove => column = " + column + ", position = " + position + ", value = " + value);
                 channelLayout.setVisibility(2, column == 2 ? View.VISIBLE : View.GONE);
                 channelLayout.setVisibility(3, column == 2 ? View.GONE : View.VISIBLE);
+            }
+
+            @Override
+            public void onInit(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value) {
+
+            }
+
+            @Override
+            public void onClick(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value) {
+
             }
         });
 

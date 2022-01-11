@@ -14,7 +14,11 @@ public interface OnChannelChangeListener {
 
     void onMove(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value);
 
-    void onSelect(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value);
+    void onInit(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value);
+
+    void onClick(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value);
+
+    void onRepeat(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value);
 
     void onHighlight(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value);
 }

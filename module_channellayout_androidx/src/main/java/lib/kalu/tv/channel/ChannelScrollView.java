@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewParent;
 import android.widget.ScrollView;
 
+import androidx.annotation.BoolRes;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -72,7 +73,7 @@ class ChannelScrollView extends ScrollView {
         setFillViewport(true);
         setVerticalScrollBarEnabled(false);
         setHorizontalScrollBarEnabled(false);
-        setBackgroundColor(Color.parseColor("#00000000"));
+//        setBackgroundColor(Color.parseColor("#00000000"));
 
         // step1
         removeAllViews();
@@ -81,7 +82,6 @@ class ChannelScrollView extends ScrollView {
         ChannelLinearLayoutChild child = new ChannelLinearLayoutChild(getContext());
         ScrollView.LayoutParams params = new ScrollView.LayoutParams(ScrollView.LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         child.setLayoutParams(params);
-        child.setBackgroundResource(R.drawable.module_channellayout_ic_shape_background_column0);
         addView(child);
     }
 
@@ -94,7 +94,7 @@ class ChannelScrollView extends ScrollView {
             return;
 
         // update
-        ((ChannelLinearLayoutChild) child).update(list);
+        ((ChannelLinearLayoutChild) child).update(list, true);
     }
 
     protected final boolean nextUp() {
@@ -130,7 +130,7 @@ class ChannelScrollView extends ScrollView {
 
     protected final void select(@Channeldirection.Value int direction, @NonNull int position, @NonNull boolean requestFocus, @NonNull boolean callback) {
 
-        if (direction != Channeldirection.INIT && direction != Channeldirection.SELECT)
+        if (direction != Channeldirection.INIT)
             return;
 
         try {
@@ -149,22 +149,22 @@ class ChannelScrollView extends ScrollView {
 //        }
 //    }
 
-    protected final void updateParentHighlight() {
+    protected final void updateLeft() {
         try {
             ChannelLayout channelLayout = (ChannelLayout) getParent();
             int index = channelLayout.indexOfChild(this);
             if (index > 0) {
                 ChannelScrollView scrollView = (ChannelScrollView) channelLayout.getChildAt(index - 1);
-                scrollView.refreshParentHighlight();
+                ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
+                layoutChild.refresh();
             }
         } catch (Exception e) {
         }
     }
 
-    private final void refreshParentHighlight() {
+    private final void update() {
         try {
-            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
-            layoutChild.forceSelectEqualsHighlight();
+
         } catch (Exception e) {
         }
     }
@@ -173,7 +173,8 @@ class ChannelScrollView extends ScrollView {
         try {
             ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
             layoutChild.requestFocus();
-            layoutChild.updateHighlightPosition();
+            int selectPosition = layoutChild.getSelectPosition();
+            layoutChild.setHighlightPosition(selectPosition, true);
         } catch (Exception e) {
         }
     }
@@ -198,16 +199,16 @@ class ChannelScrollView extends ScrollView {
 
     /*************/
 
-    protected final void callback(@NonNull int position, @NonNull int count, @Channeldirection.Value int direction, @NonNull ChannelModel value) {
+    protected final void callback(@NonNull int beforePosition, @NonNull int nextPosition, @NonNull int count, @Channeldirection.Value int direction, @NonNull ChannelModel value) {
 
-        ChannelUtil.logE("callback22 => position = " + position + ", count = " + count + ", direction = " + direction + ", value = " + value);
-        if (position < 0)
+        ChannelUtil.logE("callback22 => beforePosition = "+beforePosition+", nextPosition = " + nextPosition + ", count = " + count + ", direction = " + direction + ", value = " + value);
+        if (nextPosition < 0)
             return;
 
         ViewParent parent = getParent();
         if (null != parent && parent instanceof ChannelLayout) {
             int column = ((ChannelLayout) parent).indexOfChild(this);
-            ((ChannelLayout) parent).callback(column, position, count, direction, value);
+            ((ChannelLayout) parent).callback(column, beforePosition, nextPosition, count, direction, value);
         }
     }
 }

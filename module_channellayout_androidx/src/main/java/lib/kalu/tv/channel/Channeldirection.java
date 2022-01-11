@@ -10,14 +10,14 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.SOURCE)
 public @interface Channeldirection {
 
-    int INIT = 0x0001;
-    int SELECT = 0x0002;
-    int UP = 0x0003;
-    int NEXT_UP = 0x0004;
-    int DOWN = 0x0005;
-    int NEXT_DOWN = 0x0006;
-    int LEFT = 0x0007;
-    int RIGHT = 0x0008;
+    int INIT = 1;
+    int CLICK = 2;
+    int UP = 3;
+    int NEXT_UP = 4;
+    int DOWN = 5;
+    int NEXT_DOWN = 6;
+    int LEFT = 7;
+    int RIGHT = 8;
 
     int MIN = INIT;
     int MAX = RIGHT;
@@ -25,7 +25,7 @@ public @interface Channeldirection {
 
     @IntDef(value = {
             Channeldirection.INIT,
-            Channeldirection.SELECT,
+            Channeldirection.CLICK,
             Channeldirection.UP,
             Channeldirection.NEXT_UP,
             Channeldirection.DOWN,
