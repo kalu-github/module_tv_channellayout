@@ -181,6 +181,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value) {
 
             }
+
+            @Override
+            public void onRepeat(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value) {
+
+            }
         });
 
         channelLayout.select(0, 0);

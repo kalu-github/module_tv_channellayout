@@ -22,25 +22,14 @@ import lib.kalu.tv.channel.model.ChannelModel;
 
 @Keep
 class ChannelScrollView extends ScrollView {
-    public ChannelScrollView(Context context) {
+    public ChannelScrollView(@NonNull Context context,
+                             @NonNull int itemGravity,
+                             @NonNull int itemCount,
+                             @NonNull int itemTextSize,
+                             @NonNull int itemPaddingLeft,
+                             @NonNull int itemPaddingRight) {
         super(context);
-        init();
-    }
-
-    public ChannelScrollView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public ChannelScrollView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public ChannelScrollView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+        init(itemGravity, itemCount, itemTextSize, itemPaddingLeft, itemPaddingRight);
     }
 
     @Override
@@ -65,7 +54,12 @@ class ChannelScrollView extends ScrollView {
         return false;
     }
 
-    private final void init() {
+    private final void init(
+            @NonNull int itemGravity,
+            @NonNull int itemCount,
+            @NonNull int itemTextSize,
+            @NonNull int itemPaddingLeft,
+            @NonNull int itemPaddingRight) {
         setClickable(false);
         setLongClickable(false);
         setFocusable(false);
@@ -79,7 +73,7 @@ class ChannelScrollView extends ScrollView {
         removeAllViews();
 
         // step2
-        ChannelLinearLayoutChild child = new ChannelLinearLayoutChild(getContext());
+        ChannelLinearLayoutChild child = new ChannelLinearLayoutChild(getContext(), itemGravity, itemCount, itemTextSize, itemPaddingLeft, itemPaddingRight);
         ScrollView.LayoutParams params = new ScrollView.LayoutParams(ScrollView.LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         child.setLayoutParams(params);
         addView(child);
@@ -201,7 +195,7 @@ class ChannelScrollView extends ScrollView {
 
     protected final void callback(@NonNull int beforePosition, @NonNull int nextPosition, @NonNull int count, @Channeldirection.Value int direction, @NonNull ChannelModel value) {
 
-        ChannelUtil.logE("callback22 => beforePosition = "+beforePosition+", nextPosition = " + nextPosition + ", count = " + count + ", direction = " + direction + ", value = " + value);
+        ChannelUtil.logE("callback22 => beforePosition = " + beforePosition + ", nextPosition = " + nextPosition + ", count = " + count + ", direction = " + direction + ", value = " + value);
         if (nextPosition < 0)
             return;
 

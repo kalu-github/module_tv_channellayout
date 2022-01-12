@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -11,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,25 +30,18 @@ import lib.kalu.tv.channel.model.ChannelModel;
 @Keep
 class ChannelLinearLayoutChild extends LinearLayout {
 
-    public ChannelLinearLayoutChild(Context context) {
+    public ChannelLinearLayoutChild(Context context,
+                                    @NonNull int itemGravity,
+                                    @NonNull int itemCount,
+                                    @NonNull int itemTextSize,
+                                    @NonNull int itemPaddingLeft,
+                                    @NonNull int itemPaddingRight) {
         super(context);
-        init();
-    }
-
-    public ChannelLinearLayoutChild(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public ChannelLinearLayoutChild(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public ChannelLinearLayoutChild(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+        init(itemGravity);
+        setTag(R.id.module_channel_item_count, itemCount);
+        setTag(R.id.module_channel_item_text_size, itemTextSize);
+        setTag(R.id.module_channel_item_padding_left, itemPaddingLeft);
+        setTag(R.id.module_channel_item_padding_right, itemPaddingRight);
     }
 
     @Override
@@ -300,12 +295,20 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
     /**************/
 
-    private final void init() {
+    private final void init(@NonNull int gravity) {
         setClickable(true);
         setLongClickable(true);
         setFocusable(true);
         setFocusableInTouchMode(true);
-        setGravity(Gravity.CENTER);
+
+        if (gravity == 1) {
+            setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
+        } else if (gravity == 2) {
+            setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+        } else {
+            setGravity(Gravity.CENTER);
+        }
+
         setOrientation(LinearLayout.VERTICAL);
         setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
     }
@@ -319,16 +322,50 @@ class ChannelLinearLayoutChild extends LinearLayout {
         if (null == initText || initText.length() == 0)
             return;
 
+        WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        int heightPixels = displayMetrics.heightPixels;
+        int count;
+        try {
+            count = (int) getTag(R.id.module_channel_item_count);
+        } catch (Exception e) {
+            count = 10;
+        }
+        int height = heightPixels / count;
+
         ChannelTextView child = new ChannelTextView(getContext());
         child.setId(R.id.module_channel_item_standard);
-        child.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        int offset = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_size);
-        child.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset);
-        int left = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_left);
-        int right = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_right);
-        int top = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_top);
-        int bottom = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_bottom);
-        child.setPadding(left, top, right, bottom);
+        child.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height));
+
+        int textSize = 0;
+        try {
+            textSize = (int) getTag(R.id.module_channel_item_text_size);
+        } catch (Exception e) {
+        }
+        if (textSize <= 0) {
+            textSize = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_text_size);
+        }
+        child.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+
+        int left = 0;
+        try {
+            left = (int) getTag(R.id.module_channel_item_padding_left);
+        } catch (Exception e) {
+        }
+        if (left <= 0) {
+            left = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_left);
+        }
+        int right = 0;
+        try {
+            right = (int) getTag(R.id.module_channel_item_padding_right);
+        } catch (Exception e) {
+        }
+        if (right <= 0) {
+            right = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_right);
+        }
+        child.setPadding(left, 0, right, 0);
+
         child.setText(initText);
         child.setTag(R.id.module_channel_tag_item, model);
 
@@ -347,21 +384,21 @@ class ChannelLinearLayoutChild extends LinearLayout {
         addView(child, index);
     }
 
-    protected final void addEmpty() {
-        ChannelTextView child = new ChannelTextView(getContext());
-        child.setId(R.id.module_channel_item_empty);
-        child.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        int offset = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_size);
-        child.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset);
-        int left = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_left);
-        int right = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_right);
-        int top = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_top);
-        int bottom = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_bottom);
-        child.setPadding(left, top, right, bottom);
-        child.setText("暂无节目");
-
-        addView(child);
-    }
+//    protected final void addEmpty() {
+//        ChannelTextView child = new ChannelTextView(getContext());
+//        child.setId(R.id.module_channel_item_empty);
+//        child.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+//        int offset = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_size);
+//        child.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset);
+//        int left = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_left);
+//        int right = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_right);
+//        int top = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_top);
+//        int bottom = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_bottom);
+//        child.setPadding(left, top, right, bottom);
+//        child.setText("暂无节目");
+//
+//        addView(child);
+//    }
 
     protected final void nextFocus(@Channeldirection.Value int direction, boolean requestFocus) {
 
@@ -559,7 +596,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
 //            }
 //            // callback
 //            else {
-                callback(selectPosition, nextPosition, direction);
+            callback(selectPosition, nextPosition, direction);
 //            }
         }
 

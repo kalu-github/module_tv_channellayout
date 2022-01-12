@@ -162,10 +162,20 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         setOrientation(LinearLayout.HORIZONTAL);
 
         int column = 0;
+        int itemGravity = 3;
+        int itemCount = 10;
+        int itemTextSize = 0;
+        int itemTextPaddingLeft = 0;
+        int itemTextPaddingRight = 0;
         TypedArray attributes = null;
         try {
             attributes = getContext().obtainStyledAttributes(attrs, R.styleable.ChannelLayout);
             column = attributes.getInt(R.styleable.ChannelLayout_cl_column_count, 0);
+            itemGravity = attributes.getInt(R.styleable.ChannelLayout_cl_column_gravity, 3);
+            itemCount = attributes.getInt(R.styleable.ChannelLayout_cl_column_item_count, 10);
+            itemTextSize = attributes.getDimensionPixelOffset(R.styleable.ChannelLayout_cl_column_item_text_size, 0);
+            itemTextPaddingLeft = attributes.getDimensionPixelOffset(R.styleable.ChannelLayout_cl_column_item_padding_left, 0);
+            itemTextPaddingRight = attributes.getDimensionPixelOffset(R.styleable.ChannelLayout_cl_column_item_padding_right, 0);
         } catch (Exception e) {
         }
         if (null != attributes) {
@@ -189,7 +199,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             }
             // item
             else {
-                ChannelScrollView child = new ChannelScrollView(getContext());
+                ChannelScrollView child = new ChannelScrollView(getContext(), itemGravity, itemCount, itemTextSize, itemTextPaddingLeft, itemTextPaddingRight);
                 child.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
                 child.setBackgroundColor(Color.parseColor("#000000"));
                 addView(child);
@@ -426,21 +436,21 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         }
     }
 
-    @Keep
-    public final void setEmpty(@NonNull int column) {
-        int count = getChildCount();
-        if (column + 1 >= count)
-            return;
-        View child = getChildAt(column);
-        if (null == child || !(child instanceof ChannelScrollView))
-            return;
-        ChannelScrollView scrollView = (ChannelScrollView) child;
-        int childCount = scrollView.getChildCount();
-        if (childCount != 1)
-            return;
-        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
-        layoutChild.addEmpty();
-    }
+//    @Keep
+//    public final void setEmpty(@NonNull int column) {
+//        int count = getChildCount();
+//        if (column + 1 >= count)
+//            return;
+//        View child = getChildAt(column);
+//        if (null == child || !(child instanceof ChannelScrollView))
+//            return;
+//        ChannelScrollView scrollView = (ChannelScrollView) child;
+//        int childCount = scrollView.getChildCount();
+//        if (childCount != 1)
+//            return;
+//        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
+//        layoutChild.addEmpty();
+//    }
 
     @Keep
     public final void clear(@NonNull int column) {
