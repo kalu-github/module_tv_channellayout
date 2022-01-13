@@ -1,5 +1,6 @@
 package lib.kalu.tv.channel.model;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Keep;
 
@@ -14,15 +15,30 @@ public interface ChannelModel {
 
     CharSequence initText();
 
-    @DrawableRes
-    int leftImgHighlight();
+    @ColorRes
+    int initTextColorPlaying();
+
+    @ColorRes
+    int initTextColorHighlight();
+
+    @ColorRes
+    int initTextColorDefault();
 
     @DrawableRes
-    int leftImgDefault();
+    int initDrawablePlaying();
 
     @DrawableRes
-    int rightImgHighlight();
+    int initDrawableHighlight();
 
     @DrawableRes
-    int rightImgDefault();
+    int initDrawableDefault();
+
+    @DrawableRes
+    int initBackgroundResourcePlaying();
+
+    @DrawableRes
+    int initBackgroundResourceHighlight();
+
+    @DrawableRes
+    int initBackgroundResourceDefault();
 }

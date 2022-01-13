@@ -1,20 +1,14 @@
 package lib.kalu.tv.channel;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
-import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.ScrollView;
 
-import androidx.annotation.BoolRes;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import java.util.List;
 
@@ -23,13 +17,15 @@ import lib.kalu.tv.channel.model.ChannelModel;
 @Keep
 class ChannelScrollView extends ScrollView {
     public ChannelScrollView(@NonNull Context context,
+                             @NonNull int maxEms,
+                             @NonNull int maxWidth,
                              @NonNull int itemGravity,
                              @NonNull int itemCount,
                              @NonNull int itemTextSize,
                              @NonNull int itemPaddingLeft,
                              @NonNull int itemPaddingRight) {
         super(context);
-        init(itemGravity, itemCount, itemTextSize, itemPaddingLeft, itemPaddingRight);
+        init(maxEms, maxWidth, itemGravity, itemCount, itemTextSize, itemPaddingLeft, itemPaddingRight);
     }
 
     @Override
@@ -55,6 +51,8 @@ class ChannelScrollView extends ScrollView {
     }
 
     private final void init(
+            @NonNull int maxEms,
+            @NonNull int maxWidth,
             @NonNull int itemGravity,
             @NonNull int itemCount,
             @NonNull int itemTextSize,
@@ -73,7 +71,7 @@ class ChannelScrollView extends ScrollView {
         removeAllViews();
 
         // step2
-        ChannelLinearLayoutChild child = new ChannelLinearLayoutChild(getContext(), itemGravity, itemCount, itemTextSize, itemPaddingLeft, itemPaddingRight);
+        ChannelLinearLayoutChild child = new ChannelLinearLayoutChild(getContext(), maxEms, maxWidth, itemGravity, itemCount, itemTextSize, itemPaddingLeft, itemPaddingRight);
         ScrollView.LayoutParams params = new ScrollView.LayoutParams(ScrollView.LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         child.setLayoutParams(params);
         addView(child);

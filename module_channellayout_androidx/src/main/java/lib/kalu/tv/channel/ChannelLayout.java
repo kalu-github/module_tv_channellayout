@@ -6,25 +6,18 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import lib.kalu.tv.channel.listener.OnChannelChangeListener;
 import lib.kalu.tv.channel.model.ChannelModel;
@@ -161,6 +154,10 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 //        setGravity(Gravity.CENTER_VERTICAL);
         setOrientation(LinearLayout.HORIZONTAL);
 
+        int maxIndex = Integer.MIN_VALUE;
+        int maxEms = Integer.MIN_VALUE;
+        int maxWidth = Integer.MIN_VALUE;
+
         int column = 0;
         int itemGravity = 3;
         int itemCount = 10;
@@ -170,6 +167,9 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         TypedArray attributes = null;
         try {
             attributes = getContext().obtainStyledAttributes(attrs, R.styleable.ChannelLayout);
+            maxIndex = attributes.getInt(R.styleable.ChannelLayout_cl_column_max_index, Integer.MIN_VALUE);
+            maxEms = attributes.getInt(R.styleable.ChannelLayout_cl_column_max_ems, Integer.MIN_VALUE);
+            maxWidth = attributes.getDimensionPixelOffset(R.styleable.ChannelLayout_cl_column_max_width, Integer.MIN_VALUE);
             column = attributes.getInt(R.styleable.ChannelLayout_cl_column_count, 0);
             itemGravity = attributes.getInt(R.styleable.ChannelLayout_cl_column_gravity, 3);
             itemCount = attributes.getInt(R.styleable.ChannelLayout_cl_column_item_count, 10);
@@ -197,9 +197,22 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
                 child.setBackgroundColor(Color.parseColor("#000000"));
                 addView(child);
             }
+            //
+            else if (maxIndex >= 0 && i == maxIndex) {
+                if (maxEms < 0) {
+                    maxEms = Integer.MIN_VALUE;
+                }
+                if (maxWidth < 0) {
+                    maxWidth = Integer.MIN_VALUE;
+                }
+                ChannelScrollView child = new ChannelScrollView(getContext(), maxEms, maxWidth, itemGravity, itemCount, itemTextSize, itemTextPaddingLeft, itemTextPaddingRight);
+                child.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+                child.setBackgroundColor(Color.parseColor("#000000"));
+                addView(child);
+            }
             // item
             else {
-                ChannelScrollView child = new ChannelScrollView(getContext(), itemGravity, itemCount, itemTextSize, itemTextPaddingLeft, itemTextPaddingRight);
+                ChannelScrollView child = new ChannelScrollView(getContext(), Integer.MIN_VALUE, Integer.MIN_VALUE, itemGravity, itemCount, itemTextSize, itemTextPaddingLeft, itemTextPaddingRight);
                 child.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
                 child.setBackgroundColor(Color.parseColor("#000000"));
                 addView(child);

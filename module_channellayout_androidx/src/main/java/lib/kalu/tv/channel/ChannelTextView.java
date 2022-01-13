@@ -3,77 +3,22 @@ package lib.kalu.tv.channel;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.view.Gravity;
-import android.widget.TextView;
 
-import androidx.annotation.BoolRes;
 import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import lib.kalu.tv.channel.model.ChannelModel;
 
 @SuppressLint("AppCompatCustomView")
-class ChannelTextView extends TextView {
+class ChannelTextView extends ChannelTextViewMarquee {
 
-    /**
-     * 默认
-     */
-    @ColorInt
-    private int mTextColorDefault = getResources().getColor(R.color.module_channellayout_color_ababab);
-    /**
-     * 高亮
-     */
-    @ColorInt
-    private int mTextColorHighlight = getResources().getColor(R.color.module_channellayout_color_333333);
-    /**
-     * 选中
-     */
-    private int mTextColorSelect = getResources().getColor(R.color.module_channellayout_color_ffc700);
-    /**
-     * 在播
-     */
-    @ColorInt
-    private int mTextColorPlaying = getResources().getColor(R.color.module_channellayout_color_ffffff);
-
-    @DrawableRes
-    private int mBackgroundDefault = R.drawable.module_channellayout_ic_background_default;
-    @DrawableRes
-    private int mBackgroundHighlight = R.drawable.module_channellayout_ic_background_hightlight;
-
-    @DrawableRes
-    private int mLeftImgDefault = 0;
-    @DrawableRes
-    private int mLeftImgHighlight = 0;
-    @DrawableRes
-    private int mRightImgDefault = 0;
-    @DrawableRes
-    private int mRightImgHighlight = 0;
-
-    public ChannelTextView(Context context) {
+    public ChannelTextView(Context context, @NonNull int maxEms) {
         super(context);
-        init();
-    }
-
-    public ChannelTextView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public ChannelTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public ChannelTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        setTag(R.id.module_channel_item_max_ems, maxEms);
         init();
     }
 
@@ -88,81 +33,140 @@ class ChannelTextView extends TextView {
     }
 
     @Override
+    public boolean isFocused() {
+        return false;
+    }
+
+    @Override
     public void setOnLongClickListener(@Nullable OnLongClickListener l) {
     }
 
     /**************/
 
-    protected final void setBackgroundDefault() {
-        setBackgroundResource(R.drawable.module_channellayout_ic_background_default);
-    }
-
-    protected final void setBackgroundHighlight() {
-        setBackgroundResource(R.drawable.module_channellayout_ic_background_hightlight);
-    }
-
-    /*************************/
-
-    protected final void setCompoundDrawables(@NonNull boolean left) {
-        setCompoundDrawables(left, false);
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    protected final void setCompoundDrawables(@NonNull boolean left, @NonNull boolean right) {
+    protected final void setCompoundDrawables1(@NonNull boolean isHighlight, @NonNull boolean isPlaying) {
 
         @DrawableRes
-        int imgLeft;
-        @DrawableRes
-        int imgRight;
+        int img;
 
         try {
             ChannelModel temp = (ChannelModel) getTag(R.id.module_channel_tag_item);
-            imgLeft = left ? temp.leftImgHighlight() : temp.leftImgDefault();
-            imgRight = right ? temp.rightImgHighlight() : temp.rightImgDefault();
+            if (isPlaying) {
+                img = temp.initDrawablePlaying();
+            } else if (isHighlight) {
+                img = temp.initDrawableHighlight();
+            } else {
+                img = temp.initDrawableDefault();
+            }
         } catch (Exception e) {
-            imgLeft = left ? mLeftImgHighlight : mLeftImgDefault;
-            imgRight = right ? mRightImgHighlight : mRightImgDefault;
+            if (isPlaying) {
+                img = 0;
+            } else if (isHighlight) {
+                img = 0;
+            } else {
+                img = 0;
+            }
         }
 
         try {
-            setCompoundDrawablesWithIntrinsicBounds(imgLeft, 0, imgRight, 0);
+            setCompoundDrawablesWithIntrinsicBounds(img, 0, 0, 0);
         } catch (Exception e) {
         }
     }
 
-    /*************************/
+    protected final void setTextColor(@NonNull boolean isHighlight, @NonNull boolean isPlaying) {
 
-    protected final void setTextColorDefault() {
-        setTextColor(mTextColorDefault);
+        // step1: color
+        @ColorRes
+        int res;
+        try {
+            ChannelModel temp = (ChannelModel) getTag(R.id.module_channel_tag_item);
+            if (isPlaying) {
+                res = temp.initTextColorPlaying();
+            } else if (isHighlight) {
+                res = temp.initTextColorHighlight();
+            } else {
+                res = temp.initTextColorDefault();
+            }
+        } catch (Exception e) {
+            if (isPlaying) {
+                res = R.color.module_channellayout_color_ffffff;
+            } else if (isHighlight) {
+                res = R.color.module_channellayout_color_ffc700;
+            } else {
+                res = R.color.module_channellayout_color_ababab;
+            }
+        }
+        try {
+            int color = getResources().getColor(res);
+            setTextColor(color);
+        } catch (Exception e) {
+        }
+
+        // step2: scroll
+        CharSequence text = getText();
+        int maxEms;
+        try {
+            maxEms = (int) getTag(R.id.module_channel_item_max_ems);
+        } catch (Exception e) {
+            maxEms = -1;
+        }
+        if (maxEms > 0 && null != text && text.length() > maxEms) {
+            stopScroll();
+        }
     }
 
-    protected final void setTextColorHighlight() {
-        setTextColor(mTextColorHighlight);
-    }
+    protected final void setBackgroundResource(@NonNull boolean isHighlight, @NonNull boolean isPlaying) {
 
-    protected final void setTextColorSelect() {
-        setTextColor(mTextColorSelect);
-    }
+        // step1: background
+        @DrawableRes
+        int res;
+        try {
+            ChannelModel temp = (ChannelModel) getTag(R.id.module_channel_tag_item);
+            if (isPlaying) {
+                res = temp.initBackgroundResourcePlaying();
+            } else if (isHighlight) {
+                res = temp.initBackgroundResourceHighlight();
+            } else {
+                res = temp.initBackgroundResourceDefault();
+            }
+        } catch (Exception e) {
+            if (isPlaying) {
+                res = -1;
+            } else if (isHighlight) {
+                res = -2;
+            } else {
+                res = -3;
+            }
+        }
+        try {
+            setBackgroundResource(res);
+        } catch (Exception e) {
+            @ColorInt
+            int color;
+            if (isPlaying) {
+                color = getResources().getColor(R.color.module_channellayout_color_00000000);
+            } else if (isHighlight) {
+                color = getResources().getColor(R.color.module_channellayout_color_ffc700);
+            } else {
+                color = getResources().getColor(R.color.module_channellayout_color_00000000);
+            }
+            setBackgroundColor(color);
+        }
 
-    protected final void setTextColorPlaying() {
-        setTextColor(mTextColorPlaying);
     }
 
     /*************************/
 
     private final void init() {
+        setSingleLine(true);
         setFocusable(false);
         setFocusableInTouchMode(false);
         setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         setBackgroundColor(Color.TRANSPARENT);
-        setMarqueeRepeatLimit(Integer.MAX_VALUE);
-        setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        setSingleLine();
-        setHorizontallyScrolling(true);
 
-        setTextColorDefault();
-        setBackgroundDefault();
-        setCompoundDrawables(false, false);
+        setTextColor(false, false);
+        setCompoundDrawables1(false, false);
+        setBackgroundResource(false, false);
     }
 
     /*************************/

@@ -1,5 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <declare-styleable name="ChannelLayout">
+        <attr name="cl_column_max_index" format="integer" />
+        <attr name="cl_column_max_ems" format="integer" />
+        <attr name="cl_column_max_width" format="dimension|reference" />
         <attr name="cl_column_count" format="integer" />
         <attr name="cl_column_item_count" format="integer" />
         <attr name="cl_column_item_text_size" format="dimension|reference" />
@@ -9,6 +12,15 @@
             <enum name="top" value="1" />
             <enum name="bottom" value="2" />
             <enum name="center" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="ChannelTextViewMarquee">
+        <attr name="ctvm_scroll_interval" format="integer" />
+        <attr name="ctvm_scroll_first_delay" format="integer" />
+        <attr name="ctvm_scroll_mode">
+            <enum name="forever" value="100" />
+            <enum name="once" value="101" />
         </attr>
     </declare-styleable>
 </resources>
