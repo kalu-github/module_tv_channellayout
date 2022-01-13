@@ -147,6 +147,8 @@ class ChannelTextView extends ChannelTextViewMarquee {
             } else {
                 stopScroll();
             }
+        } else {
+            stopScroll();
         }
     }
 
@@ -236,7 +238,7 @@ class ChannelTextView extends ChannelTextViewMarquee {
             ChannelModel temp = (ChannelModel) tag;
             CharSequence tip = temp.initTip();
             if (null != tip && tip.length() > 0) {
-                int measureText = (int) getPaint().measureText(String.valueOf(tip)) * 2;
+                int measureText = (int) (getPaint().measureText(String.valueOf(tip)) * 1.8f);
                 int drawablePadding = getCompoundDrawablePadding();
                 offset = drawablePadding + measureText;
             }

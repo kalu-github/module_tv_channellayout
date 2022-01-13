@@ -56,6 +56,10 @@ class ChannelTextViewMarquee extends TextView {
      */
     private boolean mPaused = true;
     /**
+     * 是否
+     */
+    private boolean mStart = false;
+    /**
      * 是否第一次
      */
     private boolean mFirst = true;
@@ -125,9 +129,22 @@ class ChannelTextViewMarquee extends TextView {
      */
     public void startScroll() {
         mXPaused = 0;
+        mStart = true;
         mPaused = true;
         mFirst = true;
         resumeScroll();
+    }
+
+    /**
+     * 停止滚动，并回到初始位置
+     */
+    public void stopScroll() {
+        if (null == mScroller) {
+            return;
+        }
+        mStart = false;
+        mPaused = true;
+        mScroller.startScroll(0, 0, 0, 0, 0);
     }
 
     /**
@@ -152,15 +169,19 @@ class ChannelTextViewMarquee extends TextView {
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mScroller.startScroll(mXPaused, 0, distance, 0, duration);
-                    invalidate();
-                    mPaused = false;
+                    if (mStart) {
+                        mScroller.startScroll(mXPaused, 0, distance, 0, duration);
+                        invalidate();
+                        mPaused = false;
+                    }
                 }
             }, mFirstScrollDelay);
         } else {
-            mScroller.startScroll(mXPaused, 0, distance, 0, duration);
-            invalidate();
-            mPaused = false;
+            if (mStart) {
+                mScroller.startScroll(mXPaused, 0, distance, 0, duration);
+                invalidate();
+                mPaused = false;
+            }
         }
     }
 
@@ -179,17 +200,6 @@ class ChannelTextViewMarquee extends TextView {
         mXPaused = mScroller.getCurrX();
 
         mScroller.abortAnimation();
-    }
-
-    /**
-     * 停止滚动，并回到初始位置
-     */
-    public void stopScroll() {
-        if (null == mScroller) {
-            return;
-        }
-        mPaused = true;
-        mScroller.startScroll(0, 0, 0, 0, 0);
     }
 
     /**
