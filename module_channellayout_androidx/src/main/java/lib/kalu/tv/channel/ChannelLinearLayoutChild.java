@@ -318,7 +318,6 @@ class ChannelLinearLayoutChild extends LinearLayout {
             return;
 
         CharSequence initText = model.initText();
-        CharSequence initTip = model.initTip();
         if (null == initText || initText.length() == 0)
             return;
 
@@ -384,7 +383,12 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
         child.setPadding(left, 0, right, 0);
 
-        child.setText(initTip + "  " + initText);
+//        CharSequence initTip = model.initTip();
+//        if (null != initTip && initTip.length() > 0) {
+//            child.setText(initTip + "  " + initText);
+//        } else {
+            child.setText(initText);
+//        }
         child.setTag(R.id.module_channel_tag_item, model);
 
         int selectPosition = getSelectPosition();

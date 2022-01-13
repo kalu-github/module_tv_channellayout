@@ -2,6 +2,7 @@ package lib.kalu.tv.channel;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.view.Gravity;
 
@@ -182,17 +183,36 @@ class ChannelTextView extends ChannelTextViewMarquee {
             }
             setBackgroundColor(color);
         }
+    }
 
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        // tip
+        try {
+            ChannelModel temp = (ChannelModel) getTag(R.id.module_channel_tag_item);
+            CharSequence tip = temp.initTip();
+            if (null == tip || tip.length() <= 0)
+                return;
+//            int padding = getCompoundDrawablePadding();
+            int paddingLeft = getPaddingLeft();
+            canvas.drawText(String.valueOf(tip), paddingLeft, getHeight() / 2, getPaint());
+        } catch (Exception e) {
+        }
     }
 
     /*************************/
 
     private final void init() {
-
         try {
             ChannelModel temp = (ChannelModel) getTag(R.id.module_channel_tag_item);
-            CharSequence sequence = temp.initTip();
-            setTag(R.id.module_channel_item_marquee_start, sequence.length());
+            CharSequence tip = temp.initTip();
+            if (null != tip && tip.length() > 0) {
+                int measureText = (int) getPaint().measureText(String.valueOf(tip));
+                int drawablePadding = getCompoundDrawablePadding();
+                setCompoundDrawablePadding(drawablePadding + measureText);
+            }
         } catch (Exception e) {
         }
 

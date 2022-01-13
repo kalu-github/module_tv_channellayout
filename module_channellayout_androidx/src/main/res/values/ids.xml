@@ -10,7 +10,6 @@
     <item name="module_channel_item_standard" type="id" />
     <item name="module_channel_item_max_ems" type="id" />
     <item name="module_channel_item_max_width" type="id" />
-    <item name="module_channel_item_marquee_start" type="id" />
     <item name="module_channel_position_select" type="id" />
     <item name="module_channel_position_before" type="id" />
     <item name="module_channel_position_highlight" type="id" />
