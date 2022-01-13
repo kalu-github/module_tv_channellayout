@@ -188,6 +188,14 @@ class ChannelTextView extends ChannelTextViewMarquee {
     /*************************/
 
     private final void init() {
+
+        try {
+            ChannelModel temp = (ChannelModel) getTag(R.id.module_channel_tag_item);
+            CharSequence sequence = temp.initTip();
+            setTag(R.id.module_channel_item_marquee_start, sequence.length());
+        } catch (Exception e) {
+        }
+
         setSingleLine(true);
         setFocusable(false);
         setFocusableInTouchMode(false);

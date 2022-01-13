@@ -12,6 +12,7 @@ import lib.kalu.tv.channel.R;
 public class ChannelModelNormal implements ChannelModel {
 
     private int id = ChannelModel.NULL;
+    private String tip = null;
     private String text = null;
     private String url = null;
 
@@ -51,6 +52,11 @@ public class ChannelModelNormal implements ChannelModel {
     @Override
     public CharSequence initText() {
         return text;
+    }
+
+    @Override
+    public CharSequence initTip() {
+        return tip;
     }
 
     @Override
@@ -103,6 +109,10 @@ public class ChannelModelNormal implements ChannelModel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setTip(String tip) {
+        this.tip = tip;
     }
 
     public void setText(String text) {

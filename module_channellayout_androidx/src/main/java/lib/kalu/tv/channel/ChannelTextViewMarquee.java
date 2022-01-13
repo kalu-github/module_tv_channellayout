@@ -201,7 +201,13 @@ class ChannelTextViewMarquee extends TextView {
         TextPaint tp = getPaint();
         Rect rect = new Rect();
         String strTxt = getText().toString();
-        tp.getTextBounds(strTxt, 0, strTxt.length(), rect);
+        int start;
+        try {
+            start = (int) getTag(R.id.module_channel_item_marquee_start);
+        } catch (Exception e) {
+            start = 0;
+        }
+        tp.getTextBounds(strTxt, start, strTxt.length(), rect);
         return rect.width();
     }
 

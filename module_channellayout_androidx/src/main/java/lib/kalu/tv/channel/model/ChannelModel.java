@@ -15,6 +15,8 @@ public interface ChannelModel {
 
     CharSequence initText();
 
+    CharSequence initTip();
+
     @ColorRes
     int initTextColorPlaying();
 
