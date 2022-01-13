@@ -353,6 +353,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
         ChannelTextView child = new ChannelTextView(getContext(), maxEms);
         child.setId(R.id.module_channel_item_standard);
+        child.setTag(R.id.module_channel_tag_item, model);
         child.setLayoutParams(new LayoutParams(width, height));
 
         int textSize = 0;
@@ -382,14 +383,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             right = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_item_padding_right);
         }
         child.setPadding(left, 0, right, 0);
-
-//        CharSequence initTip = model.initTip();
-//        if (null != initTip && initTip.length() > 0) {
-//            child.setText(initTip + "  " + initText);
-//        } else {
-            child.setText(initText);
-//        }
-        child.setTag(R.id.module_channel_tag_item, model);
+        child.setText(initText);
 
         int selectPosition = getSelectPosition();
         int highlightPosition = getHighlightPosition();

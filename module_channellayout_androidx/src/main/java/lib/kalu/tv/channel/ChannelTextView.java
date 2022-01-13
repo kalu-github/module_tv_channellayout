@@ -4,6 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.text.TextPaint;
+import android.util.Log;
 import android.view.Gravity;
 
 import androidx.annotation.ColorInt;
@@ -189,33 +193,62 @@ class ChannelTextView extends ChannelTextViewMarquee {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // tip
+        // step1
         try {
             ChannelModel temp = (ChannelModel) getTag(R.id.module_channel_tag_item);
             CharSequence tip = temp.initTip();
-            if (null == tip || tip.length() <= 0)
-                return;
-//            int padding = getCompoundDrawablePadding();
-            int paddingLeft = getPaddingLeft();
-            canvas.drawText(String.valueOf(tip), paddingLeft, getHeight() / 2, getPaint());
+            if (null != tip && tip.length() > 0) {
+                int intrinsicWidth = 0;
+                Drawable[] compoundDrawables = getCompoundDrawables();
+                if (null != compoundDrawables[0]) {
+                    intrinsicWidth = compoundDrawables[0].getIntrinsicWidth();
+                }
+                if (intrinsicWidth < 0) {
+                    intrinsicWidth = 0;
+                }
+
+                int scrollX = getScrollX();
+                int x = getPaddingLeft() + scrollX + intrinsicWidth;
+
+                TextPaint paint = getPaint();
+                Paint.FontMetrics fontMetrics = paint.getFontMetrics();
+                float v = fontMetrics.bottom - fontMetrics.top;
+                float y = getHeight() / 2 + v / 3;
+                canvas.drawText(String.valueOf(tip), x, y, paint);
+            }
         } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setTag(int key, Object tag) {
+        super.setTag(key, tag);
+
+        if (key != R.id.module_channel_tag_item)
+            return;
+
+        if (null == tag || !(tag instanceof ChannelModel))
+            return;
+
+        // step2
+        int offset = 0;
+        try {
+            ChannelModel temp = (ChannelModel) tag;
+            CharSequence tip = temp.initTip();
+            if (null != tip && tip.length() > 0) {
+                int measureText = (int) getPaint().measureText(String.valueOf(tip)) * 2;
+                int drawablePadding = getCompoundDrawablePadding();
+                offset = drawablePadding + measureText;
+            }
+            setCompoundDrawablePadding(offset);
+        } catch (Exception e) {
+            ChannelUtil.logE(e.getMessage(), e);
         }
     }
 
     /*************************/
 
     private final void init() {
-        try {
-            ChannelModel temp = (ChannelModel) getTag(R.id.module_channel_tag_item);
-            CharSequence tip = temp.initTip();
-            if (null != tip && tip.length() > 0) {
-                int measureText = (int) getPaint().measureText(String.valueOf(tip));
-                int drawablePadding = getCompoundDrawablePadding();
-                setCompoundDrawablePadding(drawablePadding + measureText);
-            }
-        } catch (Exception e) {
-        }
-
         setSingleLine(true);
         setFocusable(false);
         setFocusableInTouchMode(false);
