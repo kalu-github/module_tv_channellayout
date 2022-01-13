@@ -744,7 +744,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 int top = child.getTop();
                 int scrollY = ((ViewGroup) getParent()).getScrollY();
                 if (top < scrollY) {
-                    ((ChannelScrollView) getParent()).smoothScrollBy(0, -Math.abs(scrollY - top));
+                    ((ChannelScrollView) getParent()).scrollBy(0, -Math.abs(scrollY - top));
                 }
             } catch (Exception e) {
             }
