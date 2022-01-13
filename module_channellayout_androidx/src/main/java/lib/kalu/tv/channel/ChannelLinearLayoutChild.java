@@ -736,6 +736,17 @@ class ChannelLinearLayoutChild extends LinearLayout {
         if (null == list || list.size() <= 0)
             return;
 
+        // scroll
+        if (visibility == View.VISIBLE) {
+            int selectPosition = getSelectPosition();
+            ChannelTextView child = (ChannelTextView) getChildAt(selectPosition);
+            int top = child.getTop();
+            int scrollY = ((ViewGroup) getParent()).getScrollY();
+            if (top < scrollY) {
+                ((ChannelScrollView) getParent()).smoothScrollBy(0, -Math.abs(scrollY - top));
+            }
+        }
+
         // show
         if (hasFocus() && visibility == View.VISIBLE) {
             try {
