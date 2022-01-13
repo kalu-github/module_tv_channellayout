@@ -213,7 +213,7 @@ class ChannelTextView extends ChannelTextViewMarquee {
                 TextPaint paint = getPaint();
                 Paint.FontMetrics fontMetrics = paint.getFontMetrics();
                 float v = fontMetrics.bottom - fontMetrics.top;
-                float y = getHeight() / 2 + v / 3;
+                float y = getHeight() / 2 + v * 0.3f;
                 canvas.drawText(String.valueOf(tip), x, y, paint);
             }
         } catch (Exception e) {
