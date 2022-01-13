@@ -1,6 +1,7 @@
 package lib.kalu.tv.channel;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -560,7 +562,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             // up down
             if (direction == Channeldirection.UP || direction == Channeldirection.DOWN) {
                 next.setCompoundDrawables1(true, false);
-                next.setTextColor(true, false);
+                next.setTextColor(true, R.color.module_channellayout_color_333333);
                 next.setBackgroundResource(true, false);
             }
             // next-up next-down
@@ -571,8 +573,8 @@ class ChannelLinearLayoutChild extends LinearLayout {
             }
             // left right
             else if (direction == Channeldirection.LEFT || direction == Channeldirection.RIGHT) {
-                next.setCompoundDrawables1(true, false);
-                next.setTextColor(true, false);
+                next.setCompoundDrawables1(false, false);
+                next.setTextColor(true, R.color.module_channellayout_color_333333);
                 next.setBackgroundResource(true, false);
             }
             // select
@@ -584,7 +586,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             // init1
             else if (requestFocus && direction == Channeldirection.INIT) {
                 next.setCompoundDrawables1(true, false);
-                next.setTextColor(true, false);
+                next.setTextColor(true, R.color.module_channellayout_color_333333);
                 next.setBackgroundResource(true, false);
             }
             // init2
@@ -695,37 +697,6 @@ class ChannelLinearLayoutChild extends LinearLayout {
         callback(selectPosition, highlightPosition, Channeldirection.INIT);
     }
 
-//    protected final void focusAuto() {
-//        int selectPosition = getSelectPosition();
-//        int highlightPosition = getHighlightPosition();
-//        setHighlightPosition(selectPosition, false);
-
-//        updateHighlightPosition();
-
-//        if (selectPosition != highlightPosition) {
-//            try {
-//                ChannelTextView textView = (ChannelTextView) getChildAt(highlightPosition);
-//                textView.setTextColorDefault();
-//                textView.setCompoundDrawables(false);
-//                textView.setBackgroundDefault();
-//            } catch (Exception e) {
-//            }
-//        }
-//        try {
-//            ChannelTextView textView = (ChannelTextView) getChildAt(selectPosition);
-//            if (hasFocus()) {
-//                textView.setTextColorHighlight();
-//                textView.setCompoundDrawables(true);
-//                textView.setBackgroundHighlight();
-//            } else {
-//                textView.setTextColorSelect();
-//                textView.setCompoundDrawables(true);
-//                textView.setBackgroundDefault();
-//            }
-//        } catch (Exception e) {
-//        }
-//    }
-
     private final List<ChannelModel> getTags(boolean click) {
 
         // 新
@@ -771,7 +742,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             try {
                 int selectPosition = getSelectPosition();
                 ChannelTextView child = (ChannelTextView) getChildAt(selectPosition);
-                child.setTextColor(true, false);
+                child.setTextColor(true, R.color.module_channellayout_color_333333);
                 child.setCompoundDrawables1(true, false);
                 child.setBackgroundResource(true, false);
             } catch (Exception e) {

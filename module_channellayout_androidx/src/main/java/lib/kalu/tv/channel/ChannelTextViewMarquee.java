@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Scroller;
 import android.widget.TextView;
@@ -88,6 +89,19 @@ class ChannelTextViewMarquee extends TextView {
         init(context, attrs);
     }
 
+    @Override
+    protected void onVisibilityChanged(View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        if (visibility != View.VISIBLE) {
+            stopScroll();
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        stopScroll();
+    }
 
     private void init(Context context, AttributeSet attrs) {
         setSingleLine();

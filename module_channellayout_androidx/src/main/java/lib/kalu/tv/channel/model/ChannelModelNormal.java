@@ -1,5 +1,7 @@
 package lib.kalu.tv.channel.model;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Keep;
@@ -28,11 +30,13 @@ public class ChannelModelNormal implements ChannelModel {
     private int mTextColorDefault = R.color.module_channellayout_color_ababab;
 
     @DrawableRes
-    private int mBackgroundResourcePlaying = 0;
+    private int mBackgroundResourcePlaying = -1;
+    @SuppressLint("ResourceType")
     @DrawableRes
-    private int mBackgroundResourceHighlight = 0;
+    private int mBackgroundResourceHighlight = -2;
+    @SuppressLint("ResourceType")
     @DrawableRes
-    private int mBackgroundResourceDefault = 0;
+    private int mBackgroundResourceDefault = -3;
 
     @Override
     public int initId() {

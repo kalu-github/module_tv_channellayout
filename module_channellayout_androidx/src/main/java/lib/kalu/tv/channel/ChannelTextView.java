@@ -111,7 +111,37 @@ class ChannelTextView extends ChannelTextViewMarquee {
             maxEms = -1;
         }
         if (maxEms > 0 && null != text && text.length() > maxEms) {
-            stopScroll();
+            if (isHighlight) {
+                startScroll();
+            } else {
+                stopScroll();
+            }
+        }
+    }
+
+    protected final void setTextColor(@NonNull boolean isHighlight, @ColorRes int res) {
+
+        // step1: color
+        try {
+            int color = getResources().getColor(res);
+            setTextColor(color);
+        } catch (Exception e) {
+        }
+
+        // step2: scroll
+        CharSequence text = getText();
+        int maxEms;
+        try {
+            maxEms = (int) getTag(R.id.module_channel_item_max_ems);
+        } catch (Exception e) {
+            maxEms = -1;
+        }
+        if (maxEms > 0 && null != text && text.length() > maxEms) {
+            if (isHighlight) {
+                startScroll();
+            } else {
+                stopScroll();
+            }
         }
     }
 
