@@ -82,7 +82,18 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     @Override
     public boolean handleMessage(@NonNull Message msg) {
-        if (msg.what >= 5) {
+
+        int timeout;
+        try {
+            timeout = (int) getTag(R.id.module_channel_timeout);
+        } catch (Exception e) {
+            timeout = 10;
+        }
+        if (timeout < 0) {
+            timeout = 10;
+        }
+
+        if (msg.what >= timeout) {
             clearTime();
             setVisibility(View.INVISIBLE);
         } else {
@@ -158,6 +169,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         int maxEms = Integer.MIN_VALUE;
         int maxWidth = Integer.MIN_VALUE;
 
+        int timeout = 10;
         int column = 0;
         int itemGravity = 3;
         int itemCount = 10;
@@ -170,6 +182,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             maxIndex = attributes.getInt(R.styleable.ChannelLayout_cl_column_max_index, Integer.MIN_VALUE);
             maxEms = attributes.getInt(R.styleable.ChannelLayout_cl_column_max_ems, Integer.MIN_VALUE);
             maxWidth = attributes.getDimensionPixelOffset(R.styleable.ChannelLayout_cl_column_max_width, Integer.MIN_VALUE);
+            timeout = attributes.getInt(R.styleable.ChannelLayout_cl_timeout, 10);
             column = attributes.getInt(R.styleable.ChannelLayout_cl_column_count, 0);
             itemGravity = attributes.getInt(R.styleable.ChannelLayout_cl_column_gravity, 3);
             itemCount = attributes.getInt(R.styleable.ChannelLayout_cl_column_item_count, 10);
@@ -181,6 +194,9 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         if (null != attributes) {
             attributes.recycle();
         }
+
+        // timeout
+        setTag(R.id.module_channel_timeout, timeout);
 
         int size = column + 1;
         for (int i = 0; i < size; i++) {

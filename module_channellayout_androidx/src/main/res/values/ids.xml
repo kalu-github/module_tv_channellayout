@@ -1,4 +1,5 @@
 <resources>
+    <item name="module_channel_timeout" type="id" />
     <item name="module_channel_tag_all" type="id" />
     <item name="module_channel_tag_item" type="id" />
     <item name="module_channel_tag_select" type="id" />

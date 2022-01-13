@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <declare-styleable name="ChannelLayout">
+        <attr name="cl_timeout" format="integer" />
         <attr name="cl_column_max_index" format="integer" />
         <attr name="cl_column_max_ems" format="integer" />
         <attr name="cl_column_max_width" format="dimension|reference" />
