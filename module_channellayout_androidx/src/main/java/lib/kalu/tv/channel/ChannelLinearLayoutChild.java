@@ -772,7 +772,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 int selectPosition = getSelectPosition();
                 ChannelTextView child = (ChannelTextView) getChildAt(selectPosition);
                 child.setTextColor(true, false);
-                child.setCompoundDrawables1(false, false);
+                child.setCompoundDrawables1(true, false);
                 child.setBackgroundResource(true, false);
             } catch (Exception e) {
             }

@@ -73,22 +73,47 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public int leftImgHighlight() {
+                    public int initTextColorPlaying() {
                         return 0;
                     }
 
                     @Override
-                    public int leftImgDefault() {
+                    public int initTextColorHighlight() {
                         return 0;
                     }
 
                     @Override
-                    public int rightImgHighlight() {
+                    public int initTextColorDefault() {
                         return 0;
                     }
 
                     @Override
-                    public int rightImgDefault() {
+                    public int initDrawablePlaying() {
+                        return 0;
+                    }
+
+                    @Override
+                    public int initDrawableHighlight() {
+                        return 0;
+                    }
+
+                    @Override
+                    public int initDrawableDefault() {
+                        return 0;
+                    }
+
+                    @Override
+                    public int initBackgroundResourcePlaying() {
+                        return 0;
+                    }
+
+                    @Override
+                    public int initBackgroundResourceHighlight() {
+                        return 0;
+                    }
+
+                    @Override
+                    public int initBackgroundResourceDefault() {
                         return 0;
                     }
 
@@ -135,22 +160,47 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public int leftImgHighlight() {
+                            public int initTextColorPlaying() {
                                 return 0;
                             }
 
                             @Override
-                            public int leftImgDefault() {
+                            public int initTextColorHighlight() {
                                 return 0;
                             }
 
                             @Override
-                            public int rightImgHighlight() {
+                            public int initTextColorDefault() {
                                 return 0;
                             }
 
                             @Override
-                            public int rightImgDefault() {
+                            public int initDrawablePlaying() {
+                                return 0;
+                            }
+
+                            @Override
+                            public int initDrawableHighlight() {
+                                return 0;
+                            }
+
+                            @Override
+                            public int initDrawableDefault() {
+                                return 0;
+                            }
+
+                            @Override
+                            public int initBackgroundResourcePlaying() {
+                                return 0;
+                            }
+
+                            @Override
+                            public int initBackgroundResourceHighlight() {
+                                return 0;
+                            }
+
+                            @Override
+                            public int initBackgroundResourceDefault() {
                                 return 0;
                             }
                         };
