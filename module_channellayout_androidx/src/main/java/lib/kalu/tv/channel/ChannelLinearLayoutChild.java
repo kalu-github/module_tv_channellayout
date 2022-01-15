@@ -754,20 +754,35 @@ class ChannelLinearLayoutChild extends LinearLayout {
         if (hasFocus() && visibility == View.VISIBLE) {
             try {
                 int selectPosition = getSelectPosition();
+//                if (selectPosition < 0) {
+//                    int beforePosition = getBeforePosition();
+//                    if (beforePosition >= 0) {
+//                        setSelectPosition(beforePosition, false);
+//                        selectPosition = getSelectPosition();
+//                    }
+//                }
+                ChannelUtil.logE("onVisibilityChanged1 => selectPosition = " + selectPosition);
                 ChannelTextView child = (ChannelTextView) getChildAt(selectPosition);
                 child.setTextColor(true, R.color.module_channellayout_color_333333);
                 child.setCompoundDrawables1(true, false);
                 child.setBackgroundResource(true, false);
             } catch (Exception e) {
+                ChannelUtil.logE("onVisibilityChanged1 => " + e.getMessage(), e);
             }
         }
         // gone
         else if (visibility != View.VISIBLE) {
             int beforePosition = getBeforePosition();
-            ChannelUtil.logE("onVisibilityChanged => beforePosition = " + beforePosition);
-            setHighlightPosition(beforePosition, true);
-            setSelectPosition(beforePosition, true);
+            ChannelUtil.logE("onVisibilityChanged2 => beforePosition = " + beforePosition);
+            setHighlightPosition(beforePosition, true, true);
+            setSelectPosition(beforePosition, true, true);
+            ChannelUtil.logE("onVisibilityChanged2 => selectPosition = " + getSelectPosition() + ", highlightPosition = " + getHighlightPosition());
             update(list, false);
+            ChannelUtil.logE("onVisibilityChanged2 => selectPosition = " + getSelectPosition() + ", highlightPosition = " + getHighlightPosition());
+        }
+        // null
+        else {
+            ChannelUtil.logE("onVisibilityChanged3 => null");
         }
     }
 
@@ -893,17 +908,26 @@ class ChannelLinearLayoutChild extends LinearLayout {
     }
 
     protected final void setHighlightPosition(@NonNull int index, @NonNull boolean update) {
-        setHighlightPosition(-1, index, update);
+        setHighlightPosition(-1, index, update, false);
+    }
+
+    protected final void setHighlightPosition(@NonNull int index, @NonNull boolean update, boolean backup) {
+        setHighlightPosition(-1, index, update, backup);
     }
 
     private final void setHighlightPosition(@NonNull int size, @NonNull int index, @NonNull boolean update) {
+        setHighlightPosition(-1, index, update, false);
+
+    }
+
+    private final void setHighlightPosition(@NonNull int size, @NonNull int index, @NonNull boolean update, boolean backup) {
         if (index < 0)
             return;
         int count = getChildCount();
         if (size > 0) {
             count = Math.max(count, size);
         }
-        if (index >= count)
+        if (!backup && index >= count)
             return;
 
         try {
@@ -936,17 +960,26 @@ class ChannelLinearLayoutChild extends LinearLayout {
     }
 
     private final void setSelectPosition(@NonNull int index, @NonNull boolean update) {
-        setSelectPosition(-1, index, update);
+        setSelectPosition(-1, index, update, false);
+    }
+
+    private final void setSelectPosition(@NonNull int index, @NonNull boolean update, boolean backup) {
+        setSelectPosition(-1, index, update, backup);
     }
 
     private final void setSelectPosition(@NonNull int size, @NonNull int index, @NonNull boolean update) {
+        setSelectPosition(size, index, update, false);
+
+    }
+
+    private final void setSelectPosition(@NonNull int size, @NonNull int index, @NonNull boolean update, boolean backup) {
         if (index < 0)
             return;
         int count = getChildCount();
         if (size > 0) {
             count = Math.max(count, size);
         }
-        if (index >= count)
+        if (!backup && index >= count)
             return;
 
         try {

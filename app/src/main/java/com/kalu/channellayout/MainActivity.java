@@ -73,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    public CharSequence initTip() {
+                        return null;
+                    }
+
+                    @Override
                     public int initTextColorPlaying() {
                         return 0;
                     }
@@ -157,6 +162,11 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public String initText() {
                                 return "column0=>item" + position + "=>item" + num;
+                            }
+
+                            @Override
+                            public CharSequence initTip() {
+                                return null;
                             }
 
                             @Override
