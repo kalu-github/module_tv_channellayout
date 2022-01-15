@@ -3,6 +3,7 @@ package lib.kalu.tv.channel;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -115,13 +116,13 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     }
 
     private final void show() {
-        super.setVisibility(View.VISIBLE);
         autoTime(View.VISIBLE);
+        super.setVisibility(View.VISIBLE);
     }
 
     private final void gone() {
-        super.setVisibility(View.INVISIBLE);
         autoTime(View.INVISIBLE);
+        super.setVisibility(View.INVISIBLE);
     }
 
     private final void autoTime(int visibility) {
@@ -211,6 +212,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
                 child.setLongClickable(false);
                 child.setImageResource(R.drawable.module_channellayout_ic_arrow);
                 child.setBackgroundColor(Color.parseColor("#000000"));
+                child.setVisibility(View.GONE);
                 addView(child);
             }
             //
@@ -224,6 +226,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
                 ChannelScrollView child = new ChannelScrollView(getContext(), maxEms, maxWidth, itemGravity, itemCount, itemTextSize, itemTextPaddingLeft, itemTextPaddingRight);
                 child.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
                 child.setBackgroundColor(Color.parseColor("#000000"));
+                child.setVisibility(View.GONE);
                 addView(child);
             }
             // item
@@ -231,6 +234,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
                 ChannelScrollView child = new ChannelScrollView(getContext(), Integer.MIN_VALUE, Integer.MIN_VALUE, itemGravity, itemCount, itemTextSize, itemTextPaddingLeft, itemTextPaddingRight);
                 child.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
                 child.setBackgroundColor(Color.parseColor("#000000"));
+                child.setVisibility(View.GONE);
                 addView(child);
             }
         }
@@ -238,6 +242,11 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     @Keep
     public final void setBackgroundResources(@DrawableRes int... resources) {
+        setBackgroundResources(-1, false, resources);
+    }
+
+    @Keep
+    public final void setBackgroundResources(@NonNull int value, @NonNull boolean blurScript, @DrawableRes int... resources) {
 
         int count = getChildCount();
         int length;
@@ -250,9 +259,11 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
         for (int i = 0; i < min; i++) {
             try {
-                View view = getChildAt(i);
-                view.setBackgroundResource(resources[i]);
+                ChannelScrollView scrollView = (ChannelScrollView) getChildAt(i);
+                scrollView.setBackground(value, blurScript, resources[i]);
+                ChannelUtil.logE("setBackgroundBlur1[succ] => i = " + i);
             } catch (Exception e) {
+                ChannelUtil.logE("setBackgroundBlur1[fail] => i = " + i);
             }
         }
     }
@@ -302,6 +313,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             return;
 
         ChannelUtil.logE("update => count = " + count + ", column = " + column + ", list = " + list);
+        view.setVisibility((null != list && list.size() > 0) ? View.VISIBLE : View.GONE);
         ((ChannelScrollView) view).update(list);
 
         if (position < 0)
@@ -346,7 +358,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             return;
 
         int count = getChildCount();
-        ChannelUtil.logE("select => count = " + count);
+        ChannelUtil.logE("setVisibility => count = " + count);
         if (count == 0)
             return;
 
@@ -357,11 +369,12 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         if (null == child)
             return;
 
-        ViewGroup.LayoutParams layoutParams = child.getLayoutParams();
-        if (null == layoutParams)
-            return;
-        layoutParams.width = visibility == View.VISIBLE ? ViewGroup.LayoutParams.WRAP_CONTENT : 0;
-        child.setLayoutParams(layoutParams);
+        child.setVisibility(visibility == View.VISIBLE ? View.VISIBLE : View.GONE);
+//        ViewGroup.LayoutParams layoutParams = child.getLayoutParams();
+//        if (null == layoutParams)
+//            return;
+//        layoutParams.width = visibility == View.VISIBLE ? ViewGroup.LayoutParams.WRAP_CONTENT : 0;
+//        child.setLayoutParams(layoutParams);
     }
 
     @Keep
@@ -492,6 +505,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         // remove
         try {
             ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
+            scrollView.setVisibility(View.GONE);
             scrollView.clear();
         } catch (Exception e) {
         }

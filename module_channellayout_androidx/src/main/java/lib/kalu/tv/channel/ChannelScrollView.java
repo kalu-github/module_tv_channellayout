@@ -1,6 +1,15 @@
 package lib.kalu.tv.channel;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
@@ -48,6 +57,22 @@ class ChannelScrollView extends ScrollView {
     public boolean onTouchEvent(MotionEvent event) {
 //        return super.onTouchEvent(event);
         return false;
+    }
+
+    public void setBackground(@NonNull int value, @NonNull boolean blurScript, @NonNull int resid) {
+        if (value <= 0) {
+            setBackgroundResource(resid);
+        } else {
+            try {
+                Bitmap bitmap = ChannelUtil.blurResources(getContext(), resid, value, blurScript);
+                Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+                super.setBackground(drawable);
+                ChannelUtil.logE("setBackgroundBlur2 => blur succ");
+            } catch (Exception e) {
+                setBackgroundResource(resid);
+                ChannelUtil.logE("setBackgroundBlur2 => " + e.getMessage(), e);
+            }
+        }
     }
 
     private final void init(
