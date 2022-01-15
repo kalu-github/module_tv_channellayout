@@ -752,7 +752,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 }
                 // scroll down
                 else if (bottom > measuredHeight) {
-                    ((ChannelScrollView) getParent()).smoothScrollBy(0, Math.abs(bottom - measuredHeight));
+                    ((ChannelScrollView) getParent()).scrollBy(0, Math.abs(bottom - measuredHeight));
                 }
 
             } catch (Exception e) {
