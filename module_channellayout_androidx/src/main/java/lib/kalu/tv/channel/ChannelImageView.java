@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 @SuppressLint("AppCompatCustomView")
-public class ChannelImageView extends ImageView {
+class ChannelImageView extends ImageView {
     public ChannelImageView(Context context) {
         super(context);
     }

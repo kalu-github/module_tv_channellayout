@@ -742,10 +742,19 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 int selectPosition = getSelectPosition();
                 ChannelTextView child = (ChannelTextView) getChildAt(selectPosition);
                 int top = child.getTop();
+                int bottom = child.getBottom();
                 int scrollY = ((ViewGroup) getParent()).getScrollY();
+                int measuredHeight = ((ViewGroup) getParent()).getMeasuredHeight() + scrollY;
+
+                // scroll up
                 if (top < scrollY) {
                     ((ChannelScrollView) getParent()).scrollBy(0, -Math.abs(scrollY - top));
                 }
+                // scroll down
+                else if (bottom > measuredHeight) {
+                    ((ChannelScrollView) getParent()).smoothScrollBy(0, Math.abs(bottom - measuredHeight));
+                }
+
             } catch (Exception e) {
             }
         }
