@@ -754,13 +754,6 @@ class ChannelLinearLayoutChild extends LinearLayout {
         if (hasFocus() && visibility == View.VISIBLE) {
             try {
                 int selectPosition = getSelectPosition();
-//                if (selectPosition < 0) {
-//                    int beforePosition = getBeforePosition();
-//                    if (beforePosition >= 0) {
-//                        setSelectPosition(beforePosition, false);
-//                        selectPosition = getSelectPosition();
-//                    }
-//                }
                 ChannelUtil.logE("onVisibilityChanged1 => selectPosition = " + selectPosition);
                 ChannelTextView child = (ChannelTextView) getChildAt(selectPosition);
                 child.setTextColor(true, R.color.module_channellayout_color_333333);
@@ -776,9 +769,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             ChannelUtil.logE("onVisibilityChanged2 => beforePosition = " + beforePosition);
             setHighlightPosition(beforePosition, true, true);
             setSelectPosition(beforePosition, true, true);
-            ChannelUtil.logE("onVisibilityChanged2 => selectPosition = " + getSelectPosition() + ", highlightPosition = " + getHighlightPosition());
             update(list, false);
-            ChannelUtil.logE("onVisibilityChanged2 => selectPosition = " + getSelectPosition() + ", highlightPosition = " + getHighlightPosition());
         }
         // null
         else {
