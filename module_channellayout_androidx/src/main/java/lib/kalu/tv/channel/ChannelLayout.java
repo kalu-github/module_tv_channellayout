@@ -203,7 +203,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         for (int i = 0; i < size; i++) {
             // image
             if (i + 1 == size) {
-                ImageView child = new ImageView(getContext());
+                ChannelImageView child = new ChannelImageView(getContext());
                 int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_arrow_width);
                 child.setLayoutParams(new LinearLayout.LayoutParams(width, LayoutParams.MATCH_PARENT));
                 child.setFocusable(false);
@@ -258,11 +258,21 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         int min = Math.min(count, length);
 
         for (int i = 0; i < min; i++) {
-            try {
-                ChannelScrollView scrollView = (ChannelScrollView) getChildAt(i);
+
+            View view = getChildAt(i);
+            if (null == view)
+                continue;
+
+            // ChannelScrollView
+            if (view instanceof ChannelScrollView) {
+                ChannelScrollView scrollView = (ChannelScrollView) view;
                 scrollView.setBackground(value, blurScript, resources[i]);
                 ChannelUtil.logE("setBackgroundBlur1[succ] => i = " + i);
-            } catch (Exception e) {
+            }
+            // ChannelImageView
+            else if (view instanceof ChannelImageView) {
+                ChannelImageView imageView = (ChannelImageView) view;
+                imageView.setBackground(value, blurScript, resources[i]);
                 ChannelUtil.logE("setBackgroundBlur1[fail] => i = " + i);
             }
         }

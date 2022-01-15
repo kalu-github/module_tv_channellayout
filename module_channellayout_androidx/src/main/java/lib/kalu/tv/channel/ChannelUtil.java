@@ -1,6 +1,5 @@
 package lib.kalu.tv.channel;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
