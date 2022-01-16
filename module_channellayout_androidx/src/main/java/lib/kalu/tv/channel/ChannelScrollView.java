@@ -12,7 +12,10 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.Window;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import androidx.annotation.Keep;
@@ -95,10 +98,10 @@ class ChannelScrollView extends ScrollView {
         // step1
         removeAllViews();
 
-        // step2
+        // step1
         ChannelLinearLayoutChild child = new ChannelLinearLayoutChild(getContext(), maxEms, maxWidth, itemGravity, itemCount, itemTextSize, itemPaddingLeft, itemPaddingRight);
-        ScrollView.LayoutParams params = new ScrollView.LayoutParams(ScrollView.LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
-        child.setLayoutParams(params);
+        ScrollView.LayoutParams layoutParams = new ScrollView.LayoutParams(ScrollView.LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+        child.setLayoutParams(layoutParams);
         addView(child);
     }
 

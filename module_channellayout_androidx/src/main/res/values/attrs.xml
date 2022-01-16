@@ -24,4 +24,9 @@
             <enum name="once" value="101" />
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="BlurView">
+        <attr name="blurOverlayColor" format="color" />
+    </declare-styleable>
+
 </resources>

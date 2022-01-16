@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -20,6 +21,7 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
+import lib.kalu.tv.channel.blur.BlurView;
 import lib.kalu.tv.channel.listener.OnChannelChangeListener;
 import lib.kalu.tv.channel.model.ChannelModel;
 
