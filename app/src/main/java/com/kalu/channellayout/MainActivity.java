@@ -133,10 +133,6 @@ public class MainActivity extends AppCompatActivity {
         channelLayout.update(list);
 
         channelLayout.setOnChannelChangeListener(new OnChannelChangeListener() {
-//            @Override
-//            public void onSelect(@NonNull int column, @NonNull int position, @NonNull int count, @NonNull ChannelModel value) {
-//                Log.e("TEST", "onSelect => column = " + column + ", position = " + position + ", value = " + value);
-//            }
 
             @Override
             public void onHighlight(@NonNull int column, @NonNull int position, @NonNull int count, @NonNull ChannelModel value) {
@@ -219,11 +215,6 @@ public class MainActivity extends AppCompatActivity {
                     channelLayout.update(3, 1, list);
                 }
             }
-
-//            @Override
-//            public void onInit(@NonNull Map<Integer, List<ChannelModel>> map) {
-//                Log.e("TEST", "onInit => map = " + map);
-//            }
 
             @Override
             public void onMove(@NonNull int column, @NonNull int position, @NonNull int count, @NonNull ChannelModel value) {
