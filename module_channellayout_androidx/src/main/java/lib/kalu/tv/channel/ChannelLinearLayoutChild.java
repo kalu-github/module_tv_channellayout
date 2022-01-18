@@ -393,7 +393,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
         ChannelUtil.logE("addItem => index = " + index + ", selectPosition = " + selectPosition + ", highlightPosition = " + highlightPosition + ", beforePosition = " + beforePosition);
         if (selectPosition >= 0 && selectPosition == index) {
             child.setTextColor(false, true);
-            child.setCompoundDrawables(false, true, false);
+            child.setCompoundDrawables(false, false, true);
         } else {
             child.setTextColor(false, false);
             child.setCompoundDrawables(false, false, false);
@@ -441,6 +441,9 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
 
         int nextPosition;
+        int count = getChildCount();
+        int selectPosition = getSelectPosition();
+
         // down
         if (direction == Channeldirection.DOWN) {
             nextPosition = (highlightPosition < 0 ? 0 : highlightPosition) + 1;
@@ -457,13 +460,15 @@ class ChannelLinearLayoutChild extends LinearLayout {
         else if (direction == Channeldirection.NEXT_UP) {
             nextPosition = (highlightPosition < 0 ? 0 : highlightPosition) - 1;
         }
+        // right
+        else if (direction == Channeldirection.RIGHT) {
+            nextPosition = selectPosition < 0 ? 0 : selectPosition;
+        }
         // init
         else {
             nextPosition = highlightPosition < 0 ? 0 : highlightPosition;
         }
 
-        int count = getChildCount();
-        int selectPosition = getSelectPosition();
         ChannelUtil.logE("nextFocusTT => highlightPosition = " + highlightPosition + ", selectPosition = " + selectPosition + ", nextPosition = " + nextPosition + ", count = " + count);
         if (nextPosition < 0 || nextPosition >= count)
             return;
@@ -563,7 +568,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             // up down
             if (direction == Channeldirection.UP || direction == Channeldirection.DOWN) {
 
-                Log.e("MNMN", "selectPosition = "+selectPosition+", highlightPosition = "+highlightPosition);
+                Log.e("MNMN", "selectPosition = " + selectPosition + ", highlightPosition = " + highlightPosition);
                 if (nextPosition == selectPosition) {
                     next.setCompoundDrawables(false, true, false);
                 } else {
@@ -587,7 +592,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             else if (direction == Channeldirection.LEFT || direction == Channeldirection.RIGHT) {
 
                 int beforePosition = getBeforePosition();
-                Log.e("MNMN", "nextPosition = "+nextPosition+", beforePosition = "+beforePosition);
+                Log.e("MNMN", "nextPosition = " + nextPosition + ", beforePosition = " + beforePosition);
                 if (nextPosition == beforePosition) {
                     next.setCompoundDrawables(false, true, false);
                 } else {
@@ -606,7 +611,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             else if (requestFocus && direction == Channeldirection.INIT) {
 
                 int beforePosition = getBeforePosition();
-                Log.e("MNMN", "nextPosition = "+nextPosition+", beforePosition = "+beforePosition);
+                Log.e("MNMN", "nextPosition = " + nextPosition + ", beforePosition = " + beforePosition);
                 if (nextPosition == beforePosition) {
                     next.setCompoundDrawables(false, true, false);
                 } else {
@@ -710,7 +715,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             ChannelTextView textView = (ChannelTextView) getChildAt(highlightPosition);
             if (hasFocus()) {
                 textView.setTextColor(true, false);
-                textView.setCompoundDrawables(true, false, false);
+                textView.setCompoundDrawables(false, false, true);
                 textView.setBackgroundResource(true, false);
             } else {
                 textView.setTextColor(false, true);
