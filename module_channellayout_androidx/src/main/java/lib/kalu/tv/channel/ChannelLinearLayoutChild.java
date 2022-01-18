@@ -3,6 +3,7 @@ package lib.kalu.tv.channel;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Keep;
@@ -280,13 +282,13 @@ class ChannelLinearLayoutChild extends LinearLayout {
         if (null != view) {
             if (highlightPosition == selectPosition) {
                 view.setTextColor(false, true);
-                view.setCompoundDrawables1(false, true);
+                view.setCompoundDrawables(false, false, true);
             } else if (direction == Channeldirection.LEFT && selectPosition != beforePosition) {
                 view.setTextColor(false, false);
-                view.setCompoundDrawables1(false, false);
+                view.setCompoundDrawables(false, false, false);
             } else {
                 view.setTextColor(true, false);
-                view.setCompoundDrawables1(true, false);
+                view.setCompoundDrawables(true, false, false);
             }
             view.setBackgroundResource(false, false);
         }
@@ -391,10 +393,10 @@ class ChannelLinearLayoutChild extends LinearLayout {
         ChannelUtil.logE("addItem => index = " + index + ", selectPosition = " + selectPosition + ", highlightPosition = " + highlightPosition + ", beforePosition = " + beforePosition);
         if (selectPosition >= 0 && selectPosition == index) {
             child.setTextColor(false, true);
-            child.setCompoundDrawables1(true, true);
+            child.setCompoundDrawables(false, true, false);
         } else {
             child.setTextColor(false, false);
-            child.setCompoundDrawables1(false, false);
+            child.setCompoundDrawables(false, false, false);
         }
         child.setBackgroundResource(false, false);
         addView(child, index);
@@ -521,23 +523,23 @@ class ChannelLinearLayoutChild extends LinearLayout {
         // before
         if (null != before && direction == Channeldirection.NEXT_DOWN) {
             before.setTextColor(false, false);
-            before.setCompoundDrawables1(false, false);
+            before.setCompoundDrawables(false, false, false);
             before.setBackgroundResource(false, false);
         }
         // before
         else if (null != before && direction == Channeldirection.NEXT_UP) {
             before.setTextColor(false, false);
-            before.setCompoundDrawables1(false, false);
+            before.setCompoundDrawables(false, false, false);
             before.setBackgroundResource(false, false);
         }
         // before
         else if (null != before) {
             if (highlightPosition >= 0 && selectPosition >= 0 && highlightPosition == selectPosition) {
                 before.setTextColor(false, true);
-                before.setCompoundDrawables1(false, true);
+                before.setCompoundDrawables(false, false, true);
             } else {
                 before.setTextColor(false, false);
-                before.setCompoundDrawables1(false, false);
+                before.setCompoundDrawables(false, false, false);
             }
             before.setBackgroundResource(false, false);
         }
@@ -560,37 +562,62 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
             // up down
             if (direction == Channeldirection.UP || direction == Channeldirection.DOWN) {
-                next.setCompoundDrawables1(true, false);
+
+                Log.e("MNMN", "selectPosition = "+selectPosition+", highlightPosition = "+highlightPosition);
+                if (nextPosition == selectPosition) {
+                    next.setCompoundDrawables(false, true, false);
+                } else {
+                    next.setCompoundDrawables(true, false, false);
+                }
                 next.setTextColor(true, R.color.module_channellayout_color_333333);
                 next.setBackgroundResource(true, false);
             }
             // next-up next-down
             else if (direction == Channeldirection.NEXT_UP || direction == Channeldirection.NEXT_DOWN) {
-                next.setCompoundDrawables1(true, true);
+
+                if (nextPosition == selectPosition) {
+                    next.setCompoundDrawables(false, true, false);
+                } else {
+                    next.setCompoundDrawables(true, false, false);
+                }
                 next.setTextColor(true, false);
                 next.setBackgroundResource(true, false);
             }
             // left right
             else if (direction == Channeldirection.LEFT || direction == Channeldirection.RIGHT) {
-                next.setCompoundDrawables1(false, false);
+
+                int beforePosition = getBeforePosition();
+                Log.e("MNMN", "nextPosition = "+nextPosition+", beforePosition = "+beforePosition);
+                if (nextPosition == beforePosition) {
+                    next.setCompoundDrawables(false, true, false);
+                } else {
+                    next.setCompoundDrawables(true, false, false);
+                }
                 next.setTextColor(true, R.color.module_channellayout_color_333333);
                 next.setBackgroundResource(true, false);
             }
             // select
             else if (direction == Channeldirection.CLICK) {
-                next.setCompoundDrawables1(true, true);
+                next.setCompoundDrawables(false, true, false);
                 next.setTextColor(true, false);
                 next.setBackgroundResource(true, false);
             }
             // init1
             else if (requestFocus && direction == Channeldirection.INIT) {
-                next.setCompoundDrawables1(true, false);
+
+                int beforePosition = getBeforePosition();
+                Log.e("MNMN", "nextPosition = "+nextPosition+", beforePosition = "+beforePosition);
+                if (nextPosition == beforePosition) {
+                    next.setCompoundDrawables(false, true, false);
+                } else {
+                    next.setCompoundDrawables(true, false, false);
+                }
                 next.setTextColor(true, R.color.module_channellayout_color_333333);
                 next.setBackgroundResource(true, false);
             }
             // init2
             else if (direction == Channeldirection.INIT) {
-                next.setCompoundDrawables1(true, true);
+                next.setCompoundDrawables(false, false, true);
                 next.setTextColor(false, true);
                 next.setBackgroundResource(false, false);
             }
@@ -674,7 +701,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             try {
                 ChannelTextView textView = (ChannelTextView) getChildAt(selectPosition);
                 textView.setTextColor(false, false);
-                textView.setCompoundDrawables1(false, false);
+                textView.setCompoundDrawables(false, false, false);
                 textView.setBackgroundResource(false, false);
             } catch (Exception e) {
             }
@@ -683,11 +710,11 @@ class ChannelLinearLayoutChild extends LinearLayout {
             ChannelTextView textView = (ChannelTextView) getChildAt(highlightPosition);
             if (hasFocus()) {
                 textView.setTextColor(true, false);
-                textView.setCompoundDrawables1(true, true);
+                textView.setCompoundDrawables(true, false, false);
                 textView.setBackgroundResource(true, false);
             } else {
                 textView.setTextColor(false, true);
-                textView.setCompoundDrawables1(true, true);
+                textView.setCompoundDrawables(false, false, true);
                 textView.setBackgroundResource(false, false);
             }
         } catch (Exception e) {
@@ -763,10 +790,15 @@ class ChannelLinearLayoutChild extends LinearLayout {
         if (hasFocus() && visibility == View.VISIBLE) {
             try {
                 int selectPosition = getSelectPosition();
+                int beforePosition = getBeforePosition();
                 ChannelUtil.logE("onVisibilityChanged1 => selectPosition = " + selectPosition);
                 ChannelTextView child = (ChannelTextView) getChildAt(selectPosition);
                 child.setTextColor(true, R.color.module_channellayout_color_333333);
-                child.setCompoundDrawables1(true, false);
+                if (selectPosition == beforePosition) {
+                    child.setCompoundDrawables(false, true, false);
+                } else {
+                    child.setCompoundDrawables(true, false, false);
+                }
                 child.setBackgroundResource(true, false);
             } catch (Exception e) {
                 ChannelUtil.logE("onVisibilityChanged1 => " + e.getMessage(), e);
@@ -936,7 +968,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 if (highlightPosition >= 0 && highlightPosition != index) {
                     ChannelTextView textView = (ChannelTextView) getChildAt(highlightPosition);
                     textView.setTextColor(false, false);
-                    textView.setCompoundDrawables1(false, false);
+                    textView.setCompoundDrawables(false, false, false);
                     textView.setBackgroundResource(false, false);
                 }
             }
@@ -988,7 +1020,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 if (selectPosition >= 0 && selectPosition != index) {
                     ChannelTextView textView = (ChannelTextView) getChildAt(selectPosition);
                     textView.setTextColor(false, false);
-                    textView.setCompoundDrawables1(false, false);
+                    textView.setCompoundDrawables(false, false, false);
                     textView.setBackgroundResource(false, false);
                 }
             }

@@ -544,6 +544,29 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         } catch (Exception e) {
         }
     }
+
+
+    @Keep
+    public final boolean isEqual(@NonNull int column) {
+
+        if (column <= 0)
+            return false;
+
+        int count = getChildCount();
+        if (column + 1 >= count)
+            return false;
+
+        try {
+            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
+            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
+            int selectPosition = layoutChild.getSelectPosition();
+            int highlightPosition = layoutChild.getHighlightPosition();
+            return selectPosition == highlightPosition;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 //
 //    @Keep
 //    public final void clearFocusLinearLayout(@NonNull int column) {

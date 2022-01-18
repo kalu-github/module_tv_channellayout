@@ -12,12 +12,15 @@ import lib.kalu.tv.channel.R;
 public class ChannelModelNormal implements ChannelModel {
 
     private int id = ChannelModel.NULL;
+    private int type = ChannelModel.VOD;
     private String tip = null;
     private String text = null;
     private String url = null;
 
     @DrawableRes
     private int mDrawablePlaying = 0;
+    @DrawableRes
+    private int mDrawablePlayingAndEqual = 0;
     @DrawableRes
     private int mDrawableHighlight = 0;
     @DrawableRes
@@ -42,6 +45,11 @@ public class ChannelModelNormal implements ChannelModel {
     @Override
     public int initId() {
         return id;
+    }
+
+    @Override
+    public int initType() {
+        return type;
     }
 
     @Override
@@ -81,6 +89,11 @@ public class ChannelModelNormal implements ChannelModel {
     }
 
     @Override
+    public int initDrawablePlayingAndEqual() {
+        return mDrawablePlayingAndEqual;
+    }
+
+    @Override
     public int initDrawableHighlight() {
         return mDrawableHighlight;
     }
@@ -111,6 +124,10 @@ public class ChannelModelNormal implements ChannelModel {
         this.id = id;
     }
 
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public void setTip(String tip) {
         this.tip = tip;
     }
@@ -125,6 +142,10 @@ public class ChannelModelNormal implements ChannelModel {
 
     public void setDrawablePlaying(@DrawableRes int mDrawablePlaying) {
         this.mDrawablePlaying = mDrawablePlaying;
+    }
+
+    public void setDrawablePlayingAndEqual(@DrawableRes int mDrawablePlayingAndEqual) {
+        this.mDrawablePlayingAndEqual = mDrawablePlayingAndEqual;
     }
 
     public void setDrawableHighlight(@DrawableRes int mDrawableHighlight) {

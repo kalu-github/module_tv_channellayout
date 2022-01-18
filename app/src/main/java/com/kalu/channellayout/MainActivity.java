@@ -63,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    public int initType() {
+                        return 0;
+                    }
+
+                    @Override
                     public String initUrl() {
                         return null;
                     }
@@ -94,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public int initDrawablePlaying() {
+                        return 0;
+                    }
+
+                    @Override
+                    public int initDrawablePlayingAndEqual() {
                         return 0;
                     }
 
@@ -151,6 +161,11 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             @Override
+                            public int initType() {
+                                return 0;
+                            }
+
+                            @Override
                             public String initUrl() {
                                 return null;
                             }
@@ -182,6 +197,11 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public int initDrawablePlaying() {
+                                return 0;
+                            }
+
+                            @Override
+                            public int initDrawablePlayingAndEqual() {
                                 return 0;
                             }
 

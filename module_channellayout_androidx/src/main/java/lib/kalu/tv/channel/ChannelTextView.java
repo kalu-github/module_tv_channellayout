@@ -48,14 +48,17 @@ class ChannelTextView extends ChannelTextViewMarquee {
 
     /**************/
 
-    protected final void setCompoundDrawables1(@NonNull boolean isHighlight, @NonNull boolean isPlaying) {
+    protected final void setCompoundDrawables(@NonNull boolean isHighlight, @NonNull boolean isPlayingAndEqual, @NonNull boolean isPlaying) {
 
+        ChannelUtil.logE("setCompoundDrawables => isHighlight = " + isHighlight + ", isPlayingAndEqual = " + isPlayingAndEqual + ", isPlaying = " + isPlaying);
         @DrawableRes
         int img;
 
         try {
             ChannelModel temp = (ChannelModel) getTag(R.id.module_channel_tag_item);
-            if (isPlaying) {
+            if (isPlayingAndEqual) {
+                img = temp.initDrawablePlayingAndEqual();
+            } else if (isPlaying) {
                 img = temp.initDrawablePlaying();
             } else if (isHighlight) {
                 img = temp.initDrawableHighlight();
@@ -63,7 +66,9 @@ class ChannelTextView extends ChannelTextViewMarquee {
                 img = temp.initDrawableDefault();
             }
         } catch (Exception e) {
-            if (isPlaying) {
+            if (isPlayingAndEqual) {
+                img = 0;
+            } else if (isPlaying) {
                 img = 0;
             } else if (isHighlight) {
                 img = 0;
@@ -258,7 +263,7 @@ class ChannelTextView extends ChannelTextViewMarquee {
         setBackgroundColor(Color.TRANSPARENT);
 
         setTextColor(false, false);
-        setCompoundDrawables1(false, false);
+        setCompoundDrawables(false, false, false);
         setBackgroundResource(false, false);
     }
 

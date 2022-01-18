@@ -8,8 +8,12 @@ import androidx.annotation.Keep;
 public interface ChannelModel {
 
     int NULL = Integer.MIN_VALUE;
+    int LIVE = 0;
+    int VOD = 1;
 
     int initId();
+
+    int initType();
 
     CharSequence initUrl();
 
@@ -28,6 +32,9 @@ public interface ChannelModel {
 
     @DrawableRes
     int initDrawablePlaying();
+
+    @DrawableRes
+    int initDrawablePlayingAndEqual();
 
     @DrawableRes
     int initDrawableHighlight();
