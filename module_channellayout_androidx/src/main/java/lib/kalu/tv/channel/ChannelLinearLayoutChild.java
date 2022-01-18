@@ -278,12 +278,16 @@ class ChannelLinearLayoutChild extends LinearLayout {
         } catch (Exception e) {
         }
 
+
         // step2
         if (null != view) {
             if (highlightPosition == selectPosition) {
                 view.setTextColor(false, true);
                 view.setCompoundDrawables(false, false, true);
             } else if (direction == Channeldirection.LEFT && selectPosition != beforePosition) {
+                view.setTextColor(false, false);
+                view.setCompoundDrawables(false, false, false);
+            } else if (direction == Channeldirection.LEFT && selectPosition != highlightPosition) {
                 view.setTextColor(false, false);
                 view.setCompoundDrawables(false, false, false);
             } else {
@@ -469,7 +473,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             nextPosition = highlightPosition < 0 ? 0 : highlightPosition;
         }
 
-        ChannelUtil.logE("nextFocusTT => highlightPosition = " + highlightPosition + ", selectPosition = " + selectPosition + ", nextPosition = " + nextPosition + ", count = " + count);
+        ChannelUtil.logE("nextFocusTT => highlightPosition = " + highlightPosition + ", selectPosition = " + selectPosition + ", nextPosition = " + nextPosition + ", count = " + count + ", direction = " + direction);
         if (nextPosition < 0 || nextPosition >= count)
             return;
 
@@ -500,6 +504,10 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
         // setHighlightPosition4
         else if (highlightPosition < 0 && direction == Channeldirection.RIGHT) {
+            setHighlightPosition(nextPosition, false);
+        }
+        // setHighlightPosition5
+        else if (highlightPosition != selectPosition && direction == Channeldirection.RIGHT) {
             setHighlightPosition(nextPosition, false);
         }
 
@@ -591,9 +599,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
             // left right
             else if (direction == Channeldirection.LEFT || direction == Channeldirection.RIGHT) {
 
-                int beforePosition = getBeforePosition();
-                Log.e("MNMN", "nextPosition = " + nextPosition + ", beforePosition = " + beforePosition);
-                if (nextPosition == beforePosition) {
+                if (nextPosition == selectPosition) {
                     next.setCompoundDrawables(false, true, false);
                 } else {
                     next.setCompoundDrawables(true, false, false);
