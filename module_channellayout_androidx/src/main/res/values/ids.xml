@@ -6,6 +6,7 @@
     <item name="module_channel_item_text_size" type="id" />
     <item name="module_channel_item_padding_left" type="id" />
     <item name="module_channel_item_padding_right" type="id" />
+    <item name="module_channel_item_drawable_padding" type="id" />
     <item name="module_channel_item_count" type="id" />
     <item name="module_channel_item_empty" type="id" />
     <item name="module_channel_item_standard" type="id" />

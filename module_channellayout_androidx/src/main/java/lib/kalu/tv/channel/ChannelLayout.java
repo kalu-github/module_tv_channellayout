@@ -179,6 +179,8 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         int itemTextSize = 0;
         int itemTextPaddingLeft = 0;
         int itemTextPaddingRight = 0;
+        int itemDrawablePadding = 0;
+
         TypedArray attributes = null;
         try {
             attributes = getContext().obtainStyledAttributes(attrs, R.styleable.ChannelLayout);
@@ -192,6 +194,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             itemTextSize = attributes.getDimensionPixelOffset(R.styleable.ChannelLayout_cl_column_item_text_size, 0);
             itemTextPaddingLeft = attributes.getDimensionPixelOffset(R.styleable.ChannelLayout_cl_column_item_padding_left, 0);
             itemTextPaddingRight = attributes.getDimensionPixelOffset(R.styleable.ChannelLayout_cl_column_item_padding_right, 0);
+            itemDrawablePadding = attributes.getDimensionPixelOffset(R.styleable.ChannelLayout_cl_column_item_drawable_padding, 0);
         } catch (Exception e) {
         }
         if (null != attributes) {
@@ -225,7 +228,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
                 if (maxWidth < 0) {
                     maxWidth = Integer.MIN_VALUE;
                 }
-                ChannelScrollView child = new ChannelScrollView(getContext(), maxEms, maxWidth, itemGravity, itemCount, itemTextSize, itemTextPaddingLeft, itemTextPaddingRight);
+                ChannelScrollView child = new ChannelScrollView(getContext(), maxEms, maxWidth, itemGravity, itemCount, itemTextSize, itemTextPaddingLeft, itemTextPaddingRight, itemDrawablePadding);
                 child.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
                 child.setBackgroundColor(Color.parseColor("#000000"));
                 child.setVisibility(View.GONE);
@@ -233,7 +236,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             }
             // item
             else {
-                ChannelScrollView child = new ChannelScrollView(getContext(), Integer.MIN_VALUE, Integer.MIN_VALUE, itemGravity, itemCount, itemTextSize, itemTextPaddingLeft, itemTextPaddingRight);
+                ChannelScrollView child = new ChannelScrollView(getContext(), Integer.MIN_VALUE, Integer.MIN_VALUE, itemGravity, itemCount, itemTextSize, itemTextPaddingLeft, itemTextPaddingRight, itemDrawablePadding);
                 child.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
                 child.setBackgroundColor(Color.parseColor("#000000"));
                 child.setVisibility(View.GONE);
@@ -409,35 +412,6 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         return column;
     }
 
-//    @Keep
-//    public final int getSelectPosition(@NonNull int column) {
-//
-//        int position = -1;
-//        try {
-//            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
-//            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
-//            int count = layoutChild.getChildCount();
-//            for (int i = 0; i < count; i++) {
-//                View child = layoutChild.getChildAt(i);
-//                ChannelUtil.logE("getClickablePosition => view = " + child + ", count = " + count);
-//                if (null == child)
-//                    continue;
-//                boolean clickable = child.isClickable();
-//                ChannelUtil.logE("getClickablePosition => column = " + column + ", i = " + i + ", clickable = " + clickable + ", text = " + ((TextView) child).getText());
-//                if (!clickable) {
-//                    position = i;
-//                    break;
-//                }
-//            }
-//        } catch (Exception e) {
-//        }
-//
-//        if (position == -1) {
-//            position = 0;
-//        }
-//        return position;
-//    }
-
     @Keep
     public final int getChildCount(@NonNull int column) {
 
@@ -489,22 +463,6 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             return false;
         }
     }
-
-//    @Keep
-//    public final void setEmpty(@NonNull int column) {
-//        int count = getChildCount();
-//        if (column + 1 >= count)
-//            return;
-//        View child = getChildAt(column);
-//        if (null == child || !(child instanceof ChannelScrollView))
-//            return;
-//        ChannelScrollView scrollView = (ChannelScrollView) child;
-//        int childCount = scrollView.getChildCount();
-//        if (childCount != 1)
-//            return;
-//        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
-//        layoutChild.addEmpty();
-//    }
 
     @Keep
     public final void clear(@NonNull int column) {
@@ -567,52 +525,31 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         }
     }
 
-//
-//    @Keep
-//    public final void clearFocusLinearLayout(@NonNull int column) {
-//        ChannelLinearLayoutChild layoutChild = getChannelLinearLayoutChild(column);
-//        if (null == layoutChild)
-//            return;
-//        layoutChild.clearFocus();
-//    }
-//
-//    @Keep
-//    public final void requestFocusLinearLayout(@NonNull int column) {
-//        try {
-//            ChannelLinearLayoutChild layoutChild = getChannelLinearLayoutChild(column);
-//            if (null == layoutChild)
-//                return;
-//            layoutChild.requestFocus();
-//        } catch (Exception e) {
-//        }
-//    }
+    @Keep
+    public final ChannelModel getTag(@NonNull int column, @NonNull boolean isHighlight) {
 
-//    @Keep
-//    public final ChannelLinearLayoutChild getChannelLinearLayoutChild(@NonNull int column) {
-//        int count = getChildCount();
-//        if (column + 1 >= count)
-//            return null;
-//        View child = getChildAt(column);
-//        if (null == child || !(child instanceof ChannelScrollView))
-//            return null;
-//        ChannelScrollView scrollView = (ChannelScrollView) child;
-//        int childCount = scrollView.getChildCount();
-//        if (childCount != 1)
-//            return null;
-//        ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
-//        return layoutChild;
-//    }
-//
-//    @Keep
-//    public final ChannelTextView getChannelTextView(@NonNull int column, int position) {
-//        try {
-//            ChannelLinearLayoutChild channelLinearLayoutChild = getChannelLinearLayoutChild(column);
-//            ChannelTextView channelTextView = (ChannelTextView) channelLinearLayoutChild.getChildAt(position);
-//            return channelTextView;
-//        } catch (Exception e) {
-//            return null;
-//        }
-//    }
+        if (column <= 0)
+            return null;
+
+        int count = getChildCount();
+        if (column + 1 >= count)
+            return null;
+
+        try {
+            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
+            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
+            int position;
+            if (isHighlight) {
+                position = layoutChild.getHighlightPosition();
+            } else {
+                position = layoutChild.getSelectPosition();
+            }
+            View child = layoutChild.getChildAt(position);
+            return (ChannelModel) child.getTag(R.id.module_channel_tag_item);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /*************************/
 

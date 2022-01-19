@@ -34,7 +34,8 @@ class ChannelLinearLayoutChild extends LinearLayout {
                                     @NonNull int itemCount,
                                     @NonNull int itemTextSize,
                                     @NonNull int itemPaddingLeft,
-                                    @NonNull int itemPaddingRight) {
+                                    @NonNull int itemPaddingRight,
+                                    @NonNull int itemDrawablePadding) {
         super(context);
         init(itemGravity);
         setTag(R.id.module_channel_item_max_width, maxWidth);
@@ -43,6 +44,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
         setTag(R.id.module_channel_item_text_size, itemTextSize);
         setTag(R.id.module_channel_item_padding_left, itemPaddingLeft);
         setTag(R.id.module_channel_item_padding_right, itemPaddingRight);
+        setTag(R.id.module_channel_item_drawable_padding, itemDrawablePadding);
     }
 
     @Override
@@ -337,7 +339,6 @@ class ChannelLinearLayoutChild extends LinearLayout {
         } catch (Exception e) {
             count = 10;
         }
-
         int height = heightPixels / count;
 
         int maxEms;
@@ -361,6 +362,19 @@ class ChannelLinearLayoutChild extends LinearLayout {
         child.setId(R.id.module_channel_item_standard);
         child.setTag(R.id.module_channel_tag_item, model);
         child.setLayoutParams(new LayoutParams(width, height));
+
+        // setCompoundDrawablePadding
+        int drawablePadding = 0;
+        try {
+            CharSequence sequence = model.initTip();
+            int dimens = (int) getTag(R.id.module_channel_item_drawable_padding);
+            drawablePadding = dimens * (sequence.length());
+        } catch (Exception e) {
+        }
+        if (drawablePadding <= 0) {
+            drawablePadding = 0;
+        }
+        child.setCompoundDrawablePadding(drawablePadding);
 
         int textSize = 0;
         try {

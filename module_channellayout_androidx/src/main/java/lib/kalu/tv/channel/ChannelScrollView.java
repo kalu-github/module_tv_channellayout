@@ -35,9 +35,10 @@ class ChannelScrollView extends ScrollView {
                              @NonNull int itemCount,
                              @NonNull int itemTextSize,
                              @NonNull int itemPaddingLeft,
-                             @NonNull int itemPaddingRight) {
+                             @NonNull int itemPaddingRight,
+                             @NonNull int itemDrawablePadding) {
         super(context);
-        init(maxEms, maxWidth, itemGravity, itemCount, itemTextSize, itemPaddingLeft, itemPaddingRight);
+        init(maxEms, maxWidth, itemGravity, itemCount, itemTextSize, itemPaddingLeft, itemPaddingRight, itemDrawablePadding);
     }
 
     @Override
@@ -85,7 +86,8 @@ class ChannelScrollView extends ScrollView {
             @NonNull int itemCount,
             @NonNull int itemTextSize,
             @NonNull int itemPaddingLeft,
-            @NonNull int itemPaddingRight) {
+            @NonNull int itemPaddingRight,
+            @NonNull int itemDrawablePadding) {
         setClickable(false);
         setLongClickable(false);
         setFocusable(false);
@@ -99,7 +101,7 @@ class ChannelScrollView extends ScrollView {
         removeAllViews();
 
         // step1
-        ChannelLinearLayoutChild child = new ChannelLinearLayoutChild(getContext(), maxEms, maxWidth, itemGravity, itemCount, itemTextSize, itemPaddingLeft, itemPaddingRight);
+        ChannelLinearLayoutChild child = new ChannelLinearLayoutChild(getContext(), maxEms, maxWidth, itemGravity, itemCount, itemTextSize, itemPaddingLeft, itemPaddingRight, itemDrawablePadding);
         ScrollView.LayoutParams layoutParams = new ScrollView.LayoutParams(ScrollView.LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         child.setLayoutParams(layoutParams);
         addView(child);
@@ -161,14 +163,6 @@ class ChannelScrollView extends ScrollView {
 
     }
 
-//    protected final void resetTags() {
-//        try {
-//            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
-//            layoutChild.resetTags();
-//        } catch (Exception e) {
-//        }
-//    }
-
     protected final void updateLeft() {
         try {
             ChannelLayout channelLayout = (ChannelLayout) getParent();
@@ -182,13 +176,6 @@ class ChannelScrollView extends ScrollView {
         }
     }
 
-    private final void update() {
-        try {
-
-        } catch (Exception e) {
-        }
-    }
-
     protected final void focusAuto() {
         try {
             ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
@@ -198,14 +185,6 @@ class ChannelScrollView extends ScrollView {
         } catch (Exception e) {
         }
     }
-
-//    protected final void resethighLight() {
-//        try {
-//            ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) getChildAt(0);
-//            layoutChild.resetHighlight();
-//        } catch (Exception e) {
-//        }
-//    }
 
     protected final void clear() {
         try {

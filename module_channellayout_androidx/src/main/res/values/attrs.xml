@@ -6,6 +6,7 @@
         <attr name="cl_column_max_width" format="dimension|reference" />
         <attr name="cl_column_count" format="integer" />
         <attr name="cl_column_item_count" format="integer" />
+        <attr name="cl_column_item_drawable_padding" format="dimension|reference" />
         <attr name="cl_column_item_text_size" format="dimension|reference" />
         <attr name="cl_column_item_padding_left" format="dimension|reference" />
         <attr name="cl_column_item_padding_right" format="dimension|reference" />

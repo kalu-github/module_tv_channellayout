@@ -227,31 +227,31 @@ class ChannelTextView extends ChannelTextViewMarquee {
         }
     }
 
-    @Override
-    public void setTag(int key, Object tag) {
-        super.setTag(key, tag);
-
-        if (key != R.id.module_channel_tag_item)
-            return;
-
-        if (null == tag || !(tag instanceof ChannelModel))
-            return;
-
-        // step2
-        int offset = 0;
-        try {
-            ChannelModel temp = (ChannelModel) tag;
-            CharSequence tip = temp.initTip();
-            if (null != tip && tip.length() > 0) {
-                int measureText = (int) (getPaint().measureText(String.valueOf(tip)) * 1.8f);
-                int drawablePadding = getCompoundDrawablePadding();
-                offset = drawablePadding + measureText;
-            }
-            setCompoundDrawablePadding(offset);
-        } catch (Exception e) {
-            ChannelUtil.logE(e.getMessage(), e);
-        }
-    }
+//    @Override
+//    public void setTag(int key, Object tag) {
+//        super.setTag(key, tag);
+//
+//        if (key != R.id.module_channel_tag_item)
+//            return;
+//
+//        if (null == tag || !(tag instanceof ChannelModel))
+//            return;
+//
+//        // step2
+//        int offset = 0;
+//        try {
+//            ChannelModel temp = (ChannelModel) tag;
+//            CharSequence tip = temp.initTip();
+//            if (null != tip && tip.length() > 0) {
+//                int measureText = (int) (getPaint().measureText(String.valueOf(tip)) * 1.8f);
+//                int drawablePadding = getCompoundDrawablePadding();
+//                offset = drawablePadding + measureText;
+//            }
+//            setCompoundDrawablePadding(offset);
+//        } catch (Exception e) {
+//            ChannelUtil.logE(e.getMessage(), e);
+//        }
+//    }
 
     /*************************/
 
