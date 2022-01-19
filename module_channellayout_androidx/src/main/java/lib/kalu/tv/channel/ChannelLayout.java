@@ -507,7 +507,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     @Keep
     public final boolean isEqual(@NonNull int column) {
 
-        if (column <= 0)
+        if (column < 0)
             return false;
 
         int count = getChildCount();
@@ -528,7 +528,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     @Keep
     public final ChannelModel getTag(@NonNull int column, @NonNull boolean isHighlight) {
 
-        if (column <= 0)
+        if (column < 0)
             return null;
 
         int count = getChildCount();
