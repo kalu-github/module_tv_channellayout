@@ -366,9 +366,17 @@ class ChannelLinearLayoutChild extends LinearLayout {
         // setCompoundDrawablePadding
         int drawablePadding = 0;
         try {
+            int length = 0;
             CharSequence sequence = model.initTip();
+            for (int i = 0; i < sequence.length(); i++) {
+                char ch = sequence.charAt(i);
+                String valueOf = String.valueOf(ch);
+                if (":".equalsIgnoreCase(valueOf) || "：".equalsIgnoreCase(valueOf))
+                    continue;
+                length += 1;
+            }
             int dimens = (int) getTag(R.id.module_channel_item_drawable_padding);
-            drawablePadding = dimens * (sequence.length());
+            drawablePadding = dimens * (length);
         } catch (Exception e) {
         }
         if (drawablePadding <= 0) {
