@@ -107,6 +107,10 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     @Override
     public void setVisibility(int visibility) {
+
+//        if (getVisibility() == visibility)
+//            return;
+
         // show
         if (visibility == View.VISIBLE) {
             show();
@@ -373,7 +377,6 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             return;
 
         int count = getChildCount();
-        ChannelUtil.logE("setVisibility => count = " + count);
         if (count == 0)
             return;
 
@@ -466,43 +469,36 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     @Keep
     public final void clear(@NonNull int column) {
-        clear(column, false);
-    }
-
-    @Keep
-    public final void clear(@NonNull int column, boolean focusMove) {
 
         // remove
         try {
             ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
-            scrollView.setVisibility(View.GONE);
             scrollView.clear();
         } catch (Exception e) {
         }
-
-        if (!focusMove)
-            return;
-
-        // update
-        focusAuto(Channeldirection.LEFT, column);
     }
 
     @Keep
-    public final void focusAuto(@Channeldirection.Value int direction, @NonNull int column) {
+    public final void clearColumnFocus(@NonNull int column) {
 
-        if (direction != Channeldirection.LEFT)
-            return;
-
-        //  focus move left
-        if (column <= 0)
-            return;
+        // remove
         try {
-            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column - 1);
-            scrollView.focusAuto();
+            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
+            scrollView.requestFocus();
         } catch (Exception e) {
         }
     }
 
+    @Keep
+    public final void requestColumnFocus(@NonNull int column) {
+
+        // remove
+        try {
+            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
+            scrollView.requestFocus();
+        } catch (Exception e) {
+        }
+    }
 
     @Keep
     public final boolean isEqual(@NonNull int column) {

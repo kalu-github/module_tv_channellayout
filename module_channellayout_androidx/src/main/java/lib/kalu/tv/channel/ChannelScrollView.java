@@ -170,7 +170,7 @@ class ChannelScrollView extends ScrollView {
             if (index > 0) {
                 ChannelScrollView scrollView = (ChannelScrollView) channelLayout.getChildAt(index - 1);
                 ChannelLinearLayoutChild layoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
-                layoutChild.refresh();
+                layoutChild.refreshParent();
             }
         } catch (Exception e) {
         }

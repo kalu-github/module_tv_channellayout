@@ -37,6 +37,9 @@ public interface ChannelModel {
     int initDrawablePlayingAndEqual();
 
     @DrawableRes
+    int initDrawablePlayingAndHightlght();
+
+    @DrawableRes
     int initDrawableHighlight();
 
     @DrawableRes

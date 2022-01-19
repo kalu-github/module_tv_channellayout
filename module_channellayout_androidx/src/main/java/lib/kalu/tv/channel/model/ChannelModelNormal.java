@@ -22,6 +22,8 @@ public class ChannelModelNormal implements ChannelModel {
     @DrawableRes
     private int mDrawablePlayingAndEqual = 0;
     @DrawableRes
+    private int mDrawablePlayingAndHighlight = 0;
+    @DrawableRes
     private int mDrawableHighlight = 0;
     @DrawableRes
     private int mDrawableDefault = 0;
@@ -91,6 +93,11 @@ public class ChannelModelNormal implements ChannelModel {
     @Override
     public int initDrawablePlayingAndEqual() {
         return mDrawablePlayingAndEqual;
+    }
+
+    @Override
+    public int initDrawablePlayingAndHightlght() {
+        return mDrawablePlayingAndHighlight;
     }
 
     @Override
@@ -178,5 +185,9 @@ public class ChannelModelNormal implements ChannelModel {
 
     public void setBackgroundResourceDefault(@DrawableRes int mBackgroundResourceDefault) {
         this.mBackgroundResourceDefault = mBackgroundResourceDefault;
+    }
+
+    public void setDrawablePlayingAndLight(@DrawableRes int mDrawablePlayingAndHighlight) {
+        this.mDrawablePlayingAndHighlight = mDrawablePlayingAndHighlight;
     }
 }

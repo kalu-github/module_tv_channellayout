@@ -83,6 +83,28 @@ class ChannelTextView extends ChannelTextViewMarquee {
         }
     }
 
+    protected final void setCompoundDrawablesPlus(@NonNull boolean playingAndHighlight) {
+
+        @DrawableRes
+        int img;
+
+        try {
+            ChannelModel temp = (ChannelModel) getTag(R.id.module_channel_tag_item);
+            if (playingAndHighlight) {
+                img = temp.initDrawablePlayingAndHightlght();
+            } else {
+                img = temp.initDrawableDefault();
+            }
+        } catch (Exception e) {
+            img = 0;
+        }
+
+        try {
+            setCompoundDrawablesWithIntrinsicBounds(img, 0, 0, 0);
+        } catch (Exception e) {
+        }
+    }
+
     protected final void setTextColor(@NonNull boolean isHighlight, @NonNull boolean isPlaying) {
 
         // step1: color

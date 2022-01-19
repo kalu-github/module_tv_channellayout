@@ -21,7 +21,7 @@ import androidx.annotation.Nullable;
 public final class ChannelUtil {
 
     private static final String TAG = "module_channelLayout";
-    private static boolean DEBUG = BuildConfig.DEBUG;
+    private static boolean DEBUG = true;
 
     @Keep
     public static final void logE(@NonNull String message) {
