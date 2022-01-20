@@ -520,6 +520,10 @@ class ChannelLinearLayoutChild extends LinearLayout {
         else if (highlightPosition != selectPosition && direction == Channeldirection.RIGHT) {
             setHighlightPosition(nextPosition, false);
         }
+        // setHighlightPosition6
+        else if (direction == Channeldirection.NEXT_UP || direction == Channeldirection.NEXT_DOWN) {
+            setHighlightPosition(nextPosition, false);
+        }
 
         // setSelectPosition1
         if (direction == Channeldirection.NEXT_UP || direction == Channeldirection.NEXT_DOWN) {
@@ -545,21 +549,13 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
         // before
         if (null != before && direction == Channeldirection.NEXT_DOWN) {
-            if (highlightPosition == selectPosition) {
-                before.setTextColor(true, false);
-            } else {
-                before.setTextColor(false, false);
-            }
+            before.setTextColor(false, false);
             before.setCompoundDrawables(false, false, false);
             before.setBackgroundResource(false, false);
         }
         // before
         else if (null != before && direction == Channeldirection.NEXT_UP) {
-            if (highlightPosition == selectPosition) {
-                before.setTextColor(true, false);
-            } else {
-                before.setTextColor(false, false);
-            }
+            before.setTextColor(false, false);
             before.setCompoundDrawables(false, false, false);
             before.setBackgroundResource(false, false);
         }
