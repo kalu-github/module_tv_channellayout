@@ -672,6 +672,27 @@ class ChannelLinearLayoutChild extends LinearLayout {
         ChannelUtil.logE("nextFocus => ****************************");
     }
 
+    private final void scrolInit(@NonNull View view) {
+
+        if (null == view)
+            return;
+
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int top = view.getTop();
+                int bottom = view.getBottom();
+                int scrollY = ((ViewGroup) getParent()).getScrollY();
+                int measuredHeight = ((ViewGroup) getParent()).getMeasuredHeight() + scrollY;
+                if (top < scrollY) {
+                    ((ChannelScrollView) getParent()).scrollBy(0, -Math.abs(scrollY - top));
+                } else if (bottom > measuredHeight) {
+                    ((ChannelScrollView) getParent()).scrollBy(0, Math.abs(bottom - measuredHeight));
+                }
+            }
+        }, 100);
+    }
+
     private final void scrolUp(@NonNull View view) {
 
         if (null == view)
@@ -683,19 +704,6 @@ class ChannelLinearLayoutChild extends LinearLayout {
         if (top < scrollY) {
             ((ChannelScrollView) getParent()).smoothScrollBy(0, -Math.abs(scrollY - top));
         }
-    }
-
-    private final void scrolInit(@NonNull View view) {
-
-        if (null == view)
-            return;
-
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                scrolDown(view);
-            }
-        }, 100);
     }
 
     private final void scrolDown(@NonNull View view) {
