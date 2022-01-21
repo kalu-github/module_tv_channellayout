@@ -690,7 +690,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
                     ((ChannelScrollView) getParent()).scrollBy(0, Math.abs(bottom - measuredHeight));
                 }
             }
-        }, 100);
+        }, 40);
     }
 
     private final void scrolUp(@NonNull View view) {
