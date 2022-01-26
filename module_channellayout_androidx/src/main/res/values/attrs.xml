@@ -4,6 +4,7 @@
         <attr name="cl_column_max_index" format="integer" />
         <attr name="cl_column_max_ems" format="integer" />
         <attr name="cl_column_max_width" format="dimension|reference" />
+        <attr name="cl_column_foot" format="reference" />
         <attr name="cl_column_count" format="integer" />
         <attr name="cl_column_item_count" format="integer" />
         <attr name="cl_column_item_drawable_padding" format="dimension|reference" />

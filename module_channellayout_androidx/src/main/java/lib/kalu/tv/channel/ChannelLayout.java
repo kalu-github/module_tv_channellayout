@@ -6,8 +6,10 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Layout;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -16,6 +18,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Keep;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -184,6 +187,8 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         int itemTextPaddingLeft = 0;
         int itemTextPaddingRight = 0;
         int itemDrawablePadding = 0;
+        @LayoutRes
+        int footRes = -1;
 
         TypedArray attributes = null;
         try {
@@ -199,6 +204,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             itemTextPaddingLeft = attributes.getDimensionPixelOffset(R.styleable.ChannelLayout_cl_column_item_padding_left, 0);
             itemTextPaddingRight = attributes.getDimensionPixelOffset(R.styleable.ChannelLayout_cl_column_item_padding_right, 0);
             itemDrawablePadding = attributes.getDimensionPixelOffset(R.styleable.ChannelLayout_cl_column_item_drawable_padding, 0);
+            footRes = attributes.getResourceId(R.styleable.ChannelLayout_cl_column_foot, -1);
         } catch (Exception e) {
         }
         if (null != attributes) {
@@ -208,21 +214,27 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         // timeout
         setTag(R.id.module_channel_timeout, timeout);
 
-        int size = column + 1;
+        int size = column+1;
         for (int i = 0; i < size; i++) {
             // image
             if (i + 1 == size) {
-                ChannelImageView child = new ChannelImageView(getContext());
-                int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_arrow_width);
-                child.setLayoutParams(new LinearLayout.LayoutParams(width, LayoutParams.MATCH_PARENT));
-                child.setFocusable(false);
-                child.setFocusableInTouchMode(false);
-                child.setClickable(false);
-                child.setLongClickable(false);
-                child.setImageResource(R.drawable.module_channellayout_ic_arrow);
-                child.setBackgroundColor(Color.parseColor("#000000"));
-                child.setVisibility(View.GONE);
-                addView(child);
+
+                try {
+                    View inflate = LayoutInflater.from(getContext()).inflate(footRes, null);
+                    addView(inflate);
+//                    ChannelImageView child = new ChannelImageView(getContext());
+//                    int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_arrow_width);
+//                    child.setLayoutParams(new LinearLayout.LayoutParams(width, LayoutParams.MATCH_PARENT));
+//                    child.setFocusable(false);
+//                    child.setFocusableInTouchMode(false);
+//                    child.setClickable(false);
+//                    child.setLongClickable(false);
+//                    child.setImageResource(R.drawable.module_channellayout_ic_arrow);
+//                    child.setBackgroundColor(Color.parseColor("#000000"));
+//                    child.setVisibility(View.GONE);
+//                    addView(child);
+                }catch (Exception e){
+                }
             }
             //
             else if (maxIndex >= 0 && i == maxIndex) {

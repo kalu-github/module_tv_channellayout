@@ -9,12 +9,14 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+@Keep
 @SuppressLint("AppCompatCustomView")
-class ChannelImageView extends ImageView {
+public class ChannelImageView extends ImageView {
     public ChannelImageView(Context context) {
         super(context);
     }
