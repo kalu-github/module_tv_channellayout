@@ -220,8 +220,8 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             if (i + 1 == size) {
 
                 try {
-                    View inflate = LayoutInflater.from(getContext()).inflate(footRes, null);
-                    addView(inflate);
+                    LayoutInflater.from(getContext()).inflate(footRes, this);
+//                    addView(inflate);
 //                    ChannelImageView child = new ChannelImageView(getContext());
 //                    int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_arrow_width);
 //                    child.setLayoutParams(new LinearLayout.LayoutParams(width, LayoutParams.MATCH_PARENT));
