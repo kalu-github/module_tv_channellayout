@@ -214,14 +214,13 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         // timeout
         setTag(R.id.module_channel_timeout, timeout);
 
-        int size = column+1;
+        int size = column + 1;
         for (int i = 0; i < size; i++) {
             // image
             if (i + 1 == size) {
 
                 try {
                     LayoutInflater.from(getContext()).inflate(footRes, this);
-//                    addView(inflate);
 //                    ChannelImageView child = new ChannelImageView(getContext());
 //                    int width = getResources().getDimensionPixelOffset(R.dimen.module_channellayout_arrow_width);
 //                    child.setLayoutParams(new LinearLayout.LayoutParams(width, LayoutParams.MATCH_PARENT));
@@ -233,7 +232,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 //                    child.setBackgroundColor(Color.parseColor("#000000"));
 //                    child.setVisibility(View.GONE);
 //                    addView(child);
-                }catch (Exception e){
+                } catch (Exception e) {
                 }
             }
             //
