@@ -5,6 +5,8 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
+import org.json.JSONObject;
+
 @Keep
 public interface ChannelModel {
 
@@ -24,7 +26,7 @@ public interface ChannelModel {
     CharSequence initTip();
 
     @Nullable
-    String initBundle();
+    JSONObject initBundle();
 
     @ColorRes
     int initTextColorPlaying();

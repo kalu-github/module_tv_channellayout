@@ -7,17 +7,19 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
+import org.json.JSONObject;
+
 import lib.kalu.tv.channel.R;
 
 @Keep
 public class ChannelModelNormal implements ChannelModel {
 
-//    private int id = ChannelModel.NULL;
+    //    private int id = ChannelModel.NULL;
 //    private int type = ChannelModel.VOD;
     private String tip = null;
     private String text = null;
     private String url = null;
-    private String bundle = null;
+    private JSONObject bundle = null;
 
     @DrawableRes
     private int mDrawablePlaying = 0;
@@ -63,7 +65,7 @@ public class ChannelModelNormal implements ChannelModel {
 
     @Nullable
     @Override
-    public String initBundle() {
+    public JSONObject initBundle() {
         return bundle;
     }
 
@@ -125,7 +127,7 @@ public class ChannelModelNormal implements ChannelModel {
 
     /************/
 
-    public void setBundle(String bundle) {
+    public void setBundle(JSONObject bundle) {
         this.bundle = bundle;
     }
 
