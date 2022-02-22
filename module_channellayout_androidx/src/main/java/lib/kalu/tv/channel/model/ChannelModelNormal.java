@@ -5,17 +5,19 @@ import android.annotation.SuppressLint;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Keep;
+import androidx.annotation.Nullable;
 
 import lib.kalu.tv.channel.R;
 
 @Keep
 public class ChannelModelNormal implements ChannelModel {
 
-    private int id = ChannelModel.NULL;
-    private int type = ChannelModel.VOD;
+//    private int id = ChannelModel.NULL;
+//    private int type = ChannelModel.VOD;
     private String tip = null;
     private String text = null;
     private String url = null;
+    private String bundle = null;
 
     @DrawableRes
     private int mDrawablePlaying = 0;
@@ -45,16 +47,6 @@ public class ChannelModelNormal implements ChannelModel {
     private int mBackgroundResourceDefault = -3;
 
     @Override
-    public int initId() {
-        return id;
-    }
-
-    @Override
-    public int initType() {
-        return type;
-    }
-
-    @Override
     public CharSequence initUrl() {
         return url;
     }
@@ -67,6 +59,12 @@ public class ChannelModelNormal implements ChannelModel {
     @Override
     public CharSequence initTip() {
         return tip;
+    }
+
+    @Nullable
+    @Override
+    public String initBundle() {
+        return bundle;
     }
 
     @Override
@@ -127,12 +125,8 @@ public class ChannelModelNormal implements ChannelModel {
 
     /************/
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setType(int type) {
-        this.type = type;
+    public void setBundle(String bundle) {
+        this.bundle = bundle;
     }
 
     public void setTip(String tip) {
