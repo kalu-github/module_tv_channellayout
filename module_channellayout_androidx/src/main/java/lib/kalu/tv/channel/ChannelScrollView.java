@@ -194,8 +194,12 @@ class ChannelScrollView extends ScrollView {
             int selectPosition = linearLayoutChild.getSelectPosition();
             if (selectPosition != beforePosition) {
                 select(Channeldirection.BACKUP, beforePosition, false, false);
-            } else if (backupStyle) {
-                backupStyle();
+            } else {
+                if (backupStyle) {
+                    backupStyle();
+                } else {
+                    backupScroll();
+                }
             }
             return true;
         } catch (Exception e) {
@@ -207,6 +211,16 @@ class ChannelScrollView extends ScrollView {
         try {
             ChannelLinearLayoutChild linearLayoutChild = (ChannelLinearLayoutChild) getChildAt(0);
             linearLayoutChild.backupStyle();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    protected final boolean backupScroll() {
+        try {
+            ChannelLinearLayoutChild linearLayoutChild = (ChannelLinearLayoutChild) getChildAt(0);
+            linearLayoutChild.backupScroll();
             return true;
         } catch (Exception e) {
             return false;

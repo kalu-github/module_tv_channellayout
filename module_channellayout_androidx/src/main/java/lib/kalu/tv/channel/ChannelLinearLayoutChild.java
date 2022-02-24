@@ -1137,6 +1137,12 @@ class ChannelLinearLayoutChild extends LinearLayout {
         view.setCompoundDrawables(false, true, false);
         view.setTextColor(true, R.color.module_channellayout_color_333333);
         view.setBackgroundResource(true, false);
+        backupScroll();
+    }
+
+    protected final void backupScroll() {
+        int position = getBeforePosition();
+        ChannelTextView view = (ChannelTextView) getChildAt(position);
         scrolInit(view);
     }
 }
