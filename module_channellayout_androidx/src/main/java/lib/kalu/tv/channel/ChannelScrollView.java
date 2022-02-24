@@ -187,14 +187,14 @@ class ChannelScrollView extends ScrollView {
         }
     }
 
-    protected final boolean backupIndex() {
+    protected final boolean backupIndex(@NonNull boolean backupStyle) {
         try {
             ChannelLinearLayoutChild linearLayoutChild = (ChannelLinearLayoutChild) getChildAt(0);
             int beforePosition = linearLayoutChild.getBeforePosition();
             int selectPosition = linearLayoutChild.getSelectPosition();
             if (selectPosition != beforePosition) {
                 select(Channeldirection.BACKUP, beforePosition, false, false);
-            } else {
+            } else if (backupStyle) {
                 backupStyle();
             }
             return true;

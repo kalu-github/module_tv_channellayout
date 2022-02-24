@@ -580,10 +580,10 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     }
 
     @Keep
-    public final boolean backupIndex(@NonNull int column) {
+    public final boolean backupIndex(@NonNull int column, @NonNull boolean backupStyle) {
         try {
             ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
-            scrollView.backupIndex();
+            scrollView.backupIndex(backupStyle);
             return true;
         } catch (Exception e) {
             return false;
