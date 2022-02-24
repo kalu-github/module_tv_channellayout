@@ -101,7 +101,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
         if (msg.what >= timeout) {
             clearTime();
-            setVisibility(View.INVISIBLE);
+            setVisibility(View.GONE);
         } else {
             nextTime(msg.what);
         }
@@ -126,12 +126,13 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
     private final void show() {
         autoTime(View.VISIBLE);
+//        bringToFront();
         super.setVisibility(View.VISIBLE);
     }
 
     private final void gone() {
-        autoTime(View.INVISIBLE);
-        super.setVisibility(View.INVISIBLE);
+        autoTime(View.GONE);
+        super.setVisibility(View.GONE);
     }
 
     private final void autoTime(int visibility) {
@@ -345,7 +346,6 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         ChannelUtil.logE("update => count = " + count + ", column = " + column + ", list = " + list);
         view.setVisibility((null != list && list.size() > 0) ? View.VISIBLE : View.GONE);
         ((ChannelScrollView) view).update(list);
-
         if (position < 0)
             return;
         select(Channeldirection.INIT, column, position, requestFocus, callback);
@@ -479,35 +479,56 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     }
 
     @Keep
-    public final void clear(@NonNull int column) {
+    public final void clear(@NonNull int column, @NonNull int visable, boolean clearFocus) {
 
-        // remove
+        // clean data
         try {
             ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
             scrollView.clear();
         } catch (Exception e) {
         }
+
+        // clear focus
+        if (clearFocus) {
+            clearFocuser(column);
+        }
+
+        // visable
+        setVisibility(column, visable);
     }
 
     @Keep
-    public final void clearColumnFocus(@NonNull int column) {
+    public final void clearFocuser(@NonNull int column) {
 
-        // remove
+        // clearFocus
         try {
-            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
-            scrollView.requestFocus();
-        } catch (Exception e) {
+            ChannelScrollView scrollView = (ChannelScrollView) this.getChildAt(column);
+            ChannelLinearLayoutChild linearLayoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
+            linearLayoutChild.clearFocus();
+        } catch (Exception var3) {
         }
     }
 
     @Keep
-    public final void requestColumnFocus(@NonNull int column) {
+    public final void requestFocuser(@NonNull int column) {
 
-        // remove
+        // clearFocus
+        try {
+            ChannelScrollView scrollView = (ChannelScrollView) this.getChildAt(column);
+            ChannelLinearLayoutChild linearLayoutChild = (ChannelLinearLayoutChild) scrollView.getChildAt(0);
+            linearLayoutChild.requestFocus();
+        } catch (Exception var3) {
+        }
+    }
+
+    @Keep
+    public final boolean isVisible(@NonNull int column) {
+
         try {
             ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
-            scrollView.requestFocus();
+            return scrollView.getVisibility() == View.VISIBLE;
         } catch (Exception e) {
+            return false;
         }
     }
 
@@ -558,6 +579,28 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
         }
     }
 
+    @Keep
+    public final boolean backupIndex(@NonNull int column) {
+        try {
+            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
+            scrollView.backupIndex();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Keep
+    public final boolean backupStyle(@NonNull int column) {
+        try {
+            ChannelScrollView scrollView = (ChannelScrollView) getChildAt(column);
+            scrollView.backupStyle();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     /*************************/
 
     private OnChannelChangeListener mOnChannelChangeListener;
@@ -586,39 +629,39 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
                 if (nextPosition == Integer.MAX_VALUE) {
                     nextPosition = -1;
                 }
-                mOnChannelChangeListener.onMove(column, nextPosition, count, value);
+                mOnChannelChangeListener.onMove(column, nextPosition, beforePosition, count, value);
             }
             // left1
             else if (direction == Channeldirection.LEFT && beforePosition == nextPosition) {
-                mOnChannelChangeListener.onRepeat(column, nextPosition, count, value);
+                mOnChannelChangeListener.onRepeat(column, nextPosition, beforePosition, count, value);
             }
             // left2
             else if (direction == Channeldirection.LEFT && beforePosition == -1) {
-                mOnChannelChangeListener.onRepeat(column, nextPosition, count, value);
+                mOnChannelChangeListener.onRepeat(column, nextPosition, beforePosition, count, value);
             }
             // left3
             else if (direction == Channeldirection.LEFT) {
-                mOnChannelChangeListener.onMove(column, nextPosition, count, value);
+                mOnChannelChangeListener.onMove(column, nextPosition, beforePosition, count, value);
             }
             // select
             else if (direction == Channeldirection.INIT) {
-                mOnChannelChangeListener.onInit(column, nextPosition, count, value);
+                mOnChannelChangeListener.onInit(column, nextPosition, beforePosition, count, value);
             }
             // click
             else if (direction == Channeldirection.CLICK) {
-                mOnChannelChangeListener.onClick(column, nextPosition, count, value);
+                mOnChannelChangeListener.onClick(column, nextPosition, beforePosition, count, value);
             }
             // nextUp
             else if (direction == Channeldirection.NEXT_UP) {
-                mOnChannelChangeListener.onClick(column, nextPosition, count, value);
+                mOnChannelChangeListener.onClick(column, nextPosition, beforePosition, count, value);
             }
             // nextDown
             else if (direction == Channeldirection.NEXT_DOWN) {
-                mOnChannelChangeListener.onClick(column, nextPosition, count, value);
+                mOnChannelChangeListener.onClick(column, nextPosition, beforePosition, count, value);
             }
             // highlight
             else {
-                mOnChannelChangeListener.onHighlight(column, nextPosition, count, value);
+                mOnChannelChangeListener.onHighlight(column, nextPosition, beforePosition, count, value);
             }
         }
     }

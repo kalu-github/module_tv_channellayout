@@ -12,13 +12,18 @@ import lib.kalu.tv.channel.model.ChannelModel;
 @Keep
 public interface OnChannelChangeListener {
 
-    void onMove(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value);
+    @Keep
+    void onMove(@NonNull int column, @NonNull int position, @NonNull int before, int count, @NonNull ChannelModel value);
 
-    void onInit(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value);
+    @Keep
+    void onInit(@NonNull int column, @NonNull int position, @NonNull int before, int count, @NonNull ChannelModel value);
 
-    void onClick(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value);
+    @Keep
+    void onClick(@NonNull int column, @NonNull int position, @NonNull int before, int count, @NonNull ChannelModel value);
 
-    void onRepeat(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value);
+    @Keep
+    void onRepeat(@NonNull int column, @NonNull int position, @NonNull int before, int count, @NonNull ChannelModel value);
 
-    void onHighlight(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value);
+    @Keep
+    void onHighlight(@NonNull int column, @NonNull int position, @NonNull int before, int count, @NonNull ChannelModel value);
 }

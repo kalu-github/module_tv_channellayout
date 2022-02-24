@@ -6,7 +6,10 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,15 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
                 int num = j;
                 ChannelModel model = new ChannelModel() {
-                    @Override
-                    public int initId() {
-                        return 0;
-                    }
-
-                    @Override
-                    public int initType() {
-                        return 0;
-                    }
 
                     @Override
                     public String initUrl() {
@@ -79,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public CharSequence initTip() {
+                        return null;
+                    }
+
+                    @Nullable
+                    @Override
+                    public JSONObject initBundle() {
                         return null;
                     }
 
@@ -104,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public int initDrawablePlayingAndEqual() {
+                        return 0;
+                    }
+
+                    @Override
+                    public int initDrawablePlayingAndHightlght() {
                         return 0;
                     }
 
@@ -145,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         channelLayout.setOnChannelChangeListener(new OnChannelChangeListener() {
 
             @Override
-            public void onHighlight(@NonNull int column, @NonNull int position, @NonNull int count, @NonNull ChannelModel value) {
+            public void onHighlight(@NonNull int column, @NonNull int position, @NonNull int before, @NonNull int count, @NonNull ChannelModel value) {
                 Log.e("TEST", "onHighlight => column = " + column + ", position = " + position + ", value = " + value);
 
                 if (column == 0) {
@@ -155,15 +160,6 @@ public class MainActivity extends AppCompatActivity {
 
                         int num = j;
                         ChannelModel model = new ChannelModel() {
-                            @Override
-                            public int initId() {
-                                return 0;
-                            }
-
-                            @Override
-                            public int initType() {
-                                return 0;
-                            }
 
                             @Override
                             public String initUrl() {
@@ -177,6 +173,12 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public CharSequence initTip() {
+                                return null;
+                            }
+
+                            @Nullable
+                            @Override
+                            public JSONObject initBundle() {
                                 return null;
                             }
 
@@ -202,6 +204,11 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public int initDrawablePlayingAndEqual() {
+                                return 0;
+                            }
+
+                            @Override
+                            public int initDrawablePlayingAndHightlght() {
                                 return 0;
                             }
 
@@ -237,24 +244,24 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onMove(@NonNull int column, @NonNull int position, @NonNull int count, @NonNull ChannelModel value) {
+            public void onMove(@NonNull int column, @NonNull int position, @NonNull int before, @NonNull int count, @NonNull ChannelModel value) {
                 Log.e("TEST", "onMove => column = " + column + ", position = " + position + ", value = " + value);
                 channelLayout.setVisibility(2, column == 2 ? View.VISIBLE : View.GONE);
                 channelLayout.setVisibility(3, column == 2 ? View.GONE : View.VISIBLE);
             }
 
             @Override
-            public void onInit(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value) {
+            public void onInit(@NonNull int column, @NonNull int position, @NonNull int before, int count, @NonNull ChannelModel value) {
 
             }
 
             @Override
-            public void onClick(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value) {
+            public void onClick(@NonNull int column, @NonNull int position, @NonNull int before, int count, @NonNull ChannelModel value) {
 
             }
 
             @Override
-            public void onRepeat(@NonNull int column, @NonNull int position, int count, @NonNull ChannelModel value) {
+            public void onRepeat(@NonNull int column,@NonNull int position, @NonNull int before, int count, @NonNull ChannelModel value) {
 
             }
         });

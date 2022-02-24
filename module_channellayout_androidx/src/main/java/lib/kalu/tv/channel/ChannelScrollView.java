@@ -17,6 +17,7 @@ import android.view.ViewParent;
 import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -152,7 +153,7 @@ class ChannelScrollView extends ScrollView {
 
     protected final void select(@Channeldirection.Value int direction, @NonNull int position, @NonNull boolean requestFocus, @NonNull boolean callback) {
 
-        if (direction != Channeldirection.INIT)
+        if (direction != Channeldirection.INIT && direction != Channeldirection.BACKUP)
             return;
 
         try {
@@ -183,6 +184,32 @@ class ChannelScrollView extends ScrollView {
             int selectPosition = layoutChild.getSelectPosition();
             layoutChild.setHighlightPosition(selectPosition, true);
         } catch (Exception e) {
+        }
+    }
+
+    protected final boolean backupIndex() {
+        try {
+            ChannelLinearLayoutChild linearLayoutChild = (ChannelLinearLayoutChild) getChildAt(0);
+            int beforePosition = linearLayoutChild.getBeforePosition();
+            int selectPosition = linearLayoutChild.getSelectPosition();
+            if (selectPosition != beforePosition) {
+                select(Channeldirection.BACKUP, beforePosition, false, false);
+            } else {
+                backupStyle();
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    protected final boolean backupStyle() {
+        try {
+            ChannelLinearLayoutChild linearLayoutChild = (ChannelLinearLayoutChild) getChildAt(0);
+            linearLayoutChild.backupStyle();
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 

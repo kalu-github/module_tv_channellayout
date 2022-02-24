@@ -18,9 +18,10 @@ public @interface Channeldirection {
     int NEXT_DOWN = 6;
     int LEFT = 7;
     int RIGHT = 8;
+    int BACKUP = 9;
 
     int MIN = INIT;
-    int MAX = RIGHT;
+    int MAX = BACKUP;
 
 
     @IntDef(value = {
@@ -31,7 +32,8 @@ public @interface Channeldirection {
             Channeldirection.DOWN,
             Channeldirection.NEXT_DOWN,
             Channeldirection.LEFT,
-            Channeldirection.RIGHT})
+            Channeldirection.RIGHT,
+            Channeldirection.BACKUP})
     @Retention(RetentionPolicy.SOURCE)
     @Keep
     @interface Value {

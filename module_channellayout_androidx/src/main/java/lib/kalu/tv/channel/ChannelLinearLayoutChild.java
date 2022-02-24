@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
@@ -478,6 +479,12 @@ class ChannelLinearLayoutChild extends LinearLayout {
         else if (direction == Channeldirection.RIGHT) {
             nextPosition = selectPosition < 0 ? 0 : selectPosition;
         }
+        // backup
+        else if (direction == Channeldirection.BACKUP) {
+            nextPosition = highlightPosition;
+            selectPosition = highlightPosition;
+            highlightPosition = getHighlightPosition();
+        }
         // init
         else {
             nextPosition = highlightPosition < 0 ? 0 : highlightPosition;
@@ -524,6 +531,10 @@ class ChannelLinearLayoutChild extends LinearLayout {
         else if (direction == Channeldirection.NEXT_UP || direction == Channeldirection.NEXT_DOWN) {
             setHighlightPosition(nextPosition, false);
         }
+        // BACKUP
+        else if (direction == Channeldirection.BACKUP) {
+            setHighlightPosition(nextPosition, false);
+        }
 
         // setSelectPosition1
         if (direction == Channeldirection.NEXT_UP || direction == Channeldirection.NEXT_DOWN) {
@@ -532,6 +543,11 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
         // setSelectPosition2
         else if (nextPosition > 0 && direction == Channeldirection.INIT) {
+            setBeforePosition(nextPosition);
+            setSelectPosition(nextPosition, false);
+        }
+        // BACKUP
+        else if (direction == Channeldirection.BACKUP) {
             setBeforePosition(nextPosition);
             setSelectPosition(nextPosition, false);
         }
@@ -574,16 +590,18 @@ class ChannelLinearLayoutChild extends LinearLayout {
         // next
         if (null != next) {
 
+            ChannelUtil.logE("scrollTT => direction = " + direction);
+
             // scroll => init
-            if (direction == Channeldirection.INIT) {
+            if (direction == Channeldirection.INIT || direction == Channeldirection.LEFT || direction == Channeldirection.RIGHT) {
                 scrolInit(next);
             }
             // scroll => down
-            else if (direction == Channeldirection.DOWN) {
+            else if (direction == Channeldirection.DOWN || direction == Channeldirection.NEXT_DOWN) {
                 scrolDown(next);
             }
             // scroll => up
-            else if (direction == Channeldirection.UP) {
+            else if (direction == Channeldirection.UP || direction == Channeldirection.NEXT_UP) {
                 scrolUp(next);
             }
 
@@ -607,7 +625,8 @@ class ChannelLinearLayoutChild extends LinearLayout {
                 } else {
                     next.setCompoundDrawables(true, false, false);
                 }
-                next.setTextColor(true, false);
+                next.setTextColor(true, R.color.module_channellayout_color_333333);
+//                next.setTextColor(true, false);
                 next.setBackgroundResource(true, false);
             }
             // left right
@@ -794,57 +813,105 @@ class ChannelLinearLayoutChild extends LinearLayout {
 //        if (getVisibility() == visibility)
 //            return;
         super.onVisibilityChanged(changedView, visibility);
-
-        ChannelUtil.logE("onVisibilityChanged => *******************");
-        ChannelUtil.logE("onVisibilityChanged => visibility = " + visibility + ", hasFocus = " + hasFocus());
-
-        // style
-        if (hasFocus() && visibility == View.VISIBLE) {
-            int selectPosition = getSelectPosition();
-            ChannelTextView child = (ChannelTextView) getChildAt(selectPosition);
-            if (null != child) {
-                child.setTextColor(true, R.color.module_channellayout_color_333333);
-                child.setCompoundDrawables(false, true, false);
-                child.setBackgroundResource(true, false);
-            }
-        }
-
-        // scroll
-        if (visibility == View.VISIBLE) {
-            int selectPosition = getSelectPosition();
-            ChannelUtil.logE("onVisibilityChanged => selectPosition = " + selectPosition);
-            int count = getChildCount();
-            if (selectPosition + 1 <= count) {
-                ChannelTextView child = (ChannelTextView) getChildAt(selectPosition);
-                if (null != child) {
-                    int top = child.getTop();
-                    int bottom = child.getBottom();
-                    int scrollY = ((ViewGroup) getParent()).getScrollY();
-                    int measuredHeight = ((ViewGroup) getParent()).getMeasuredHeight() + scrollY;
-                    // scroll up
-                    if (top < scrollY) {
-                        ChannelUtil.logE("onVisibilityChanged => scroll up");
-                        ((ChannelScrollView) getParent()).scrollBy(0, -Math.abs(scrollY - top));
-                    }
-                    // scroll down
-                    else if (bottom > measuredHeight) {
-                        ChannelUtil.logE("onVisibilityChanged => scroll down");
-                        ((ChannelScrollView) getParent()).scrollBy(0, Math.abs(bottom - measuredHeight));
-                    }
-                }
-            }
-        }
-
-        // backup
+//
+//        ChannelUtil.logE("onVisibilityChanged => *******************");
+//        ChannelUtil.logE("onVisibilityChanged => visibility = " + visibility + ", hasFocus = " + hasFocus());
+//
+//
+//        // style
+//        if (hasFocus() && visibility == View.VISIBLE) {
+//            int selectPosition = getSelectPosition();
+//            ChannelTextView child = (ChannelTextView) getChildAt(selectPosition);
+//            if (null != child) {
+//                child.setTextColor(true, R.color.module_channellayout_color_333333);
+//                child.setCompoundDrawables(false, true, false);
+//                child.setBackgroundResource(true, false);
+//            }
+//        }
+//
+////        // scroll
+////        if (visibility == View.VISIBLE) {
+////            int selectPosition = getSelectPosition();
+////            ChannelUtil.logE("onVisibilityChanged => selectPosition = " + selectPosition);
+////            int count = getChildCount();
+////            if (selectPosition + 1 <= count) {
+////                ChannelTextView child = (ChannelTextView) getChildAt(selectPosition);
+////                if (null != child) {
+////                    int top = child.getTop();
+////                    int bottom = child.getBottom();
+////                    int scrollY = ((ViewGroup) getParent()).getScrollY();
+////                    ChannelUtil.logE("onVisibilityChanged => top = " + top + ", bottom = " + bottom + ", scrollY = " + scrollY);
+////                    int measuredHeight = ((ViewGroup) getParent()).getMeasuredHeight() + scrollY;
+////                    // scroll up
+////                    if (top < scrollY) {
+////                        ChannelUtil.logE("onVisibilityChanged => scroll up");
+////                        ((ChannelScrollView) getParent()).scrollBy(0, -Math.abs(scrollY - top));
+////                    }
+////                    // scroll down
+////                    else if (bottom > measuredHeight) {
+////                        ChannelUtil.logE("onVisibilityChanged => scroll down");
+////                        ((ChannelScrollView) getParent()).scrollBy(0, Math.abs(bottom - measuredHeight));
+////                    }
+////                }
+////            }
+////        }
+//
         if (visibility != View.VISIBLE) {
-            int beforePosition = getBeforePosition();
-            setHighlightPosition(beforePosition, true, true);
-            setSelectPosition(beforePosition, true, true);
-            List<ChannelModel> list = getTags(false);
-            ChannelUtil.logE("onVisibilityChanged => beforePosition =" + beforePosition + ", list = " + list);
-            update(list, false);
+
+            try {
+
+                List<ChannelModel> list = getTags(false);
+                int size = list.size();
+                int count = getChildCount();
+//                boolean refresh = (count != size);
+//                if (!refresh) {
+//                    for (int i = 0; i < count; i++) {
+//                        TextView textView = (TextView) getChildAt(i);
+//                        CharSequence charSequence = list.get(i).initText();
+//                        if (null != textView && null != textView.getText()) {
+//                            if (!textView.getText().equals(charSequence)) {
+//                                refresh = true;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+
+                // scroll
+//                int selectPosition = getSelectPosition();
+//                ChannelUtil.logE("onVisibilityChanged => selectPosition = " + selectPosition);
+//                if (selectPosition + 1 <= count) {
+//                    ChannelTextView child = (ChannelTextView) getChildAt(selectPosition);
+//                    if (null != child) {
+//                        int top = child.getTop();
+//                        int bottom = child.getBottom();
+//                        int scrollY = ((ViewGroup) getParent()).getScrollY();
+//                        ChannelUtil.logE("onVisibilityChanged => top = " + top + ", bottom = " + bottom + ", scrollY = " + scrollY);
+//                        int measuredHeight = ((ViewGroup) getParent()).getMeasuredHeight() + scrollY;
+//                        // scroll up
+//                        if (top < scrollY) {
+//                            ChannelUtil.logE("onVisibilityChanged => scroll up");
+//                            ((ChannelScrollView) getParent()).scrollBy(0, -Math.abs(scrollY - top));
+//                        }
+//                        // scroll down
+//                        else if (bottom > measuredHeight) {
+//                            ChannelUtil.logE("onVisibilityChanged => scroll down");
+//                            ((ChannelScrollView) getParent()).scrollBy(0, Math.abs(bottom - measuredHeight));
+//                        }
+//                    }
+//                }
+
+                // backup
+                int beforePosition = getBeforePosition();
+                setHighlightPosition(beforePosition, true, true);
+                setSelectPosition(beforePosition, true, true);
+                ChannelUtil.logE("onVisibilityChanged => beforePosition =" + beforePosition + ", list = " + list);
+                update(list, false);
+
+            } catch (Exception e) {
+            }
         }
-        ChannelUtil.logE("onVisibilityChanged => *******************");
+//        ChannelUtil.logE("onVisibilityChanged => *******************");
     }
 
     protected final void update(@NonNull List<ChannelModel> list, boolean refresh) {
@@ -896,6 +963,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
         // step4
         removeAllViews();
+//        ((ChannelScrollView) getParent()).setScrollY(0);
 
         int size = list.size();
         for (int i = 0; i < size; i++) {
@@ -939,7 +1007,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
 
     /**************/
 
-    private final int getBeforePosition() {
+    protected final int getBeforePosition() {
         try {
             return (int) getTag(R.id.module_channel_position_before);
         } catch (Exception e) {
@@ -947,7 +1015,7 @@ class ChannelLinearLayoutChild extends LinearLayout {
         }
     }
 
-    private final void setBeforePosition(@NonNull int index) {
+    protected final void setBeforePosition(@NonNull int index) {
         if (index < 0)
             return;
         int count = getChildCount();
@@ -1062,4 +1130,13 @@ class ChannelLinearLayoutChild extends LinearLayout {
     }
 
     /**************/
+
+    protected final void backupStyle() {
+        int position = getBeforePosition();
+        ChannelTextView view = (ChannelTextView) getChildAt(position);
+        view.setCompoundDrawables(false, true, false);
+        view.setTextColor(true, R.color.module_channellayout_color_333333);
+        view.setBackgroundResource(true, false);
+        scrolInit(view);
+    }
 }
