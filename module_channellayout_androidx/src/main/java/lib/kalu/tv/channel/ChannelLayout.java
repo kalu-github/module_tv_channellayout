@@ -99,6 +99,8 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             timeout = 10;
         }
 
+        ChannelUtil.logE("handleMessage => what = " + msg.what + ", timeout = " + timeout);
+
         if (msg.what >= timeout) {
             clearTime();
             setVisibility(View.GONE);
@@ -113,6 +115,9 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
 
 //        if (getVisibility() == visibility)
 //            return;
+
+
+        ChannelUtil.logE("handleMessage[setVisibility] => visibility = " + visibility);
 
         // show
         if (visibility == View.VISIBLE) {
@@ -661,6 +666,7 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
             }
             // highlight
             else {
+                setVisibility(View.VISIBLE);
                 mOnChannelChangeListener.onHighlight(column, nextPosition, beforePosition, count, value);
             }
         }

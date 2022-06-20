@@ -861,8 +861,8 @@ class ChannelLinearLayoutChild extends LinearLayout {
             try {
 
                 List<ChannelModel> list = getTags(false);
-                int size = list.size();
-                int count = getChildCount();
+//                int size = list.size();
+//                int count = getChildCount();
 //                boolean refresh = (count != size);
 //                if (!refresh) {
 //                    for (int i = 0; i < count; i++) {
