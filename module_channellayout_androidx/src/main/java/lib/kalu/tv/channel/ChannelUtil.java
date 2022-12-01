@@ -24,12 +24,12 @@ public final class ChannelUtil {
     private static boolean DEBUG = true;
 
     @Keep
-    public static final void logE(@NonNull String message) {
+    public static void logE(@NonNull String message) {
         logE(message, null);
     }
 
     @Keep
-    public static final void logE(@NonNull String message, @Nullable Throwable tr) {
+    public static void logE(@NonNull String message, @Nullable Throwable tr) {
 
         if (!DEBUG)
             return;
@@ -45,12 +45,12 @@ public final class ChannelUtil {
     }
 
     @Keep
-    public static final void setDebug(boolean debug) {
+    public static void setDebug(boolean debug) {
         DEBUG = debug;
     }
 
 
-    public static final Bitmap drawableToBitmap(Drawable drawable) {
+    public static Bitmap drawableToBitmap(Drawable drawable) {
         try {
             int w = drawable.getIntrinsicWidth();
             int h = drawable.getIntrinsicHeight();
@@ -66,7 +66,7 @@ public final class ChannelUtil {
         }
     }
 
-    public static final Bitmap blurResources(@NonNull Context context, @DrawableRes int resid, @NonNull int value, @NonNull boolean blurScript) {
+    public static Bitmap blurResources(@NonNull Context context, @DrawableRes int resid, @NonNull int value, @NonNull boolean blurScript) {
 
         try {
             Resources resources = context.getResources();

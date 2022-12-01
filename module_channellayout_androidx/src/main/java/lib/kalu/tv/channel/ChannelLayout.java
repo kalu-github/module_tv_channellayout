@@ -3,17 +3,12 @@ package lib.kalu.tv.channel;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.os.Message;
-import android.text.Layout;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
@@ -24,14 +19,11 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-import lib.kalu.tv.channel.blur.BlurView;
 import lib.kalu.tv.channel.listener.OnChannelChangeListener;
 import lib.kalu.tv.channel.model.ChannelModel;
 
 @Keep
-public class ChannelLayout extends LinearLayout implements Handler.Callback {
-
-    private final Handler mHandler = new Handler(this);
+public class ChannelLayout extends LinearLayout {
 
     public ChannelLayout(Context context) {
         super(context);
@@ -87,30 +79,6 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     }
 
     @Override
-    public boolean handleMessage(@NonNull Message msg) {
-
-        int timeout;
-        try {
-            timeout = (int) getTag(R.id.module_channel_timeout);
-        } catch (Exception e) {
-            timeout = 10;
-        }
-        if (timeout < 0) {
-            timeout = 10;
-        }
-
-        ChannelUtil.logE("handleMessage => what = " + msg.what + ", timeout = " + timeout);
-
-        if (msg.what >= timeout) {
-            clearTime();
-            setVisibility(View.GONE);
-        } else {
-            nextTime(msg.what);
-        }
-        return false;
-    }
-
-    @Override
     public void setVisibility(int visibility) {
 
 //        if (getVisibility() == visibility)
@@ -149,31 +117,53 @@ public class ChannelLayout extends LinearLayout implements Handler.Callback {
     }
 
     private final void resetTime() {
-        if (null != mHandler) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
-        if (null != mHandler) {
-            mHandler.sendEmptyMessageDelayed(1, 1000);
-        }
+        clearTime();
+        Message message = new Message();
+        message.what = 1;
+        ChannelMessage.sendMessageDelayed(message, 1000);
     }
 
     private final void clearTime() {
-        if (null != mHandler) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
+        ChannelMessage.clearMessage();
     }
 
     private final void nextTime(int what) {
-        if (null != mHandler) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
-        if (null != mHandler) {
-            mHandler.removeCallbacksAndMessages(null);
-            mHandler.sendEmptyMessageDelayed(what + 1, 1000);
-        }
+        clearTime();
+        Message message = new Message();
+        message.what = what + 1;
+        ChannelMessage.sendMessageDelayed(message, 1000);
     }
 
     private final void init(@Nullable AttributeSet attrs) {
+
+        //
+        ChannelMessage.regist(new ChannelMessage.OnMessageChangeListener() {
+            @Override
+            public void onMessage(@NonNull Message msg) {
+                int timeout;
+                try {
+                    timeout = (int) getTag(R.id.module_channel_timeout);
+                } catch (Exception e) {
+                    timeout = 10;
+                }
+                if (timeout < 0) {
+                    timeout = 10;
+                }
+                ChannelUtil.logE("handleMessage => what = " + msg.what + ", timeout = " + timeout + ", thread = " + Thread.currentThread().getName());
+                if (msg.what >= timeout) {
+                    clearTime();
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            setVisibility(View.GONE);
+                        }
+                    });
+                } else {
+                    nextTime(msg.what);
+                }
+            }
+        });
+
         setClickable(false);
         setLongClickable(false);
         setFocusable(false);
