@@ -282,13 +282,13 @@ public class ChannelLayout extends LinearLayout {
             // ChannelScrollView
             if (view instanceof ChannelScrollView) {
                 ChannelScrollView scrollView = (ChannelScrollView) view;
-                scrollView.setBackground(value, blurScript, resources[i]);
+                scrollView.setBackgroundBlur(value, blurScript, resources[i]);
                 ChannelUtil.logE("setBackgroundBlur1[succ] => i = " + i);
             }
             // ChannelImageView
-            else if (view instanceof ChannelImageView) {
-                ChannelImageView imageView = (ChannelImageView) view;
-                imageView.setBackground(value, blurScript, resources[i]);
+            else if (view instanceof ChannelFootImpl) {
+                ChannelFootImpl imageView = (ChannelFootImpl) view;
+                imageView.setBackgroundBlur(value, blurScript, resources[i]);
                 ChannelUtil.logE("setBackgroundBlur1[fail] => i = " + i);
             }
         }

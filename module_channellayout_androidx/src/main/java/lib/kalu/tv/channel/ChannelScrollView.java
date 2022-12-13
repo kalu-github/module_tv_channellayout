@@ -64,7 +64,7 @@ class ChannelScrollView extends ScrollView {
         return false;
     }
 
-    public void setBackground(@NonNull int value, @NonNull boolean blurScript, @NonNull int resid) {
+    void setBackgroundBlur(@NonNull int value, @NonNull boolean blurScript, @NonNull int resid) {
         if (value <= 0) {
             setBackgroundResource(resid);
         } else {
